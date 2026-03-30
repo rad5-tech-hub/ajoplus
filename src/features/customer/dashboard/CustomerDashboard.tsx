@@ -13,7 +13,7 @@ const CustomerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
-      <Navbar user={user} />
+      <Navbar />
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Welcome Header */}

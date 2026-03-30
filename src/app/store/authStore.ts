@@ -1,7 +1,7 @@
 // src/app/store/authStore.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { useMutation } from '@tanstack/react-query';
+// import { useMutation } from '@tanstack/react-query';
 import { AuthStore, LoginCredentials, SignupData, User } from '@/features/auth/types';
 
 // Simulated API calls (replace with real axios/fetch later)
@@ -44,7 +44,7 @@ const api = {
 
 export const useAuthStore = create<AuthStore>()(
   persist(
-    (set, get) => ({
+    (set, ) => ({
       user: null,
       token: null,
       isAuthenticated: false,
