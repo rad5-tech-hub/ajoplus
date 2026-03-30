@@ -6,8 +6,8 @@ import { useAuthStore } from '@/app/store/authStore';
 
 const NAV_LINKS = [
   { label: 'Dashboard', to: '/dashboard/customer', icon: LayoutDashboard },
-  { label: 'Agent',     to: '/dashboard/customer',  icon: UserCog },
-  { label: 'Admin',     to: '#',                   icon: ShieldCheck },
+  { label: 'Agent',     to: '/dashboard/agent',  icon: UserCog },
+  { label: 'Admin',     to: '/dashboard/admin', icon: ShieldCheck },
 ];
 
 const CustomerNavbar = () => {

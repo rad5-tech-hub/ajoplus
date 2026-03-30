@@ -5,7 +5,7 @@ const OverviewCards = () => {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
       {/* Total Referrals */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100">
+      <div className="bg-white p-6 rounded-3xl border  border-slate-200/50 shadow-md">
         <div className="flex justify-between">
           <div>
             <p className="text-sm text-slate-500">Total Referrals</p>
@@ -22,7 +22,7 @@ const OverviewCards = () => {
       </div>
 
       {/* Total Earnings */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100">
+      <div className="bg-white p-6 rounded-3xl border border-slate-200/50 shadow-md ">
         <div className="flex justify-between">
           <div>
             <p className="text-sm text-slate-500">Total Earnings</p>
@@ -39,7 +39,7 @@ const OverviewCards = () => {
       </div>
 
       {/* Earnings Per Referral */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100">
+      <div className="bg-white p-6 rounded-3xl border  border-slate-200/50 shadow-md">
         <div className="flex justify-between">
           <div>
             <p className="text-sm text-slate-500">Earnings Per Referral</p>
@@ -55,7 +55,7 @@ const OverviewCards = () => {
       </div>
 
       {/* Total Transactions */}
-      <div className="bg-white p-6 rounded-3xl border border-slate-100">
+      <div className="bg-white p-6 rounded-3xl border  border-slate-200/50 shadow-md">
         <div className="flex justify-between">
           <div>
             <p className="text-sm text-slate-500">Total Transactions</p>

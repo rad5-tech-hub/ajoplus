@@ -1,7 +1,7 @@
 // src/features/customer/dashboard/components/AjoDailySavings.tsx
 const AjoDailySavings = () => {
   return (
-    <div className="bg-[#19ad45] text-white rounded-3xl p-6 sm:p-8 w-full max-w-2xl mx-auto">
+    <div className="bg-emerald-600 text-white rounded-3xl p-6 sm:p-8 w-full max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

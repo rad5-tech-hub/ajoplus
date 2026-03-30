@@ -7,6 +7,7 @@ import ReferredUsers from '../components/ReferredUsers';
 import EarningsBreakdown from '../components/EarningsBreakdown';
 import PerformanceTips from '../components/PerformanceTips';
 import AgentSince from '../components/AgentSince';
+import CommissionStructure from '../components/CommisionStucture';
 
 const AgentDashboard = () => {
   return (
@@ -25,15 +26,16 @@ const AgentDashboard = () => {
 
         <div className="grid lg:grid-cols-12 gap-8 mt-12">
           {/* Left Column */}
-          <div className="lg:col-span-7 space-y-8">
+          <div className="lg:col-span-8 space-y-8">
             <ReferralLink />
             <ReferredUsers />
           </div>
 
           {/* Right Column */}
-          <div className="lg:col-span-5 space-y-8">
+          <div className="lg:col-span-4 space-y-8">
             <ReferralCode />
             <EarningsBreakdown />
+            <CommissionStructure/>
             <PerformanceTips />
             <AgentSince />
           </div>

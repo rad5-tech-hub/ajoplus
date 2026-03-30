@@ -6,9 +6,7 @@ import SignupPage from '@/features/auth/SignUpPage';
 import ProtectedRoute from './ProtectedRoute';
 import CustomerDashboard from '@/features/customer/dashboard/CustomerDashboard';
 import AgentDashboard from '@/features/agent/dashboard/AgentDashboard';
-
-// Placeholder dashboards for agent and admin until we build them out
-const AdminDashboard = () => <div>Admin Dashboard - Coming Soon</div>;
+import AdminDashboard from '@/features/admin/dashboard/AdminDashboard';
 
 const AppRouter = () => {
   return (
