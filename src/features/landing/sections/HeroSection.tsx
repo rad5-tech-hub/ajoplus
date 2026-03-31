@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 // src/features/landing/sections/HeroSection.tsx
 const HeroSection = () => {
   return (
@@ -18,12 +20,12 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4">
-            <button
+            <Link to="/signup"
               onClick={() => window.location.href = '/get-started'}
               className="px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-base rounded-2xl transition-all active:scale-[0.98] shadow-lg shadow-emerald-200"
             >
               Get Started
-            </button>
+            </Link>
 
             <button
               className="px-8 py-4 border-2 border-emerald-600 text-emerald-700 font-semibold text-base rounded-2xl hover:bg-emerald-50 transition-all active:scale-[0.98]"
