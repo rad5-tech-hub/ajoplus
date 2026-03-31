@@ -1,5 +1,6 @@
 // src/features/landing/sections/ReferralSection.tsx
 import { Gift, UserPlus } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const ReferralSection = () => {
   return (
@@ -22,10 +23,10 @@ const ReferralSection = () => {
         </p>
 
         {/* CTA Button */}
-        <button className="group inline-flex items-center gap-3 cursor-pointer bg-white hover:bg-white/95 text-emerald-700 font-semibold text-lg px-10 py-4 rounded-2xl transition-all active:scale-[0.985]">
+        <Link to="/signup" className="group inline-flex items-center gap-3 cursor-pointer bg-white hover:bg-white/95 text-emerald-700 font-semibold text-lg px-10 py-4 rounded-2xl transition-all active:scale-[0.985]">
           <UserPlus className="w-6 h-6 " strokeWidth={2.5} />
           Become an Agent
-        </button>
+        </Link>
       </div>
     </section>
   );

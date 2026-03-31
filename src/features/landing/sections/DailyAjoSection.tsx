@@ -2,6 +2,7 @@
 import { Check } from 'lucide-react';
 import img from '@/assets/dailyajo.jpg';
 import { Rocket, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 const DailyAjoSection = () => {
   return (
     <section className="py-12 bg-[#f8fafc]">
@@ -71,10 +72,10 @@ const DailyAjoSection = () => {
             </div>
 
             {/* CTA Button */}
-            <button className="cursor-pointer mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-4 rounded-2xl flex items-center gap-2 transition-all active:scale-[0.985]">
+            <Link to="/signup"  className="cursor-pointer mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-4 rounded-2xl flex items-center gap-2 transition-all active:scale-[0.985]">
               <span className="text-white">🤝</span>
               Start Saving
-            </button>
+            </Link>
           </div>
 
           {/* Right Image */}
