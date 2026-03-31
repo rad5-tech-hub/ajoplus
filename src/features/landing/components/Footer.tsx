@@ -76,12 +76,12 @@ const Footer: React.FC = () => (
         {/* Brand col — spans 2 on lg */}
         <div className="lg:col-span-2">
           <div className="flex items-center gap-2.5 mb-4">
-            <div className="w-9 h-9 rounded-lg bg-[#16a34a] flex items-center justify-center flex-shrink-0">
+            <div className="w-9 h-9 rounded-lg bg-[#16a34a] flex items-center justify-center shrink-0">
               <span className="text-white font-extrabold text-[15px] leading-none select-none">A+</span>
             </div>
             <span className="text-white font-bold text-[18px]">AjoPlus</span>
           </div>
-          <p className="text-[13.5px] text-blue-200/55 leading-relaxed max-w-[260px] mb-6">
+          <p className="text-[13.5px] text-blue-200/55 leading-relaxed max-w-65 mb-6">
             Save smart and contribute easily with Nigeria's leading digital Ajo and structured savings platform.
           </p>
           <div className="flex items-center gap-2.5">

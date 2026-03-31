@@ -1,6 +1,7 @@
 // src/features/landing/sections/PackagesSection.tsx
 import Button from '@/components/ui/Button';
 import { Clock, Calendar, Package as PackageIcon } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const PackagesSection = () => {
   const packages = [
@@ -121,17 +122,18 @@ const PackagesSection = () => {
 
               {/* Join Button - Pushed to bottom */}
               <div className="mt-auto">
-                <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-4 px-6 rounded-4xl flex items-center justify-center gap-2 transition-all active:scale-[0.985]">
+                <Link to="/signup" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-4 px-6 rounded-4xl flex items-center justify-center gap-2 transition-all active:scale-[0.985]">
                   <PackageIcon className="w-5 h-5" />
                   Join Package
-                </button>
+                </Link>
               </div>
             </div>
           ))}
         </div>
 
-		<div className="flex justify-center mt-16">
+		<Link to="/browse" className="flex justify-center mt-16">
           <Button 
+
             variant="outline" 
             size="lg" 
             showArrow
@@ -139,7 +141,7 @@ const PackagesSection = () => {
           >
             View All Packages
           </Button>
-        </div>
+        </Link>
       </div>
     </section>
   );

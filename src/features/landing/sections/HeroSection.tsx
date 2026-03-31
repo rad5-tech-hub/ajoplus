@@ -21,17 +21,17 @@ const HeroSection = () => {
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4">
             <Link to="/signup"
-              onClick={() => window.location.href = '/get-started'}
+              onClick={() => window.location.href = '/signup'}
               className="px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-base rounded-2xl transition-all active:scale-[0.98] shadow-lg shadow-emerald-200"
             >
               Get Started
             </Link>
 
-            <button
+            <a href="#packages"
               className="px-8 py-4 border-2 border-emerald-600 text-emerald-700 font-semibold text-base rounded-2xl hover:bg-emerald-50 transition-all active:scale-[0.98]"
             >
               Explore Packages
-            </button>
+            </a>
           </div>
 
           {/* Trust Bar */}
@@ -55,7 +55,7 @@ const HeroSection = () => {
 
         {/* Right Image */}
         <div className="relative flex justify-center md:justify-end">
-          <div className="relative w-full max-w-[420px] md:max-w-none">
+          <div className="relative w-full max-w-105 md:max-w-none">
             <img
               src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop"
               alt="Happy woman saving with AjoPlus"

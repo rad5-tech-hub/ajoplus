@@ -48,8 +48,12 @@ const LoginPage = () => {
 
       // Redirect based on role (handled in store or here)
       navigate('/dashboard/customer'); // Will be improved with role-based routing later
-    } catch (err: any) {
-      setLocalError(err.message || 'Login failed. Please try again.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setLocalError(err.message);
+      } else {
+        setLocalError('Login failed. Please try again.');
+      }
     }
   };
 
@@ -66,7 +70,9 @@ const LoginPage = () => {
 
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 text-white">
-            <div className="w-12 h-12 bg-white text-emerald-600 rounded-2xl flex items-center justify-center font-bold text-2xl">A+</div>
+            <div className="w-12 h-12 bg-white text-emerald-600 rounded-2xl flex items-center justify-center font-bold text-2xl">
+              A+
+            </div>
             <span className="text-3xl font-semibold tracking-tight">AjoPlus</span>
           </div>
           <p className="text-white/90 mt-2 text-lg">Save Smart, Grow Together</p>

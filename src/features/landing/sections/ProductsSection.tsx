@@ -83,7 +83,7 @@ const ProductsSection = () => {
                   {product.title}
                 </h3>
 
-                <p className="text-slate-600 text-[15px] leading-relaxed mb-8 min-h-[42px]">
+                <p className="text-slate-600 text-[15px] leading-relaxed mb-8 min-h-10.5">
                   {product.description}
                 </p>
 

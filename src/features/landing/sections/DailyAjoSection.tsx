@@ -58,15 +58,15 @@ const DailyAjoSection = () => {
             {/* Benefits */}
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
+                <Check className="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" />
                 <span className="text-slate-700">Automated daily collections</span>
               </div>
               <div className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
+                <Check className="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" />
                 <span className="text-slate-700">Withdraw after 30 days</span>
               </div>
               <div className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
+                <Check className="w-5 h-5 text-emerald-600 mt-0.5 shrink-0" />
                 <span className="text-slate-700">Transparent 5% service fee</span>
               </div>
             </div>
@@ -80,7 +80,7 @@ const DailyAjoSection = () => {
 
           {/* Right Image */}
           <div className="relative flex justify-center lg:justify-end">
-            <div className="rounded-3xl overflow-hidden shadow-2xl max-w-[550px]">
+            <div className="rounded-3xl overflow-hidden shadow-2xl max-w-137.5">
               <img
                 src={img}
                 alt="Person using mobile banking for Ajo savings"

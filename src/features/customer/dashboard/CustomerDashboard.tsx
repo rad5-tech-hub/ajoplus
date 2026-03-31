@@ -2,7 +2,7 @@
 import { useAuthStore } from '@/app/store/authStore';
 import Navbar from '../components/CustomerNavbar';
 import OverviewCards from '../components/OverviewCards';
-import MyPackages from '../components/MyPackages';
+import MyPackages from '../packages/MyPackages';
 import AjoDailySavings from '../components/AjoDailySavings';
 import RecentTransactions from '../components/RecentTransactions';
 import QuickActions from '../components/QuickActions';
