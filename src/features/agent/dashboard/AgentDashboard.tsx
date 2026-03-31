@@ -1,6 +1,6 @@
 // src/features/agent/dashboard/AgentDashboard.tsx
 import AgentNavbar from '../components/AgentNavbar';
-import OverviewCards from '../components/OverviewCrads';
+import OverviewCards from '../components/OverviewCards';
 import ReferralLink from '../components/ReferralLink';
 import ReferralCode from '../components/ReferralCode';
 import ReferredUsers from '../components/ReferredUsers';
