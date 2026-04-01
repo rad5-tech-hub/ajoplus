@@ -289,7 +289,7 @@ const PackageDetail = () => {
         packageName={packageData.title}
         recommendedAmount="₦5,769.23"
         onSuccess={(amount) =>
-          navigate('/payment-success', {
+          navigate('/payment/success', {
             state: { packageName: packageData.title, amount: `₦${amount}` },
           })
         }

@@ -11,6 +11,7 @@ import PackageDetail from '@/features/customer/packages/PackagesDetail';
 import MakePayment from '@/features/customer/Payments/MakePayment';
 import BrowsePage from '@/features/browse/BrowsePage';
 import ShoppingCart from '@/features/cart/ShoppingCart';
+import PaymentSuccess from '@/components/ui/PaymentSuccess';
 const AppRouter = () => {
   return (
     <Routes>
@@ -29,6 +30,8 @@ const AppRouter = () => {
         <Route path="/dashboard/customer/payment/:packageId" element={<MakePayment />} />
         <Route path="/dashboard/customer/payment/" element={<MakePayment />} />
         <Route path="/cart" element={<ShoppingCart />} />
+        <Route path="/payment/success" element={<PaymentSuccess />} />
+        
       </Route>
 
       <Route path="/unauthorized" element={<div>Unauthorized Access</div>} />
