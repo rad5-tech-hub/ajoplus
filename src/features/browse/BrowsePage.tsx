@@ -1,16 +1,28 @@
 // src/features/browse/BrowsePage.tsx
 import { useState } from 'react';
 import { Search } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import BrowseTabs from './components/BrowseTabs';
 import ProductCard from './components/ProductCard';
-import CustomerNavbar from '../customer/components/CustomerNavbar';
+
+import { useNavigate } from 'react-router-dom';
 
 const BrowsePage = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'all' | 'packages' | 'products'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
 
-  // Mock data with real Unsplash images (kept only here)
+  const [step, setStep] = useState<1 | 2>(1);
+
+  const handleBack = () => {
+    if (step === 2) {
+      setStep(1);
+    } else {
+      navigate(-1);
+    }
+  };
+
   const allItems = [
     {
       id: 'p1',
@@ -109,55 +121,75 @@ const BrowsePage = () => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
-      <CustomerNavbar />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-20">
+        <button
+          onClick={handleBack}
+          className="flex cursor-pointer mb-2 items-center gap-2 text-slate-600 hover:text-emerald-900 transition-colors"
+        >
+          <ArrowLeft className="w-3 h-3" />
+          <span className="font-medium text-sm">Back</span>
+        </button>
+        {/* Header Section */}
         <div className="mb-10">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
-            Browse All Packages & Products
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 leading-tight">
+            Discover Premium Packages & Products
           </h1>
-          <p className="text-slate-600 mt-3 text-base sm:text-lg">
-            Choose from contribution packages or one-time purchase products
+          <p className="text-slate-600 mt-3 text-base sm:text-lg max-w-2xl">
+            Choose from flexible contribution packages or premium one-time purchase products
           </p>
         </div>
 
+        {/* Tabs */}
         <BrowseTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-        {/* Search & Filter Bar */}
-        <div className="mt-8 flex flex-col md:flex-row gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-5 top-4 text-slate-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Search packages and products..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-14 py-4 bg-white border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-500 text-base"
-            />
-          </div>
+        {/* Creative Search & Filter Bar */}
+        <div className="mt-10 bg-white rounded-3xl shadow-sm border border-slate-100 p-2">
+          <div className="flex flex-col md:flex-row gap-4">
+            {/* Search Input */}
+            <div className="flex-1 relative group">
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 transition-colors group-focus-within:text-emerald-500" />
+              <input
+                type="text"
+                placeholder="Search packages and products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-14 pr-6 py-4 bg-transparent border border-transparent focus:border-emerald-200 rounded-2xl focus:outline-none text-base placeholder:text-slate-400"
+              />
+            </div>
 
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="bg-white border border-slate-200 px-5 py-4 rounded-2xl focus:outline-none focus:border-emerald-500 text-base w-full md:w-72"
-          >
-            <option>All Categories</option>
-            <option>Food & Groceries</option>
-            <option>Electronics</option>
-            <option>Fashion</option>
-            <option>Home</option>
-            <option>Events</option>
-          </select>
+            {/* Category Filter */}
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="bg-white border border-slate-200 px-6 py-4 rounded-2xl focus:outline-none focus:border-emerald-500 text-base w-full md:w-80 cursor-pointer"
+            >
+              <option>All Categories</option>
+              <option>Food & Groceries</option>
+              <option>Electronics</option>
+              <option>Fashion</option>
+              <option>Home</option>
+              <option>Events</option>
+            </select>
+          </div>
         </div>
 
-        <p className="mt-8 text-sm text-slate-500">Showing {filteredItems.length} items</p>
+        {/* Results Count */}
+        <p className="mt-8 text-sm text-slate-500 font-medium">
+          Showing {filteredItems.length} result{filteredItems.length !== 1 ? 's' : ''}
+        </p>
 
-        {/* Uniform Height Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+        {/* Products Grid - Uniform & Responsive */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8">
           {filteredItems.map((item) => (
             <ProductCard key={item.id} item={item} />
           ))}
         </div>
+
+        {filteredItems.length === 0 && (
+          <div className="text-center py-20">
+            <p className="text-slate-400 text-xl">No items found matching your search.</p>
+          </div>
+        )}
       </div>
     </div>
   );

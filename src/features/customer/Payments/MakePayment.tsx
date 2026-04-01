@@ -13,13 +13,13 @@ const MakePayment = () => {
 
   const packageName = "Smart Phone Package";
 
-  const handleBack = () => {
-    if (step === 2) {
-      setStep(1);
-    } else {
-      navigate(`/dashboard/customer/package/${packageId}`);
-    }
-  };
+ const handleBack = () => {
+  if (step === 2) {
+    setStep(1);
+  } else {
+    navigate(-1);
+  }
+};
 
   const handleNext = () => setStep(2);	
 

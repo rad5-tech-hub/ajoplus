@@ -11,7 +11,7 @@ const OverviewCards = () => {
             <p className="text-sm text-slate-500">Total Saved</p>
             <p className="text-xs text-slate-400 mt-1">All contributions combined</p>
           </div>
-          <div className="w-10 h-10 bg-emerald-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 bg-emerald-100 rounded-2xl flex items-center justify-center shrink-0">
             <PiggyBank className="w-5 h-5 text-emerald-600" />
           </div>
         </div>
@@ -28,7 +28,7 @@ const OverviewCards = () => {
             <p className="text-sm text-slate-500">Pending Payments</p>
             <p className="text-xs text-slate-400 mt-1">Awaiting admin approval</p>
           </div>
-          <div className="w-10 h-10 bg-emerald-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 bg-emerald-100 rounded-2xl flex items-center justify-center shrink-0">
             <Clock className="w-5 h-5 text-emerald-600" />
           </div>
         </div>
@@ -44,7 +44,7 @@ const OverviewCards = () => {
             <p className="text-sm text-slate-500">Available Balance</p>
             <p className="text-xs text-slate-400 mt-1">Ready to withdraw</p>
           </div>
-          <div className="w-10 h-10 bg-emerald-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 bg-emerald-100 rounded-2xl flex items-center justify-center shrink-0">
             <DollarSign className="w-5 h-5 text-emerald-600" />
           </div>
         </div>
@@ -60,7 +60,7 @@ const OverviewCards = () => {
             <p className="text-sm text-slate-500">Active Packages</p>
             <p className="text-xs text-slate-400 mt-1">Currently contributing to</p>
           </div>
-          <div className="w-10 h-10 bg-emerald-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+          <div className="w-10 h-10 bg-emerald-100 rounded-2xl flex items-center justify-center shrink-0">
             <Package className="w-5 h-5 text-emerald-600" />
           </div>
         </div>

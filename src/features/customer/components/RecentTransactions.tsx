@@ -17,7 +17,7 @@ const RecentTransactions = () => {
         >
           {/* Left Section: Icon + Details */}
           <div className="flex items-center gap-4 flex-1 min-w-0">
-            <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-2xl flex items-center justify-center flex-shrink-0 ${
+            <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-2xl flex items-center justify-center shrink-0 ${
               tx.amount.startsWith('+') ? 'bg-emerald-100' : 'bg-red-100'
             }`}>
               <span className="text-lg sm:text-xl">
@@ -32,7 +32,7 @@ const RecentTransactions = () => {
           </div>
 
           {/* Right Section: Amount + Status */}
-          <div className="flex flex-col items-end sm:items-end text-right flex-shrink-0">
+          <div className="flex flex-col items-end sm:items-end text-right shrink-0">
             <p className={`font-semibold text-lg sm:text-xl ${
               tx.amount.startsWith('+') ? 'text-emerald-700' : 'text-red-600'
             }`}>

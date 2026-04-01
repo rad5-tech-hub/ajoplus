@@ -28,17 +28,21 @@ const SignupPage = () => {
 
   const validateStep = (currentStep: Step): boolean => {
     setLocalError('');
-    
+
     if (currentStep === 1) {
-      if (!formData.fullName.trim()) return setLocalError('Full name is required'), false;
-      if (!formData.email.trim() || !formData.email.includes('@')) return setLocalError('Valid email is required'), false;
-      if (!formData.phone.trim()) return setLocalError('Phone number is required'), false;
+      if (!formData.fullName.trim()) return (setLocalError('Full name is required'), false);
+      if (!formData.email.trim() || !formData.email.includes('@'))
+        return (setLocalError('Valid email is required'), false);
+      if (!formData.phone.trim()) return (setLocalError('Phone number is required'), false);
     }
 
     if (currentStep === 3) {
-      if (formData.password.length < 6) return setLocalError('Password must be at least 6 characters'), false;
-      if (formData.password !== formData.confirmPassword) return setLocalError('Passwords do not match'), false;
-      if (!formData.agreeTerms) return setLocalError('You must agree to the Terms and Privacy Policy'), false;
+      if (formData.password.length < 6)
+        return (setLocalError('Password must be at least 6 characters'), false);
+      if (formData.password !== formData.confirmPassword)
+        return (setLocalError('Passwords do not match'), false);
+      if (!formData.agreeTerms)
+        return (setLocalError('You must agree to the Terms and Privacy Policy'), false);
     }
 
     return true;
@@ -69,8 +73,9 @@ const SignupPage = () => {
       });
 
       navigate('/dashboard/customer');
-    } catch (err: any) {
-      setLocalError(err.message || 'Failed to create account');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to create account';
+      setLocalError(message);
     }
   };
 
@@ -84,7 +89,9 @@ const SignupPage = () => {
 
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 text-white">
-            <div className="w-12 h-12 bg-white text-emerald-600 rounded-2xl flex items-center justify-center font-bold text-2xl">A+</div>
+            <div className="w-12 h-12 bg-white text-emerald-600 rounded-2xl flex items-center justify-center font-bold text-2xl">
+              A+
+            </div>
             <span className="text-3xl font-semibold tracking-tight">AjoPlus</span>
           </div>
         </div>
@@ -116,7 +123,9 @@ const SignupPage = () => {
             {step === 1 && (
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Full Name *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Full Name *
+                  </label>
                   <div className="relative">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
@@ -131,7 +140,9 @@ const SignupPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Email Address *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Email Address *
+                  </label>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
@@ -146,7 +157,9 @@ const SignupPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Phone Number *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Phone Number *
+                  </label>
                   <div className="relative">
                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
@@ -174,11 +187,18 @@ const SignupPage = () => {
             {step === 2 && (
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">I want to join as *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    I want to join as *
+                  </label>
                   <select
                     className="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 outline-none"
                     value={formData.accountType}
-                    onChange={(e) => setFormData({ ...formData, accountType: e.target.value as 'customer' | 'agent' })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        accountType: e.target.value as 'customer' | 'agent',
+                      })
+                    }
                   >
                     <option value="customer">Customer (Save & Earn)</option>
                     <option value="agent">Agent</option>
@@ -186,7 +206,9 @@ const SignupPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Referral Code (optional)</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Referral Code (optional)
+                  </label>
                   <input
                     type="text"
                     placeholder="Enter referral code"
@@ -219,7 +241,9 @@ const SignupPage = () => {
             {step === 3 && (
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Password *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Password *
+                  </label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
@@ -241,7 +265,9 @@ const SignupPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Confirm Password *</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Confirm Password *
+                  </label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
@@ -249,7 +275,9 @@ const SignupPage = () => {
                       placeholder="Re-enter password"
                       className="w-full pl-11 pr-12 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 outline-none"
                       value={formData.confirmPassword}
-                      onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, confirmPassword: e.target.value })
+                      }
                       required
                     />
                     <button
@@ -257,7 +285,11 @@ const SignupPage = () => {
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
                     >
-                      {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      {showConfirmPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
                     </button>
                   </div>
                 </div>

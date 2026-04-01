@@ -7,6 +7,7 @@ import AjoDailySavings from '../components/AjoDailySavings';
 import RecentTransactions from '../components/RecentTransactions';
 import QuickActions from '../components/QuickActions';
 import NeedHelp from '../components/NeedHelp';
+import { Link } from 'react-router-dom';
 
 const CustomerDashboard = () => {
   const { user } = useAuthStore();
@@ -37,9 +38,9 @@ const CustomerDashboard = () => {
           <div className="lg:col-span-7 space-y-8">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-semibold text-slate-900">My Packages</h2>
-              <button className="px-4 py-2 border-2 cursor-pointer border-emerald-600 text-emerald-600 rounded-2xl hover:bg-emerald-50 transition-colors text-sm font-medium">
+              <Link to="/browse" className="px-4 py-2 border-2 cursor-pointer border-emerald-600 text-emerald-600 rounded-2xl hover:bg-emerald-50 transition-colors text-sm font-medium">
                 View All
-              </button>
+              </Link>
             </div>
             <MyPackages />
           </div>

@@ -1,6 +1,6 @@
 // src/features/customer/packages/PackageDetail.tsx
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, CheckCircle, Clock,  CreditCard } from 'lucide-react';
+import { ArrowLeft, Calendar, CheckCircle, Clock, CreditCard } from 'lucide-react';
 import UploadReceiptModal from '@/components/ui/UploadReceiptModal';
 import { useState } from 'react';
 const PackageDetail = () => {
@@ -141,14 +141,14 @@ const PackageDetail = () => {
               <div className="flex gap-4">
                 <button
                   onClick={() => navigate(`/dashboard/customer/payment/${packageId}`)}
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 transition-colors text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-3"
+                  className="flex-1 cursor-pointer bg-emerald-600 hover:bg-emerald-700 transition-colors text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-3"
                 >
                   Make Payment
                 </button>
 
                 <button
                   onClick={() => setShowUploadModal(true)}
-                  className="flex-1 border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 font-semibold py-4 rounded-2xl flex items-center justify-center gap-3 transition-colors"
+                  className="flex-1 border-2 cursor-pointer border-emerald-600 text-emerald-600 hover:bg-emerald-50 font-semibold py-4 rounded-2xl flex items-center justify-center gap-3 transition-colors"
                 >
                   Upload Receipt
                 </button>
@@ -217,7 +217,38 @@ const PackageDetail = () => {
                 </div>
               </div>
             </div>
+            {/* Package Items Included */}
+            <div className="bg-white border border-slate-200 rounded-3xl p-6">
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-8 h-8 bg-amber-100 rounded-2xl flex items-center justify-center text-xl">
+                  📦
+                </div>
+                <h3 className="font-semibold">Package Items</h3>
+              </div>
 
+              <div className="space-y-4">
+                <div className="flex gap-3">
+                  <div className="w-7 h-7 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center text-sm font-medium shrink-0">
+                    1
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-slate-900">Bag of Rice</p>
+                    <p className="text-sm text-slate-500">50kg</p>
+                  </div>
+                </div>
+
+                {/* Add more items as needed */}
+                <div className="flex gap-3">
+                  <div className="w-7 h-7 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center text-sm font-medium shrink-0">
+                    2
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-slate-900">Cooking Oil</p>
+                    <p className="text-sm text-slate-500">5 liters</p>
+                  </div>
+                </div>
+              </div>
+            </div>
             {/* Payment Instructions */}
             <div className="bg-white border border-slate-200 rounded-3xl p-6">
               <div className="flex items-center gap-3 mb-4">
@@ -262,17 +293,17 @@ const PackageDetail = () => {
           </div>
         </div>
       </div>
-  <UploadReceiptModal 
-  isOpen={showUploadModal}
-  onClose={() => setShowUploadModal(false)}
-  packageName={packageData.title}
-  recommendedAmount="₦5,769.23"
-  onSuccess={(amount) => {
-    navigate('/payment-success', { 
-      state: { packageName: packageData.title, amount: `₦${amount}` } 
-    });
-  }}
-/>
+      <UploadReceiptModal
+        isOpen={showUploadModal}
+        onClose={() => setShowUploadModal(false)}
+        packageName={packageData.title}
+        recommendedAmount="₦5,769.23"
+        onSuccess={(amount) => {
+          navigate('/payment-success', {
+            state: { packageName: packageData.title, amount: `₦${amount}` },
+          });
+        }}
+      />
     </div>
   );
 };

@@ -58,20 +58,20 @@ const ProductsSection = () => {
             >
               {/* Product Image */}
               <div className="relative h-56 bg-slate-100">
-                <img
+        <img 
                   src={product.image}
                   alt={product.title}
                   className="w-full h-full object-cover"
                   loading="lazy"
-                />
+        />
 
                 {/* In Stock Badge */}
-                <div className="absolute top-4 right-4">
+        <div className="absolute top-4 right-4">
                   <span className="inline-flex items-center px-4 py-1 bg-emerald-600 text-white text-xs font-medium rounded-2xl">
-                    In Stock
-                  </span>
-                </div>
-              </div>
+            In Stock
+          </span>
+        </div>
+      </div>
 
               {/* Content Area */}
               <div className="p-6">
@@ -81,9 +81,9 @@ const ProductsSection = () => {
 
                 <h3 className="text-xl font-semibold text-slate-900 leading-tight mb-3">
                   {product.title}
-                </h3>
+        </h3>
 
-                <p className="text-slate-600 text-[15px] leading-relaxed mb-8 min-h-10.5">
+                <p className="text-slate-600 text-[15px] leading-relaxed mb-8 min-h-10.">
                   {product.description}
                 </p>
 
@@ -95,11 +95,11 @@ const ProductsSection = () => {
                     <ShoppingCart className="w-5 h-5" />
                     Buy Now
                   </button>
-                </div>
-              </div>
+        </div>
+            </div>
             </div>
           ))}
-        </div>
+          </div>
         <div className="mt-12 mx-auto w-full max-w-3xl px-4 sm:px-6">
           <div className="bg-[#ecfdf5] rounded-3xl p-6 sm:p-8 md:p-12">
             <h2 className="text-center text-xl sm:text-2xl font-bold tracking-tight text-slate-950 mb-8 sm:mb-10">
@@ -111,7 +111,7 @@ const ProductsSection = () => {
               <div className="bg-white rounded-2xl p-5 sm:p-6 flex flex-col items-center text-center border border-slate-100 hover:border-emerald-200 hover:shadow-md transition-all duration-200">
                 <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mb-4">
                   <Package className="w-7 h-7 sm:w-8 sm:h-8 text-emerald-600" strokeWidth={2.25} />
-                </div>
+            </div>
                 <h3 className="text-[15px] sm:text-base font-semibold text-slate-900 mb-2 leading-snug">
                   Contribution Packages
                 </h3>

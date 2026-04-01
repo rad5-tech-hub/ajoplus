@@ -1,4 +1,5 @@
-// src/features/admin/dashboard/components/PackageManagement.tsx
+import { useState } from 'react';
+import CreatePackageModal from '@/components/ui/CreatePackageModal';
 
 const packages = [
   {
@@ -52,13 +53,18 @@ const packages = [
 ];
 
 const PackageManagement = () => {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
   return (
     <div>
       {/* Header */}
       <div className="flex items-center justify-between gap-4 mb-6 sm:mb-8">
         <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">All Packages</h2>
-        <button className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white px-4 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base whitespace-nowrap flex items-center gap-1.5">
-          + <span className="hidden xs:inline">Create</span> Package
+        <button 
+          onClick={() => setIsCreateModalOpen(true)}
+          className="cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white px-4 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base whitespace-nowrap flex items-center gap-1.5"
+        >
+          + <span className="xs:inline">Create</span> Package
         </button>
       </div>
 
@@ -80,7 +86,7 @@ const PackageManagement = () => {
               <tr key={index} className="border-b border-slate-100 last:border-b-0 hover:bg-slate-50 transition-colors">
                 <td className="py-5 px-6 lg:px-8">
                   <p className="font-semibold text-slate-900 text-sm lg:text-base">{pkg.name}</p>
-                  <p className="text-xs text-slate-500 mt-0.5 max-w-[220px]">{pkg.desc}</p>
+                  <p className="text-xs text-slate-500 mt-0.5 max-w-55">{pkg.desc}</p>
                 </td>
                 <td className="py-5 px-4">
                   <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs rounded-xl whitespace-nowrap">
@@ -137,6 +143,12 @@ const PackageManagement = () => {
           </div>
         ))}
       </div>
+
+      {/* Create New Package Modal */}
+      <CreatePackageModal 
+        isOpen={isCreateModalOpen} 
+        onClose={() => setIsCreateModalOpen(false)} 
+      />
     </div>
   );
 };
