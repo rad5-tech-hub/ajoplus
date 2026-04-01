@@ -1,7 +1,7 @@
 // src/features/customer/payments/PaymentSuccess.tsx
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
-import CustomerNavbar from '@/features/customer/components/CustomerNavbar';
+// import CustomerNavbar from '@/features/customer/components/CustomerNavbar';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ const PaymentSuccess = () => {
 
   return (
     <div >
-      <CustomerNavbar />
+      {/* <CustomerNavbar /> */}
       <div className="flex items-center justify-center w-[90%] mx-auto">
         <div className="bg-emerald-600 rounded-3xl max-w-md w-full p-10 text-center mt-4">
           <div className="mx-auto w-20 h-20 bg-emerald-600 rounded-full flex items-center justify-center mb-8">
