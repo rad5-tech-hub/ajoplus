@@ -16,7 +16,7 @@ const navigate = useNavigate();
         </button>
 
         <button 
-          onClick={() => navigate(`/brows`)} className="w-full cursor-pointer border border-emerald-600 text-emerald-600 font-semibold py-4 rounded-2xl hover:bg-emerald-50 transition-all">
+          onClick={() => navigate(`/browse`)} className="w-full cursor-pointer border border-emerald-600 text-emerald-600 font-semibold py-4 rounded-2xl hover:bg-emerald-50 transition-all">
           Browse Packages
         </button>
 

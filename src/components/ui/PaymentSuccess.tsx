@@ -1,7 +1,6 @@
 // src/features/customer/payments/PaymentSuccess.tsx
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
-// import CustomerNavbar from '@/features/customer/components/CustomerNavbar';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
