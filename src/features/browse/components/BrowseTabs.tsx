@@ -27,7 +27,7 @@ const BrowseTabs = ({ activeTab, onTabChange }: BrowseTabsProps) => {
 
         <button
           onClick={() => onTabChange('packages')}
-          className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-medium text-sm whitespace-nowrap transition-all active:scale-95
+          className={`flex cursor-pointer items-center gap-2 px-5 py-3 rounded-2xl font-medium text-sm whitespace-nowrap transition-all active:scale-95
             ${activeTab === 'packages'
               ? 'bg-emerald-600 text-white shadow-md shadow-emerald-100'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
@@ -40,7 +40,7 @@ const BrowseTabs = ({ activeTab, onTabChange }: BrowseTabsProps) => {
 
         <button
           onClick={() => onTabChange('products')}
-          className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-medium text-sm whitespace-nowrap transition-all active:scale-95
+          className={`flex items-center cursor-pointer gap-2 px-5 py-3 rounded-2xl font-medium text-sm whitespace-nowrap transition-all active:scale-95
             ${activeTab === 'products'
               ? 'bg-emerald-600 text-white shadow-md shadow-emerald-100'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'

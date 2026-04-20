@@ -1,15 +1,13 @@
 // src/features/customer/dashboard/components/CustomerNavbar.tsx
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LogOut, User, Menu, X, LayoutDashboard, UserCog, ShieldCheck, ShoppingCart } from 'lucide-react';
+import { LogOut, User, Menu, X, ShieldCheck, ShoppingCart } from 'lucide-react';
 import { useAuthStore } from '@/app/store/authStore';
 import { useCartStore } from '@/app/store/CartStore';
 
 const NAV_LINKS = [
-  { label: 'Dashboard', to: '/dashboard/customer', icon: LayoutDashboard },
+  { label: 'Dashboard', to: '/dashboard/admin', icon: ShieldCheck },
   { label: 'Browse', to: '/browse', icon: null },
-  { label: 'Agent', to: '/dashboard/agent', icon: UserCog },
-  { label: 'Admin', to: '/dashboard/admin', icon: ShieldCheck },
 ];
 
 const AgentNavbar = () => {
@@ -44,9 +42,8 @@ const AgentNavbar = () => {
   return (
     <>
       <nav
-        className={`bg-white border-b border-slate-100 sticky top-0 z-50 transition-shadow duration-200 ${
-          scrolled ? 'shadow-sm' : ''
-        }`}
+        className={`bg-white border-b border-slate-100 sticky top-0 z-50 transition-shadow duration-200 ${scrolled ? 'shadow-sm' : ''
+          }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
 
@@ -66,11 +63,10 @@ const AgentNavbar = () => {
               <Link
                 key={label}
                 to={to}
-                className={`transition-colors duration-150 ${
-                  isActive(to)
-                    ? 'text-emerald-600 font-semibold'
-                    : 'text-slate-500 hover:text-slate-900'
-                }`}
+                className={`transition-colors duration-150 ${isActive(to)
+                  ? 'text-emerald-600 font-semibold'
+                  : 'text-slate-500 hover:text-slate-900'
+                  }`}
               >
                 {label}
               </Link>
@@ -81,8 +77,8 @@ const AgentNavbar = () => {
           <div className="flex items-center gap-3">
 
             {/* Cart Icon with Live Count */}
-            <Link 
-              to="/browse" 
+            <Link
+              to="/browse"
               className="relative p-2.5 text-slate-600 hover:text-emerald-600 transition-colors rounded-xl hover:bg-slate-100"
             >
               <ShoppingCart className="w-5 h-5" />
@@ -131,9 +127,8 @@ const AgentNavbar = () => {
 
         {/* Drawer Content */}
         <div
-          className={`absolute top-16 left-0 right-0 bg-white border-b border-slate-100 shadow-xl transition-transform duration-300 ease-out ${
-            menuOpen ? 'translate-y-0' : '-translate-y-full'
-          }`}
+          className={`absolute top-16 left-0 right-0 bg-white border-b border-slate-100 shadow-xl transition-transform duration-300 ease-out ${menuOpen ? 'translate-y-0' : '-translate-y-full'
+            }`}
         >
           <div className="px-5 py-6 flex flex-col gap-2">
             {NAV_LINKS.map(({ label, to, icon: Icon }) => (
@@ -141,11 +136,10 @@ const AgentNavbar = () => {
                 key={label}
                 to={to}
                 onClick={() => setMenuOpen(false)}
-                className={`flex items-center gap-3 px-5 py-4 rounded-2xl text-[15px] font-medium transition-all ${
-                  isActive(to)
-                    ? 'bg-emerald-50 text-emerald-700'
-                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                }`}
+                className={`flex items-center gap-3 px-5 py-4 rounded-2xl text-[15px] font-medium transition-all ${isActive(to)
+                  ? 'bg-emerald-50 text-emerald-700'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`}
               >
                 {Icon && <Icon className="w-5 h-5" />}
                 {label}

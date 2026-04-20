@@ -1,16 +1,28 @@
 // src/features/customer/dashboard/CustomerDashboard.tsx
 import { useAuthStore } from '@/app/store/authStore';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/CustomerNavbar';
 import OverviewCards from '../components/OverviewCards';
 import MyPackages from '../packages/MyPackages';
 import AjoDailySavings from '../components/AjoDailySavings';
 import RecentTransactions from '../components/RecentTransactions';
-import QuickActions from '../components/QuickActions';
+// import QuickActions from '../components/QuickActions';
 import NeedHelp from '../components/NeedHelp';
-import { Link } from 'react-router-dom';
+import DailyAjoSetupModal from '@/components/ui/DailyAjoSetupModal';
 
 const CustomerDashboard = () => {
   const { user } = useAuthStore();
+  const [searchParams] = useSearchParams();
+  const [showDailyAjoModal, setShowDailyAjoModal] = useState(false);
+
+  // Show modal ONLY if coming from "Start Saving" button on landing page
+  useEffect(() => {
+    const shouldOpen = searchParams.get('openDailyAjo') === 'true';
+    if (shouldOpen) {
+      setShowDailyAjoModal(true);
+    }
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
@@ -21,7 +33,7 @@ const CustomerDashboard = () => {
         <div className="flex justify-between items-start mb-10">
           <div>
             <h1 className="text-xl md:text-4xl font-bold tracking-tight text-slate-900">
-              Welcome back, {user?.fullName.split(' ')[0]}!
+              Welcome back, {user?.fullName?.split(' ')[0]}!
             </h1>
             <p className="text-slate-600 mt-1">Here's your financial overview</p>
           </div>
@@ -38,17 +50,17 @@ const CustomerDashboard = () => {
           <div className="lg:col-span-7 space-y-8">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-semibold text-slate-900">My Packages</h2>
-              <Link to="/browse" className="px-4 py-2 border-2 cursor-pointer border-emerald-600 text-emerald-600 rounded-2xl hover:bg-emerald-50 transition-colors text-sm font-medium">
+              <a href="/browse" className="px-4 py-2 border-2 cursor-pointer border-emerald-600 text-emerald-600 rounded-2xl hover:bg-emerald-50 transition-colors text-sm font-medium">
                 View All
-              </Link>
+              </a>
             </div>
             <MyPackages />
           </div>
 
           {/* Right Column */}
           <div className="lg:col-span-4 space-y-9">
-            <AjoDailySavings />
-            <QuickActions />
+            <AjoDailySavings onOpenDailyModal={() => setShowDailyAjoModal(true)} />
+            {/* <QuickActions /> */}
             <NeedHelp />
           </div>
         </div>
@@ -64,6 +76,12 @@ const CustomerDashboard = () => {
           <RecentTransactions />
         </div>
       </div>
+
+      {/* Daily Ajo Setup Modal */}
+      <DailyAjoSetupModal
+        isOpen={showDailyAjoModal}
+        onClose={() => setShowDailyAjoModal(false)}
+      />
     </div>
   );
 };

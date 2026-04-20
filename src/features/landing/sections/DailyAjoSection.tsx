@@ -3,6 +3,7 @@ import { Check } from 'lucide-react';
 import img from '@/assets/dailyajo.jpg';
 import { Rocket, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
 const DailyAjoSection = () => {
   return (
     <section className="py-12 bg-[#f8fafc]">
@@ -11,7 +12,7 @@ const DailyAjoSection = () => {
           {/* Left Content */}
           <div className="space-y-6">
             {/* Badge */}
-            <span className="inline-block px-5 py-1.5  text-emerald-700 text-sm font-semibold rounded-full tracking-widest">
+            <span className="inline-block px-5 py-1.5 text-emerald-700 text-sm font-semibold rounded-full tracking-widest">
               TRADITIONAL AJO, DIGITAL EXPERIENCE
             </span>
 
@@ -71,8 +72,11 @@ const DailyAjoSection = () => {
               </div>
             </div>
 
-            {/* CTA Button */}
-            <Link to="/signup"  className="cursor-pointer mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-4 rounded-2xl flex items-center gap-2 transition-all active:scale-[0.985]">
+            {/* CTA Button - Now passes state to trigger modal */}
+            <Link
+              to="/dashboard/customer?openDailyAjo=true"
+              className="cursor-pointer mt-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-4 rounded-2xl flex items-center gap-2 transition-all active:scale-[0.985]"
+            >
               <span className="text-white">🤝</span>
               Start Saving
             </Link>
@@ -90,9 +94,10 @@ const DailyAjoSection = () => {
           </div>
         </div>
 
+        {/* Investment Opportunities section unchanged */}
         <div className="mt-30 bg-emerald-100/60 rounded-3xl p-10 md:p-14 text-center mx-auto max-w-[85%] border border-emerald-200">
           <div className="mx-auto w-14 h-14 rounded-2xl flex items-center justify-center mb-6">
-            <Rocket className='h-12 w-12 text-emerald-300'/>
+            <Rocket className='h-12 w-12 text-emerald-300' />
           </div>
 
           <h3 className="text-3xl font-bold tracking-tight text-slate-950 mb-4">

@@ -11,12 +11,16 @@ import Testimonies from './sections/Testimonies';
 import Faq from './sections/Faq';
 import ReadyToStartSaving from './sections/CtaSection';
 import Footer from './components/Footer';
+
+// Import the modal
+import Modal from '@/components/ui/GeneralModal';   // ← This is the most important line
+
 const LandingPage = () => {
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       <Navbar />
       <HeroSection />
-	    <HowItWorksSection />
+      <HowItWorksSection />
       <PackagesSection />
       <ProductsSection />
       <DailyAjoSection />
@@ -26,6 +30,9 @@ const LandingPage = () => {
       <Faq />
       <ReadyToStartSaving />
       <Footer />
+
+      {/* ←←← THIS MUST BE HERE */}
+      <Modal />
     </div>
   );
 };

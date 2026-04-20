@@ -44,6 +44,24 @@ const ProductCard = ({ item }: ProductCardProps) => {
 
   const isPackage = item.type === 'package';
 
+  const handleAction = () => {
+    if (isPackage) {
+      // TODO: Implement JOIN NOW flow (e.g., navigate or open join modal)
+      // For now, we'll show a success modal as placeholder
+      openModal({
+        type: 'success',
+        title: 'Joining Package',
+        message: `You have chosen to join ${item.title}. Redirecting to package details...`,
+      });
+
+      setTimeout(() => {
+        useModalStore.getState().closeModal();
+      }, 2500);
+    } else {
+      handleAddToCart();
+    }
+  };
+
   return (
     <>
       <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden hover:border-emerald-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full">
@@ -113,14 +131,14 @@ const ProductCard = ({ item }: ProductCardProps) => {
             {item.description || `Premium ${item.category.toLowerCase()} offering`}
           </div>
 
-          {/* Add to Cart Button */}
+          {/* Action Button - Only text changes based on type */}
           <div className="mt-auto pt-2">
             <button
-              onClick={handleAddToCart}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] text-white font-semibold py-3.5 rounded-2xl flex items-center justify-center gap-2 transition-all duration-200 text-sm sm:text-base"
+              onClick={handleAction}
+              className="w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] text-white font-semibold py-3.5 rounded-2xl flex items-center justify-center gap-2 transition-all duration-200 text-sm sm:text-base"
             >
               <ShoppingCart className="w-4 h-4" />
-              Add to Cart
+              {isPackage ? 'JOIN NOW' : 'ADD TO CART'}
             </button>
           </div>
         </div>
