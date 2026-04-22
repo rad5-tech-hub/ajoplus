@@ -35,6 +35,16 @@ const BrowsePage = () => {
       progress: 45,
       description: 'Complete food package with essential items - ₦1,000 daily from Jan. - Dec.',
       image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a9c?q=80&w=800',
+      packageItems: [
+        '1 Bag of Rice',
+        '1 Carton of Spaghetti',
+        '½ Carton of Tomatoes',
+        '1 Packet of Salt',
+        '1 Packet of Maggi',
+        '2 Liters of Groundnut Oil',
+        '1 Carton of Eggs',
+        '1 Kg of Garri',
+      ],
     },
     {
       id: 'p2',
@@ -46,6 +56,12 @@ const BrowsePage = () => {
       frequency: 'Daily',
       description: 'Essential rice and groceries package - ₦250 daily',
       image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?q=80&w=800',
+      packageItems: [
+        '2 Bags of Rice',
+        '1 Packet of Salt',
+        '1 Kg of Garri',
+        '1 Liter of Groundnut Oil',
+      ],
     },
     {
       id: 'p3',
@@ -57,6 +73,14 @@ const BrowsePage = () => {
       frequency: 'Daily',
       description: 'Garri and staples package - ₦250 daily',
       image: 'https://images.unsplash.com/photo-1626645739622-0c5c3b2b9c5e?q=80&w=800',
+      packageItems: [
+        '3 Kg of Garri',
+        '1 Carton of Spaghetti',
+        '1 Packet of Maggi',
+        '½ Carton of Tomatoes',
+        '1 Liter of Groundnut Oil',
+        '1 Packet of Salt',
+      ],
     },
     {
       id: 'p4',
@@ -68,6 +92,14 @@ const BrowsePage = () => {
       frequency: 'Daily',
       description: 'Household provisions - ₦250 daily',
       image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=800',
+      packageItems: [
+        '1 Bag of Rice',
+        '1 Carton of Spaghetti',
+        '1 Kg of Garri',
+        '1 Liter of Groundnut Oil',
+        '1 Packet of Salt',
+        '1 Carton of Eggs',
+      ],
     },
     {
       id: 'pr1',
@@ -179,7 +211,7 @@ const BrowsePage = () => {
         </p>
 
         {/* Products Grid - Uniform & Responsive */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 mt-8">
           {filteredItems.map((item) => (
             <ProductCard key={item.id} item={item} />
           ))}

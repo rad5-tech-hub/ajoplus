@@ -1,7 +1,7 @@
 // src/features/auth/SignupPage.tsx
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Mail, Phone, Lock, Eye, EyeOff, ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import { User, Mail, Phone, Lock, Eye, EyeOff, ArrowLeft, ArrowRight, Check, Building2 } from 'lucide-react';
 import { useAuthStore } from '@/app/store/authStore';
 
 type Step = 1 | 2 | 3;
@@ -19,6 +19,8 @@ const SignupPage = () => {
     fullName: '',
     email: '',
     phone: '',
+    accountNumber: '',
+    bankName: '',
     accountType: 'customer' as 'customer' | 'agent',
     password: '',
     confirmPassword: '',
@@ -34,6 +36,8 @@ const SignupPage = () => {
       if (!formData.email.trim() || !formData.email.includes('@'))
         return (setLocalError('Valid email is required'), false);
       if (!formData.phone.trim()) return (setLocalError('Phone number is required'), false);
+      if (!formData.accountNumber.trim()) return (setLocalError('Account number is required'), false);
+      if (!formData.bankName.trim()) return (setLocalError('Bank name is required'), false);
     }
 
     if (currentStep === 3) {
@@ -67,6 +71,8 @@ const SignupPage = () => {
         fullName: formData.fullName,
         email: formData.email,
         phone: formData.phone,
+        accountNumber: formData.accountNumber,
+        bankName: formData.bankName,
         accountType: formData.accountType,
         password: formData.password,
         referralCode: formData.referralCode || undefined,
@@ -171,6 +177,46 @@ const SignupPage = () => {
                       required
                     />
                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Bank Name *
+                  </label>
+                  <div className="relative">
+                    <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <select
+                      className="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 outline-none appearance-none"
+                      value={formData.bankName}
+                      onChange={(e) => setFormData({ ...formData, bankName: e.target.value })}
+                      required
+                    >
+                      <option value="">Select your bank</option>
+                      <option value="GTBank">Guaranty Trust Bank (GTBank)</option>
+                      <option value="Access">Access Bank</option>
+                      <option value="Zenith">Zenith Bank</option>
+                      <option value="First Bank">First Bank</option>
+                      <option value="UBA">United Bank for Africa (UBA)</option>
+                      <option value="Stanbic">Stanbic IBTC Bank</option>
+                      <option value="Ecobank">Ecobank</option>
+                      <option value="FCMB">FCMB</option>
+                      <option value="Other">Other Bank</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Account Number *
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Your bank account number"
+                    className="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 outline-none"
+                    value={formData.accountNumber}
+                    onChange={(e) => setFormData({ ...formData, accountNumber: e.target.value })}
+                    required
+                  />
                 </div>
 
                 <button

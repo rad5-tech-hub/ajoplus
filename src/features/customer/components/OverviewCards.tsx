@@ -1,9 +1,8 @@
 // src/features/customer/dashboard/components/OverviewCards.tsx
-import { PiggyBank, Clock, DollarSign, Package, TrendingUp } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { PiggyBank, Clock, DollarSign, Package } from 'lucide-react';
+// import { useNavigate } from 'react-router-dom';
 
 const OverviewCards = () => {
-  const navigate = useNavigate();
 
   // TODO: Replace with real data from Zustand / React Query later
   const totalSaved = 0;
@@ -93,27 +92,7 @@ const OverviewCards = () => {
         </div>
       </div>
 
-      {/* Global Empty State Message */}
-      {isEmpty && (
-        <div className="bg-white border border-slate-200 rounded-3xl p-8 text-center">
-          <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-3xl flex items-center justify-center mb-5">
-            <TrendingUp className="w-9 h-9 text-emerald-600" />
-          </div>
 
-          <h3 className="text-xl font-semibold text-slate-900 mb-2">Get Started with Savings</h3>
-          <p className="text-slate-600 max-w-md mx-auto mb-6">
-            Join Ajo packages, start daily savings, or add products to your cart to see your financial overview here.
-          </p>
-
-          <button
-            onClick={() => navigate('/browse')}
-            className="inline-flex items-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-4 rounded-2xl transition-all active:scale-[0.985]"
-          >
-            Browse Packages & Products
-            <Package className="w-5 h-5" />
-          </button>
-        </div>
-      )}
     </div>
   );
 };

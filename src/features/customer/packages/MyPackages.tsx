@@ -1,6 +1,7 @@
 // src/features/customer/dashboard/components/MyPackages.tsx
 import { Calendar, ChevronRight, Package as PackageIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { usePackageStore } from '@/app/store/PackageStore';
 
 interface Package {
   id: string;
@@ -18,10 +19,22 @@ interface Package {
 
 const MyPackages = () => {
   const navigate = useNavigate();
+  const joinedPackages = usePackageStore((state) => state.getPackages());
 
-  const packages: Package[] = [
-
-  ];
+  // Transform JoinedPackage to Package format for display
+  const packages: Package[] = joinedPackages.map((pkg) => ({
+    id: pkg.id,
+    title: pkg.title,
+    subtitle: pkg.description,
+    status: pkg.status,
+    totalPaid: pkg.totalPaid,
+    remaining: pkg.remaining,
+    progress: pkg.progress,
+    duration: pkg.duration,
+    nextDue: pkg.nextDue,
+    amount: `₦${pkg.price.toLocaleString()}`,
+    frequency: pkg.frequency,
+  }));
 
   const handlePackageClick = (packageId: string) => {
     navigate(`/dashboard/customer/package/${packageId}`);

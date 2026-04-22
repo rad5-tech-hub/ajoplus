@@ -19,6 +19,8 @@ export interface SignupData {
   fullName: string;
   email: string;
   phone: string;
+  accountNumber: string;
+  bankName: string;
   accountType: 'customer' | 'agent';
   password: string;
   referralCode?: string;

@@ -3,14 +3,16 @@ import { useState } from 'react';
 import AgentNavbar from '../components/AgentNavbar';
 import OverviewCards from '../components/OverviewCards';
 import PackageManagement from '../components/PackageManagement';
+import ProductManagement from '../components/ProductManagement';
 import PaymentApprovals from '../components/PaymentApprovals';
 import WithdrawalRequests from '../components/WithdrawalRequests';
 import PlatformSettings from '../components/PlatformSettings';
 
-type Tab = 'packages' | 'approvals' | 'withdrawals' | 'settings';
+type Tab = 'packages' | 'products' | 'approvals' | 'withdrawals' | 'settings';
 
 const TABS: { key: Tab; label: string; shortLabel: string }[] = [
   { key: 'packages',    label: 'Package Management', shortLabel: 'Packages'   },
+  { key: 'products',    label: 'Product Management', shortLabel: 'Products'   },
   { key: 'approvals',   label: 'Payment Approvals',  shortLabel: 'Approvals'  },
   { key: 'withdrawals', label: 'Withdrawals',         shortLabel: 'Withdrawals'},
   { key: 'settings',    label: 'Settings',            shortLabel: 'Settings'   },
@@ -68,6 +70,7 @@ const AdminDashboard = () => {
         {/* Tab Content */}
         <div>
           {activeTab === 'packages'    && <PackageManagement />}
+          {activeTab === 'products'    && <ProductManagement />}
           {activeTab === 'approvals'   && <PaymentApprovals />}
           {activeTab === 'withdrawals' && <WithdrawalRequests />}
           {activeTab === 'settings'    && <PlatformSettings />}

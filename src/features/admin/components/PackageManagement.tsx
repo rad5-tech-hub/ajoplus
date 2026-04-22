@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import CreatePackageModal from '@/components/ui/CreatePackageModal';
+import CategoryManagement from '@/components/ui/CategoryManagement';
 
 const packages = [
   {
@@ -54,18 +55,27 @@ const packages = [
 
 const PackageManagement = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between gap-4 mb-6 sm:mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
         <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">All Packages</h2>
-        <button 
-          onClick={() => setIsCreateModalOpen(true)}
-          className="cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white px-4 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base whitespace-nowrap flex items-center gap-1.5"
-        >
-          + <span className="xs:inline">Create</span> Package
-        </button>
+        <div className="flex gap-3 flex-wrap">
+          <button 
+            onClick={() => setIsCategoryModalOpen(true)}
+            className="cursor-pointer bg-slate-200 hover:bg-slate-300 active:scale-95 transition-all text-slate-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base whitespace-nowrap"
+          >
+            📁 Manage Categories
+          </button>
+          <button 
+            onClick={() => setIsCreateModalOpen(true)}
+            className="cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white px-4 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base whitespace-nowrap flex items-center gap-1.5"
+          >
+            + <span className="xs:inline">Create</span> Package
+          </button>
+        </div>
       </div>
 
       {/* ── Desktop Table (md+) ── */}
@@ -148,6 +158,12 @@ const PackageManagement = () => {
       <CreatePackageModal 
         isOpen={isCreateModalOpen} 
         onClose={() => setIsCreateModalOpen(false)} 
+      />
+
+      {/* Category Management Modal */}
+      <CategoryManagement 
+        isOpen={isCategoryModalOpen} 
+        onClose={() => setIsCategoryModalOpen(false)} 
       />
     </div>
   );

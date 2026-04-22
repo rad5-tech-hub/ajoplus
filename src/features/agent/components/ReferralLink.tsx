@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link as LinkIcon, Copy, Share2, Check } from 'lucide-react';
 
 const ReferralLink = () => {
-  const referralUrl = 'https://ajoplus.com/ref/agent1';
+  const referralUrl = 'AGENT-ADEBAYO';
   const [copied, setCopied] = useState(false);
 
   const copyLink = async () => {
@@ -17,12 +17,12 @@ const ReferralLink = () => {
       {/* Header */}
       <div className="flex items-center gap-2.5 sm:gap-3 mb-4 sm:mb-5 lg:mb-6">
         <LinkIcon className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
-        <h3 className="text-base sm:text-lg lg:text-xl font-semibold">Your Referral Link</h3>
+        <h3 className="text-base sm:text-lg lg:text-xl font-semibold">Your Referral Code</h3>
       </div>
 
       {/* Description */}
       <p className="text-emerald-100 text-sm sm:text-[15px] leading-relaxed mb-4 sm:mb-5 lg:mb-6">
-        Share this link with friends and family. You earn{' '}
+        Share this code with friends and family. You earn{' '}
         <span className="font-semibold text-white">₦4,000</span> for every person
         who signs up and buys a package!
       </p>
@@ -41,7 +41,7 @@ const ReferralLink = () => {
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <button
           onClick={copyLink}
-          className="bg-emerald-950 hover:bg-black text-white py-3 sm:py-3.5 lg:py-4 px-3 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] font-semibold flex items-center justify-center gap-2 transition-all"
+          className="bg-emerald-950 cursor-pointer hover:bg-black text-white py-3 sm:py-3.5 lg:py-4 px-3 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] font-semibold flex items-center justify-center gap-2 transition-all"
         >
           {copied ? (
             <>
@@ -51,13 +51,13 @@ const ReferralLink = () => {
             </>
           ) : (
             <>
-              <Copy className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+              <Copy className=" cursor-pointer w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
               <span>Copy Link</span>
             </>
           )}
         </button>
 
-        <button className="bg-emerald-950 hover:bg-black text-white py-3 sm:py-3.5 lg:py-4 px-3 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] font-semibold flex items-center justify-center gap-2 transition-all">
+        <button className="bg-emerald-950 cursor-pointer hover:bg-black text-white py-3 sm:py-3.5 lg:py-4 px-3 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] font-semibold flex items-center justify-center gap-2 transition-all">
           <Share2 className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
           <span>Share Link</span>
         </button>

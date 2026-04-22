@@ -1,7 +1,7 @@
 // src/features/agent/dashboard/AgentDashboard.tsx
 import AgentNavbar from '../components/AgentNavbar';
 import OverviewCards from '../components/OverviewCards';
-import ReferralLink from '../components/ReferralLink';
+// import ReferralLink from '../components/ReferralLink';
 import ReferralCode from '../components/ReferralCode';
 import ReferredUsers from '../components/ReferredUsers';
 import EarningsBreakdown from '../components/EarningsBreakdown';
@@ -27,7 +27,7 @@ const AgentDashboard = () => {
         <div className="grid lg:grid-cols-12 gap-8 mt-12">
           {/* Left Column */}
           <div className="lg:col-span-8 space-y-8">
-            <ReferralLink />
+            {/* <ReferralLink /> */}
             <ReferredUsers />
           </div>
 
@@ -35,7 +35,7 @@ const AgentDashboard = () => {
           <div className="lg:col-span-4 space-y-8">
             <ReferralCode />
             <EarningsBreakdown />
-            <CommissionStructure/>
+            <CommissionStructure />
             <PerformanceTips />
             <AgentSince />
           </div>

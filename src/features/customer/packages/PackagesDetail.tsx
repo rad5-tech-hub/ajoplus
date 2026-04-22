@@ -2,14 +2,33 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, CheckCircle, Clock, CreditCard } from 'lucide-react';
 import UploadReceiptModal from '@/components/ui/UploadReceiptModal';
+import { usePackageStore } from '@/app/store/PackageStore';
 import { useState } from 'react';
 
 const PackageDetail = () => {
   const { packageId } = useParams<{ packageId: string }>();
   const navigate = useNavigate();
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const getPackageById = usePackageStore((state) => state.getPackageById);
+  
+  const joinedPackage = getPackageById(packageId || '');
 
-  const packageData = {
+  // Fallback to default data if package not found
+  const packageData = joinedPackage ? {
+    id: joinedPackage.id,
+    title: joinedPackage.title,
+    subtitle: joinedPackage.description,
+    status: joinedPackage.status,
+    totalAmount: `₦${joinedPackage.price.toLocaleString()}`,
+    category: joinedPackage.category,
+    totalPaid: joinedPackage.totalPaid,
+    remaining: joinedPackage.remaining,
+    perPayment: `₦${(joinedPackage.price / 26).toLocaleString('en-US', { maximumFractionDigits: 2 })}`,
+    duration: joinedPackage.duration,
+    frequency: joinedPackage.frequency,
+    nextDue: joinedPackage.nextDue,
+    progress: joinedPackage.progress,
+  } : {
     id: packageId,
     title: 'Smart Phone Package',
     subtitle: 'Save weekly and get the latest smartphone',
@@ -69,17 +88,21 @@ const PackageDetail = () => {
           <h3 className="font-semibold text-sm sm:text-base">Package Items</h3>
         </div>
         <div className="space-y-3 sm:space-y-4">
-          {[
+          {(joinedPackage?.packageItems || [
             { n: 1, name: 'Bag of Rice',   detail: '50kg'     },
             { n: 2, name: 'Cooking Oil',   detail: '5 liters' },
-          ].map(({ n, name, detail }) => (
-            <div key={n} className="flex gap-2.5 sm:gap-3">
+          ]).map((item, index) => (
+            <div key={typeof item === 'string' ? index : item.n} className="flex gap-2.5 sm:gap-3">
               <div className="w-6 h-6 sm:w-7 sm:h-7 bg-emerald-100 text-emerald-700 rounded-lg sm:rounded-2xl flex items-center justify-center text-xs font-medium shrink-0">
-                {n}
+                {index + 1}
               </div>
               <div>
-                <p className="font-medium text-slate-900 text-sm">{name}</p>
-                <p className="text-xs text-slate-500">{detail}</p>
+                <p className="font-medium text-slate-900 text-sm">
+                  {typeof item === 'string' ? item : item.name}
+                </p>
+                {typeof item === 'object' && item.detail && (
+                  <p className="text-xs text-slate-500">{item.detail}</p>
+                )}
               </div>
             </div>
           ))}
