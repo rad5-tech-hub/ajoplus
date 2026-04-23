@@ -224,7 +224,7 @@ const PaymentApprovals = () => {
         onClose={() => setShowRejectModal(false)}
         onConfirm={handleRejectConfirm}
         customerName={selectedItem?.name || ''}
-        amount={selectedItem?.amount || ''}
+        amount={selectedItem ? String(selectedItem.amount) : ''}
       />
 
       <PaymentApprovedModal

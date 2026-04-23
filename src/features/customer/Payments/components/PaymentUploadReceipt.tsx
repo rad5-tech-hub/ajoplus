@@ -28,7 +28,7 @@ const PaymentUploadReceipt = ({
   amountPaid, 
   setAmountPaid,
   packageId,
-  packageName = "Smart Phone Package",
+//  _packageName = "Smart Phone Package",
   expectedAmount = 37500,
   isCartPayment = false,
   cartItems = []

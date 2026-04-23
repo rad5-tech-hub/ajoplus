@@ -3,6 +3,9 @@ import { Trash2, Edit2, AlertTriangle } from 'lucide-react';
 import CreateProductModal from '@/components/ui/CreateProductModal';
 import CategoryManagement from '@/components/ui/CategoryManagement';
 
+// edit functionalities were commented till api Implementation is done to avoid confusion during UI testing. The code is still present and can be uncommented when needed.
+
+
 interface Product {
   id: string;
   name: string;
@@ -61,7 +64,7 @@ const ProductManagement = () => {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  // const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   const getStatusBadgeColor = (status: string) => {
@@ -77,10 +80,10 @@ const ProductManagement = () => {
     }
   };
 
-  const handleEdit = (product: Product) => {
-    setEditingProduct(product);
-    setIsCreateModalOpen(true);
-  };
+  // const handleEdit = (product: Product) => {
+  //   // setEditingProduct(product);
+  //   setIsCreateModalOpen(true);
+  // };
 
   const handleDelete = (id: string) => {
     setProducts(products.filter(p => p.id !== id));
@@ -89,7 +92,7 @@ const ProductManagement = () => {
 
   const handleCloseModal = () => {
     setIsCreateModalOpen(false);
-    setEditingProduct(null);
+    // setEditingProduct(null);
   };
 
   return (
@@ -156,7 +159,7 @@ const ProductManagement = () => {
                 </td>
                 <td className="py-5 px-6 lg:px-8 text-right whitespace-nowrap">
                   <button
-                    onClick={() => handleEdit(product)}
+                    // onClick={() => handleEdit(product)}
                     className="text-emerald-600 hover:text-emerald-700 hover:underline cursor-pointer mr-4 text-sm font-medium transition-colors inline-flex items-center gap-1"
                   >
                     <Edit2 className="w-3 h-3" /> Edit
@@ -211,7 +214,7 @@ const ProductManagement = () => {
                 </div>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => handleEdit(product)}
+                    // onClick={() => handleEdit(product)}
                     className="px-3 py-2 text-emerald-600 hover:bg-emerald-50 rounded-xl text-sm font-medium transition-colors inline-flex items-center gap-1"
                   >
                     <Edit2 className="w-4 h-4" /> Edit

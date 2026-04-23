@@ -4,6 +4,7 @@ import { useState } from 'react';
 interface CreatePackageModalProps {
   isOpen: boolean;
   onClose: () => void;
+  // editingPackage?: Package | null; 
 }
 
 const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {

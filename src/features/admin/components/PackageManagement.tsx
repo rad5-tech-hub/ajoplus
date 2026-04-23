@@ -3,6 +3,9 @@ import { Trash2, Edit2, AlertTriangle } from 'lucide-react';
 import CreatePackageModal from '@/components/ui/CreatePackageModal';
 import CategoryManagement from '@/components/ui/CategoryManagement';
 
+// edit functionalities were commented till api Implementation is done to avoid confusion during UI testing. The code is still present and can be uncommented when needed.
+
+
 interface Package {
   id: string;
   name: string;
@@ -74,13 +77,13 @@ const PackageManagement = () => {
   const [packages, setPackages] = useState<Package[]>(initialPackages);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-  const [editingPackage, setEditingPackage] = useState<Package | null>(null);
+  // const [editingPackage, setEditingPackage] = useState<Package | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
-  const handleEdit = (pkg: Package) => {
-    setEditingPackage(pkg);
-    setIsCreateModalOpen(true);
-  };
+  // const handleEdit = (pkg: Package) => {
+  //   // setEditingPackage(pkg);
+  //   setIsCreateModalOpen(true);
+  // };
 
   const handleDelete = (id: string) => {
     setPackages(packages.filter(p => p.id !== id));
@@ -89,7 +92,7 @@ const PackageManagement = () => {
 
   const handleCloseModal = () => {
     setIsCreateModalOpen(false);
-    setEditingPackage(null);
+    // setEditingPackage(null);
   };
 
   return (
@@ -98,13 +101,13 @@ const PackageManagement = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
         <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">All Packages</h2>
         <div className="flex gap-3 flex-wrap">
-          <button 
+          <button
             onClick={() => setIsCategoryModalOpen(true)}
             className="cursor-pointer bg-slate-200 hover:bg-slate-300 active:scale-95 transition-all text-slate-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base whitespace-nowrap"
           >
             📁 Manage Categories
           </button>
-          <button 
+          <button
             onClick={() => setIsCreateModalOpen(true)}
             className="cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white px-4 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base whitespace-nowrap flex items-center gap-1.5"
           >
@@ -143,7 +146,7 @@ const PackageManagement = () => {
                 <td className="py-5 px-4 text-slate-600 text-sm">{pkg.frequency}</td>
                 <td className="py-5 px-6 lg:px-8 text-right whitespace-nowrap">
                   <button
-                    onClick={() => handleEdit(pkg)}
+                    // onClick={() => handleEdit(pkg)}
                     className="text-emerald-600 hover:text-emerald-700 hover:underline cursor-pointer mr-4 text-sm font-medium transition-colors inline-flex items-center gap-1"
                   >
                     <Edit2 className="w-3 h-3" /> Edit
@@ -188,7 +191,7 @@ const PackageManagement = () => {
             {/* Actions */}
             <div className="flex gap-3 border-t border-slate-100 pt-3">
               <button
-                onClick={() => handleEdit(pkg)}
+                // onClick={() => handleEdit(pkg)}
                 className="flex-1 text-center text-emerald-600 text-sm font-medium py-1.5 rounded-lg hover:bg-emerald-50 transition-colors inline-flex items-center justify-center gap-1"
               >
                 <Edit2 className="w-4 h-4" /> Edit
@@ -204,17 +207,15 @@ const PackageManagement = () => {
           </div>
         ))}
       </div>
-
-      {/* Create New Package Modal */}
-      <CreatePackageModal 
-        isOpen={isCreateModalOpen} 
-        onClose={handleCloseModal} 
+      <CreatePackageModal
+        isOpen={isCreateModalOpen}
+        onClose={handleCloseModal}
+        // editingPackage={editingPackage}
       />
 
-      {/* Category Management Modal */}
-      <CategoryManagement 
-        isOpen={isCategoryModalOpen} 
-        onClose={() => setIsCategoryModalOpen(false)} 
+      <CategoryManagement
+        isOpen={isCategoryModalOpen}
+        onClose={() => setIsCategoryModalOpen(false)}
       />
 
       {/* Delete Confirmation Modal */}
