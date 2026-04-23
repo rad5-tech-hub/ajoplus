@@ -1,25 +1,24 @@
 // src/features/customer/payments/components/PaymentBankDetails.tsx
 import { Copy, Info } from 'lucide-react';
 import { useState } from 'react';
+import { formatCurrency, convertToUSD } from '@/lib/currency';
 
 interface PaymentBankDetailsProps {
   onNext: () => void;
+  totalAmount?: number;
 }
 
-const PaymentBankDetails = ({ onNext }: PaymentBankDetailsProps) => {
+const PaymentBankDetails = ({ onNext, totalAmount = 37500 }: PaymentBankDetailsProps) => {
   const [showToast, setShowToast] = useState(false);
-//   const [copiedText, setCopiedText] = useState("");
 
   const bankDetails = {
     bankName: "GTBank",
     accountNumber: "0123456789",
     accountName: "AjoPlus Technologies Ltd",
-    amount: "₦37,500",
   };
 
   const copyToClipboard = (text: string,) => {
     navigator.clipboard.writeText(text);
-    // setCopiedText(label);
     setShowToast(true);
     
     setTimeout(() => setShowToast(false), 2000);
@@ -35,11 +34,11 @@ const PaymentBankDetails = ({ onNext }: PaymentBankDetailsProps) => {
         </div>
       )}
 
-      {/* Amount Card - unchanged */}
+      {/* Amount Card */}
       <div className="bg-emerald-600 text-white rounded-3xl p-8 text-center">
         <p className="text-emerald-100 text-sm font-medium tracking-wider">Amount to Pay</p>
-        <p className="text-5xl font-bold mt-3 mb-1">{bankDetails.amount}</p>
-        <p className="text-emerald-100">Weekly Payment</p>
+        <p className="text-4xl sm:text-5xl font-bold mt-3 mb-2">{formatCurrency(totalAmount, 'NGN')}</p>
+        <p className="text-emerald-100 text-lg">{formatCurrency(convertToUSD(totalAmount), 'USD')}</p>
       </div>
  {/* Bank Details Cards */}
       <div className="bg-white rounded-3xl shadow-sm overflow-hidden border border-slate-100">

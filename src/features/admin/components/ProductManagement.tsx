@@ -1,8 +1,20 @@
 import { useState } from 'react';
+import { Trash2, Edit2, AlertTriangle } from 'lucide-react';
 import CreateProductModal from '@/components/ui/CreateProductModal';
 import CategoryManagement from '@/components/ui/CategoryManagement';
 
-const products = [
+interface Product {
+  id: string;
+  name: string;
+  desc: string;
+  category: string;
+  price: string;
+  quantity: number;
+  status: string;
+  image: string;
+}
+
+const initialProducts: Product[] = [
   {
     id: '1',
     name: 'Premium Bag of Rice (50kg)',
@@ -46,8 +58,11 @@ const products = [
 ];
 
 const ProductManagement = () => {
+  const [products, setProducts] = useState<Product[]>(initialProducts);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
@@ -60,6 +75,21 @@ const ProductManagement = () => {
       default:
         return 'bg-slate-100 text-slate-700';
     }
+  };
+
+  const handleEdit = (product: Product) => {
+    setEditingProduct(product);
+    setIsCreateModalOpen(true);
+  };
+
+  const handleDelete = (id: string) => {
+    setProducts(products.filter(p => p.id !== id));
+    setDeleteConfirmId(null);
+  };
+
+  const handleCloseModal = () => {
+    setIsCreateModalOpen(false);
+    setEditingProduct(null);
   };
 
   return (
@@ -125,8 +155,18 @@ const ProductManagement = () => {
                   </span>
                 </td>
                 <td className="py-5 px-6 lg:px-8 text-right whitespace-nowrap">
-                  <span className="text-emerald-600 hover:underline cursor-pointer mr-4 text-sm">Edit</span>
-                  <span className="text-red-500 hover:underline cursor-pointer text-sm">Delete</span>
+                  <button
+                    onClick={() => handleEdit(product)}
+                    className="text-emerald-600 hover:text-emerald-700 hover:underline cursor-pointer mr-4 text-sm font-medium transition-colors inline-flex items-center gap-1"
+                  >
+                    <Edit2 className="w-3 h-3" /> Edit
+                  </button>
+                  <button
+                    onClick={() => setDeleteConfirmId(product.id)}
+                    className="text-red-500 hover:text-red-700 hover:underline cursor-pointer text-sm font-medium transition-colors inline-flex items-center gap-1"
+                  >
+                    <Trash2 className="w-3 h-3" /> Delete
+                  </button>
                 </td>
               </tr>
             ))}
@@ -170,11 +210,17 @@ const ProductManagement = () => {
                   <p className="text-xs text-slate-500 mt-1">{product.quantity} units</p>
                 </div>
                 <div className="flex gap-2">
-                  <button className="px-3 py-2 text-emerald-600 hover:bg-emerald-50 rounded-xl text-sm font-medium transition-colors">
-                    Edit
+                  <button
+                    onClick={() => handleEdit(product)}
+                    className="px-3 py-2 text-emerald-600 hover:bg-emerald-50 rounded-xl text-sm font-medium transition-colors inline-flex items-center gap-1"
+                  >
+                    <Edit2 className="w-4 h-4" /> Edit
                   </button>
-                  <button className="px-3 py-2 text-red-500 hover:bg-red-50 rounded-xl text-sm font-medium transition-colors">
-                    Delete
+                  <button
+                    onClick={() => setDeleteConfirmId(product.id)}
+                    className="px-3 py-2 text-red-500 hover:bg-red-50 rounded-xl text-sm font-medium transition-colors inline-flex items-center gap-1"
+                  >
+                    <Trash2 className="w-4 h-4" /> Delete
                   </button>
                 </div>
               </div>
@@ -184,8 +230,39 @@ const ProductManagement = () => {
       </div>
 
       {/* Modals */}
-      <CreateProductModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} />
+      <CreateProductModal isOpen={isCreateModalOpen} onClose={handleCloseModal} />
       <CategoryManagement isOpen={isCategoryModalOpen} onClose={() => setIsCategoryModalOpen(false)} />
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmId && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full">
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mb-4 mx-auto">
+              <AlertTriangle className="w-6 h-6 text-red-600" />
+            </div>
+            <h3 className="text-xl font-bold text-center text-slate-900 mb-2">
+              Delete Product?
+            </h3>
+            <p className="text-center text-slate-600 mb-6">
+              Are you sure you want to delete "{products.find(p => p.id === deleteConfirmId)?.name}"? This action cannot be undone.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setDeleteConfirmId(null)}
+                className="flex-1 px-4 py-3 rounded-xl border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDelete(deleteConfirmId)}
+                className="flex-1 px-4 py-3 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

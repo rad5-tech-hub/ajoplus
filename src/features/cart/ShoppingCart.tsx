@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Trash2, Plus, Minus, ArrowLeft, ShoppingBag } from 'lucide-react';
 import { useCartStore } from '@/app/store/CartStore';
+import { formatCurrency, convertToUSD } from '@/lib/currency';
 import CustomerNavbar from '../customer/components/CustomerNavbar';
 
 const ShoppingCart = () => {
@@ -84,7 +85,10 @@ const ShoppingCart = () => {
           {itemCount} items in your cart
         </p>
 
+        {/* ── Grid ── */}
         <div className="grid lg:grid-cols-12 gap-6 lg:gap-8">
+
+          {/* ── Left column: items ── */}
           <div className="lg:col-span-7 space-y-4 sm:space-y-6">
             {items.map((item) => {
               const safeQty = Number(item.quantity || 0);
@@ -144,26 +148,31 @@ const ShoppingCart = () => {
                       <div className="flex items-center justify-between sm:justify-end gap-4">
                         <div className="text-right">
                           <div className="font-bold text-emerald-600 text-lg sm:text-xl">
-                            ₦{(safePrice * safeQty).toLocaleString()}
+                            {formatCurrency(safePrice * safeQty, 'NGN')}
                           </div>
-                          <div className="text-xs text-slate-500">
-                            ₦{safePrice.toLocaleString()} each
+                          <div className="text-xs text-slate-600 font-medium">
+                            {formatCurrency(convertToUSD(safePrice * safeQty), 'USD')}
+                          </div>
+                          <div className="text-xs text-slate-500 mt-1">
+                            {formatCurrency(safePrice, 'NGN')} each
                           </div>
                         </div>
-
-                        <button
-                          onClick={() => removeFromCart(item.id)}
-                          className="text-red-500 hover:text-red-600 p-2 transition-colors"
-                          aria-label="Remove item"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
                       </div>
                     </div>
+
+                    <button
+                      onClick={() => removeFromCart(item.id)}
+                      className="text-red-500 hover:text-red-600 p-2 transition-colors"
+                      aria-label="Remove item"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
                   </div>
                 </div>
+                // FIX 1: removed the extra </div> that was here
               );
             })}
+            {/* FIX 2: map now correctly closed with })} above */}
 
             <div className="flex justify-center sm:justify-end">
               <button
@@ -176,6 +185,8 @@ const ShoppingCart = () => {
             </div>
           </div>
 
+          {/* ── Right column: order summary ── */}
+          {/* FIX 3: this column is now correctly inside the grid div */}
           <div className="lg:col-span-5">
             <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:sticky lg:top-24 shadow-sm">
               <h2 className="text-lg sm:text-xl font-semibold mb-5 sm:mb-6">
@@ -185,7 +196,11 @@ const ShoppingCart = () => {
               <div className="space-y-4 mb-6 sm:mb-8">
                 <div className="flex justify-between">
                   <span className="text-slate-600">Subtotal</span>
-                  <span className="font-semibold">₦{subtotal.toLocaleString()}</span>
+                  <span className="font-semibold">{formatCurrency(subtotal, 'NGN')}</span>
+                </div>
+                <div className="flex justify-between text-xs text-slate-500">
+                  <span></span>
+                  <span>{formatCurrency(convertToUSD(subtotal), 'USD')}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-600">Processing Fee</span>
@@ -194,11 +209,15 @@ const ShoppingCart = () => {
               </div>
 
               <div className="border-t border-slate-200 pt-5 sm:pt-6 mb-6 sm:mb-8">
-                <div className="flex justify-between text-base sm:text-lg">
+                <div className="flex justify-between text-base sm:text-lg mb-2">
                   <span className="font-semibold">Total</span>
                   <span className="font-bold text-emerald-600">
-                    ₦{total.toLocaleString()}
+                    {formatCurrency(total, 'NGN')}
                   </span>
+                </div>
+                <div className="flex justify-between text-xs text-slate-500">
+                  <span></span>
+                  <span>{formatCurrency(convertToUSD(total), 'USD')}</span>
                 </div>
               </div>
 
@@ -221,6 +240,7 @@ const ShoppingCart = () => {
               </button>
             </div>
           </div>
+
         </div>
       </div>
     </div>

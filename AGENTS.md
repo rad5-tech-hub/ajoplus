@@ -346,3 +346,8 @@ export const useMyStore = create<StoreState>()(
 - Review existing features in `src/features/` for patterns
 - Run `npm run lint` to catch style issues
 - Use TypeScript compiler: `tsc --noEmit` for type checking
+
+Blazing speed & efficiency (even on 2G/3G and low-end Android devices).
+Pixel-perfect fidelity to provided Figma designs when available (exact colors, spacing, typography, micro-interactions).
+Rock-solid reliability (zero random bugs, zero console errors, production-ready from day one).
+Scalability & maintainability (professional component-based architecture that can grow without refactoring).
