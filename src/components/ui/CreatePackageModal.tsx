@@ -6,10 +6,26 @@ interface CreatePackageModalProps {
   onClose: () => void;
 }
 
+interface PackageItem {
+  id: number;
+  name: string;
+  quantity: string;
+}
+
 const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
-  const [packageItems, setPackageItems] = useState([
+  const [packageItems, setPackageItems] = useState<PackageItem[]>([
     { id: 1, name: '', quantity: '' }
   ]);
+
+  // Form state (this was missing!)
+  const [formData, setFormData] = useState({
+    productName: '',
+    category: '',
+    paymentFrequency: 'Monthly',
+    price: '',
+    duration: '',
+    description: '',
+  });
 
   const addItem = () => {
     setPackageItems([...packageItems, { id: Date.now(), name: '', quantity: '' }]);
@@ -26,13 +42,31 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
     ));
   };
 
- const handleSubmit = () => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = () => {
     if (!formData.productName.trim() || !formData.category || !formData.price) {
       alert('Please fill in all required fields');
       return;
     }
-    alert('Product created successfully! (Mock)');
+
+    console.log('Creating package:', { ...formData, items: packageItems });
+    alert('Package created successfully! (Mock)');
     onClose();
+
+    // Reset form after submit (optional)
+    setFormData({
+      productName: '',
+      category: '',
+      paymentFrequency: 'Monthly',
+      price: '',
+      duration: '',
+      description: '',
+    });
+    setPackageItems([{ id: 1, name: '', quantity: '' }]);
   };
 
   if (!isOpen) return null;
@@ -53,10 +87,7 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
               Create New Package
             </h2>
           </div>
-          <button
-            onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 transition-colors"
-          >
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">
             <X className="w-5 h-5 md:w-6 md:h-6" />
           </button>
         </div>
@@ -71,8 +102,11 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                 Package Name <span className="text-red-500">*</span>
               </label>
               <input
+                name="productName"
                 type="text"
                 placeholder="e.g., Special Food Package"
+                value={formData.productName}
+                onChange={handleInputChange}
                 className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600"
               />
             </div>
@@ -81,12 +115,18 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
                 Category <span className="text-red-500">*</span>
               </label>
-              <select className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white">
-                <option>Food & Groceries</option>
-                <option>Fashion</option>
-                <option>Electronics</option>
-                <option>Events</option>
-                <option>Others</option>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white"
+              >
+                <option value="">Select category</option>
+                <option value="Food & Groceries">Food & Groceries</option>
+                <option value="Fashion">Fashion</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Events">Events</option>
+                <option value="Others">Others</option>
               </select>
             </div>
 
@@ -94,10 +134,15 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
                 Payment Frequency <span className="text-red-500">*</span>
               </label>
-              <select className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white">
-                <option>Daily</option>
-                <option>Weekly</option>
-                <option>Monthly</option>
+              <select
+                name="paymentFrequency"
+                value={formData.paymentFrequency}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white"
+              >
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Monthly">Monthly</option>
               </select>
             </div>
           </div>
@@ -109,8 +154,11 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                 Total Price (₦) <span className="text-red-500">*</span>
               </label>
               <input
+                name="price"
                 type="text"
                 placeholder="e.g., 350000"
+                value={formData.price}
+                onChange={handleInputChange}
                 className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600"
               />
             </div>
@@ -120,8 +168,11 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                 Duration <span className="text-red-500">*</span>
               </label>
               <input
+                name="duration"
                 type="text"
                 placeholder="e.g., 12 months"
+                value={formData.duration}
+                onChange={handleInputChange}
                 className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600"
               />
             </div>
@@ -130,8 +181,11 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">Description</label>
             <textarea
+              name="description"
               placeholder="Brief description of the package..."
               rows={4}
+              value={formData.description}
+              onChange={handleInputChange}
               className="w-full px-4 py-3 text-base border border-slate-200 rounded-3xl focus:outline-none focus:border-emerald-600 resize-y"
             />
           </div>
@@ -184,18 +238,18 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
         </div>
 
         {/* Footer Buttons */}
-         <div className="border-t cursor-pointer border-slate-100 p-5 md:p-6 sm:block md:flex gap-3 md:gap-4">
+        <div className="border-t border-slate-100 p-5 md:p-6 flex flex-col sm:flex-row gap-3 md:gap-4">
           <button
             onClick={onClose}
-            className="md:flex-1 w-full mb-2 md:mb-0 py-4 border-2 border-emerald-600 text-emerald-600 font-semibold rounded-2xl hover:bg-emerald-50 transition-colors text-base"
+            className="flex-1 py-4 border-2 border-emerald-600 text-emerald-600 font-semibold rounded-2xl hover:bg-emerald-50 transition-colors text-base"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className="md:flex-1 py-4 w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] transition-all text-white font-semibold rounded-2xl flex items-center justify-center gap-2 text-base"
+            className="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] transition-all text-white font-semibold rounded-2xl flex items-center justify-center gap-2 text-base"
           >
-            <Plus className="w-5 h-5" /> Create Product
+            <Plus className="w-5 h-5" /> Create Package
           </button>
         </div>
       </div>
