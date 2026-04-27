@@ -1,43 +1,145 @@
 // src/app/router/AppRouter.tsx
-import { Routes, Route } from 'react-router-dom';
-import LandingPage from '@/features/landing/LandingPage';
-import LoginPage from '@/features/auth/LoginPage';
-import SignupPage from '@/features/auth/SignUpPage';
+import { Routes, Route, } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import ProtectedRoute from './ProtectedRoute';
-import CustomerDashboard from '@/features/customer/dashboard/CustomerDashboard';
-import AgentDashboard from '@/features/agent/dashboard/AgentDashboard';
-import AdminDashboard from '@/features/admin/dashboard/AdminDashboard';
-import PackageDetail from '@/features/customer/packages/PackagesDetail';
-import MakePayment from '@/features/customer/Payments/MakePayment';
-import BrowsePage from '@/features/browse/BrowsePage';
-import ShoppingCart from '@/features/cart/ShoppingCart';
-import Checkout from '@/features/cart/Checkout';
-import PaymentSuccess from '@/components/ui/PaymentSuccess';
+import RouteSuspenseFallback from '@/components/RouteSuspenseFallback';
+
+/**
+ * Route-level code splitting for optimal performance on 3G/low-end devices
+ * Each dashboard is lazy-loaded only when navigated to
+ */
+
+// Public routes (lazy-loaded)
+const LandingPage = lazy(() => import('@/features/landing/LandingPage'));
+const LoginPage = lazy(() => import('@/features/auth/LoginPage'));
+const SignupPage = lazy(() => import('@/features/auth/SignUpPage'));
+const BrowsePage = lazy(() => import('@/features/browse/BrowsePage'));
+
+// Protected routes (lazy-loaded)
+const CustomerDashboard = lazy(() => import('@/features/customer/dashboard/CustomerDashboard'));
+const AgentDashboard = lazy(() => import('@/features/agent/dashboard/AgentDashboard'));
+const AdminDashboard = lazy(() => import('@/features/admin/dashboard/AdminDashboard'));
+const PackageDetail = lazy(() => import('@/features/customer/packages/PackagesDetail'));
+const MakePayment = lazy(() => import('@/features/customer/Payments/MakePayment'));
+const ShoppingCart = lazy(() => import('@/features/cart/ShoppingCart'));
+const Checkout = lazy(() => import('@/features/cart/Checkout'));
+const PaymentSuccess = lazy(() => import('@/components/ui/PaymentSuccess'));
 const AppRouter = () => {
   return (
     <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/browse" element={<BrowsePage />} />
+      {/* Public Routes - Lazy loaded */}
+      <Route
+        path="/"
+        element={
+          <Suspense fallback={<RouteSuspenseFallback />}>
+            <LandingPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <Suspense fallback={<RouteSuspenseFallback />}>
+            <LoginPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <Suspense fallback={<RouteSuspenseFallback />}>
+            <SignupPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/browse"
+        element={
+          <Suspense fallback={<RouteSuspenseFallback />}>
+            <BrowsePage />
+          </Suspense>
+        }
+      />
 
-      {/* Protected Routes */}
+      {/* Protected Routes - Lazy loaded */}
       <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard/customer" element={<CustomerDashboard />} />
-        <Route path="/dashboard/agent" element={<AgentDashboard />} />
-        <Route path="/dashboard/admin" element={<AdminDashboard />} />
-        <Route path="/dashboard/customer/package/:packageId" element={<PackageDetail />} />
-        <Route path="/dashboard/customer/payment/:packageId" element={<MakePayment />} />
-        <Route path="/dashboard/customer/payment/" element={<MakePayment />} />
-        <Route path="/cart" element={<ShoppingCart />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/payment/success" element={<PaymentSuccess />} />
-        
+        <Route
+          path="/dashboard/customer"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <CustomerDashboard />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/dashboard/agent"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <AgentDashboard />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/dashboard/admin"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <AdminDashboard />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/dashboard/customer/package/:packageId"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <PackageDetail />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/dashboard/customer/payment/:packageId"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <MakePayment />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/dashboard/customer/payment/"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <MakePayment />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <ShoppingCart />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <Checkout />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/payment/success"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <PaymentSuccess />
+            </Suspense>
+          }
+        />
       </Route>
 
-      <Route path="/unauthorized" element={<div>Unauthorized Access</div>} />
-      <Route path="*" element={<div>404 - Page Not Found</div>} />
+      {/* Error Routes */}
+      <Route path="/unauthorized" element={<div className="min-h-screen flex items-center justify-center">Unauthorized Access</div>} />
+      <Route path="*" element={<div className="min-h-screen flex items-center justify-center">404 - Page Not Found</div>} />
     </Routes>
   );
 };

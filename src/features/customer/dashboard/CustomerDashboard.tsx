@@ -10,6 +10,7 @@ import RecentTransactions from '../components/RecentTransactions';
 // import QuickActions from '../components/QuickActions';
 import NeedHelp from '../components/NeedHelp';
 import DailyAjoSetupModal from '@/components/ui/DailyAjoSetupModal';
+import Modal from '@/components/ui/GeneralModal';
 
 const CustomerDashboard = () => {
   const { user } = useAuthStore();
@@ -26,6 +27,12 @@ const CustomerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
+      <Modal
+        isOpen={showDailyAjoModal}
+        onClose={() => setShowDailyAjoModal(false)}
+      >
+        <DailyAjoSetupModal />
+      </Modal>
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-6 py-8">

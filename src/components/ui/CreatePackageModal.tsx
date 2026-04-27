@@ -4,7 +4,6 @@ import { useState } from 'react';
 interface CreatePackageModalProps {
   isOpen: boolean;
   onClose: () => void;
-  // editingPackage?: Package | null; 
 }
 
 const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
@@ -27,12 +26,21 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
     ));
   };
 
+ const handleSubmit = () => {
+    if (!formData.productName.trim() || !formData.category || !formData.price) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    alert('Product created successfully! (Mock)');
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-100 p-4">
-      <div className="bg-white rounded-3xl w-full max-w-120 md:max-w-130 max-h-[94vh] overflow-hidden flex flex-col shadow-2xl">
-        
+      <div className="bg-white rounded-3xl w-full max-w-2xl md:max-w-3xl lg:max-w-4xl max-h-[94vh] overflow-hidden flex flex-col shadow-2xl">
+
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 md:px-6 md:py-5 border-b border-slate-100">
           <div className="flex items-center gap-3">
@@ -45,8 +53,8 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
               Create New Package
             </h2>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="text-slate-400 hover:text-slate-600 transition-colors"
           >
             <X className="w-5 h-5 md:w-6 md:h-6" />
@@ -55,7 +63,9 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
 
         {/* Form Content */}
         <div className="flex-1 overflow-auto p-5 md:p-6 space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+          {/* Row 1: Name + Category + Payment Frequency */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
                 Package Name <span className="text-red-500">*</span>
@@ -79,8 +89,20 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                 <option>Others</option>
               </select>
             </div>
+
+            <div className="sm:col-span-2 lg:col-span-1">
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                Payment Frequency <span className="text-red-500">*</span>
+              </label>
+              <select className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white">
+                <option>Daily</option>
+                <option>Weekly</option>
+                <option>Monthly</option>
+              </select>
+            </div>
           </div>
 
+          {/* Row 2: Price + Duration */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
@@ -103,17 +125,6 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                 className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600"
               />
             </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Payment Frequency <span className="text-red-500">*</span>
-            </label>
-            <select className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white">
-              <option>Daily</option>
-              <option>Weekly</option>
-              <option>Monthly</option>
-            </select>
           </div>
 
           <div>
@@ -158,7 +169,7 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                     placeholder="Quantity (e.g., 1, 50kg)"
                     value={item.quantity}
                     onChange={(e) => updateItem(item.id, 'quantity', e.target.value)}
-                    className="w-full sm:w-48 px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600"
+                    className="w-full sm:w-48 lg:w-56 px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600"
                   />
                   <button
                     onClick={() => removeItem(item.id)}
@@ -173,21 +184,18 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
         </div>
 
         {/* Footer Buttons */}
-        <div className="border-t border-slate-100 p-5 md:p-6 flex gap-3 md:gap-4">
+         <div className="border-t cursor-pointer border-slate-100 p-5 md:p-6 sm:block md:flex gap-3 md:gap-4">
           <button
             onClick={onClose}
-            className="flex-1 py-4 border-2 border-emerald-600 text-emerald-600 font-semibold rounded-2xl hover:bg-emerald-50 transition-colors text-base"
+            className="md:flex-1 w-full mb-2 md:mb-0 py-4 border-2 border-emerald-600 text-emerald-600 font-semibold rounded-2xl hover:bg-emerald-50 transition-colors text-base"
           >
             Cancel
           </button>
           <button
-            onClick={() => {
-              alert("Package created successfully! (Mock)");
-              onClose();
-            }}
-            className="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] transition-all text-white font-semibold rounded-2xl flex items-center justify-center gap-2 text-base"
+            onClick={handleSubmit}
+            className="md:flex-1 py-4 w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] transition-all text-white font-semibold rounded-2xl flex items-center justify-center gap-2 text-base"
           >
-            <Plus className="w-5 h-5" /> Create Package
+            <Plus className="w-5 h-5" /> Create Product
           </button>
         </div>
       </div>

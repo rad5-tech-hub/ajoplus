@@ -1,60 +1,22 @@
 // src/app/store/authStore.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-// import { useMutation } from '@tanstack/react-query';
 import { AuthStore, LoginCredentials, SignupData, User } from '@/features/auth/types';
-
-// Simulated API calls (replace with real axios/fetch later)
-const api = {
-  login: async (credentials: LoginCredentials): Promise<{ user: User; token: string }> => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    
-    // Mock successful login
-    return {
-      user: {
-        id: 'user_123',
-        fullName: 'Test User',
-        email: credentials.email,
-        phone: '+2348034567890',
-        role: credentials.email.includes('admin') ? 'admin' : 
-              credentials.email.includes('agent') ? 'agent' : 'customer',
-        createdAt: new Date().toISOString(),
-      },
-      token: 'mock_jwt_token_' + Date.now(),
-    };
-  },
-
-  signup: async (data: SignupData): Promise<{ user: User; token: string }> => {
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    return {
-      user: {
-        id: 'new_user_' + Date.now(),
-        fullName: data.fullName,
-        email: data.email,
-        phone: data.phone,
-        role: data.accountType as 'customer' | 'agent',
-        createdAt: new Date().toISOString(),
-      },
-      token: 'mock_jwt_token_' + Date.now(),
-    };
-  },
-};
+import * as authAPI from '@/api/auth';
 
 export const useAuthStore = create<AuthStore>()(
   persist(
-    (set, ) => ({
+    (set) => ({
       user: null,
       token: null,
       isAuthenticated: false,
       isLoading: false,
       error: null,
 
-      login: async (credentials) => {
+      login: async (credentials: LoginCredentials) => {
         set({ isLoading: true, error: null });
         try {
-          const { user, token } = await api.login(credentials);
+          const { user, token } = await authAPI.loginUser(credentials);
           
           set({
             user,
@@ -63,18 +25,19 @@ export const useAuthStore = create<AuthStore>()(
             isLoading: false,
           });
         } catch (err: any) {
+          const errorMessage = err.message || 'Invalid credentials';
           set({
-            error: err.message || 'Invalid credentials',
+            error: errorMessage,
             isLoading: false,
           });
           throw err;
         }
       },
 
-      signup: async (data) => {
+      signup: async (data: SignupData) => {
         set({ isLoading: true, error: null });
         try {
-          const { user, token } = await api.signup(data);
+          const { user, token } = await authAPI.signupUser(data);
           
           set({
             user,
@@ -83,15 +46,19 @@ export const useAuthStore = create<AuthStore>()(
             isLoading: false,
           });
         } catch (err: any) {
+          const errorMessage = err.message || 'Failed to create account';
           set({
-            error: err.message || 'Failed to create account',
+            error: errorMessage,
             isLoading: false,
           });
           throw err;
         }
       },
 
-      logout: () => {
+      logout: async () => {
+        // Notify backend of logout (non-blocking)
+        authAPI.logoutUser().catch(console.warn);
+        
         set({
           user: null,
           token: null,

@@ -1,13 +1,16 @@
 import { BrowserRouter } from 'react-router-dom';
 import AppRouter from './app/router/AppRouter';
 import ScrollToTop from './components/ui/ScrollToTop';
+import AppErrorBoundary from './components/AppErrorBoundary';
 
 function App() {
-  <ScrollToTop/>
   return (
-    <BrowserRouter>
+    <AppErrorBoundary>
+      <BrowserRouter>
+        <ScrollToTop />
         <AppRouter />
-    </BrowserRouter>
+      </BrowserRouter>
+    </AppErrorBoundary>
   );
 }
 

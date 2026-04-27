@@ -1,4 +1,4 @@
-import { X, Plus} from 'lucide-react';
+import { X, Plus } from 'lucide-react';
 import { useState } from 'react';
 
 interface CreateProductModalProps {
@@ -44,8 +44,8 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-100 p-4">
-      <div className="bg-white rounded-3xl w-full max-w-2xl max-h-[94vh] overflow-hidden flex flex-col shadow-2xl">
-        
+      <div className="bg-white rounded-3xl w-full max-w-2xl md:max-w-3xl lg:max-w-4xl max-h-[94vh] overflow-hidden flex flex-col shadow-2xl">
+
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 md:px-6 md:py-5 border-b border-slate-100">
           <div className="flex items-center gap-3">
@@ -58,8 +58,8 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
               Create New Product
             </h2>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="text-slate-400 hover:text-slate-600 transition-colors"
           >
             <X className="w-5 h-5 md:w-6 md:h-6" />
@@ -68,107 +68,112 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
 
         {/* Form Content */}
         <div className="flex-1 overflow-auto p-5 md:p-6 space-y-6">
-          
-          {/* Image Upload */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-3">
-              Product Image <span className="text-red-500">*</span>
-            </label>
-            <div className="border-2 border-dashed border-slate-200 rounded-2xl p-6 text-center hover:border-emerald-400 transition-colors cursor-pointer"
-              onClick={() => document.getElementById('image-input')?.click()}>
-              {imagePreview ? (
-                <div className="relative w-full max-h-48">
-                  <img src={imagePreview} alt="Preview" className="w-full h-48 object-cover rounded-xl" />
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setImagePreview(null);
-                      setFormData({ ...formData, imageUrl: '' });
-                    }}
-                    className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              ) : (
-                <div className="py-8">
-                  <div className="text-4xl mb-3">📸</div>
-                  <p className="text-slate-600 font-medium">Click to upload product image</p>
-                  <p className="text-slate-400 text-sm mt-1">PNG, JPG up to 5MB</p>
-                </div>
-              )}
-              <input
-                id="image-input"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
-            </div>
-          </div>
 
-          {/* Basic Info */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Product Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                placeholder="e.g., Premium Rice (50kg)"
-                value={formData.productName}
-                onChange={(e) => setFormData({ ...formData, productName: e.target.value })}
-                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600"
-              />
-            </div>
+          {/* Image Upload + Basic Info side-by-side on lg */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
+            {/* Image Upload */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Category <span className="text-red-500">*</span>
+              <label className="block text-sm font-medium text-slate-700 mb-3">
+                Product Image <span className="text-red-500">*</span>
               </label>
-              <select
-                value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white"
+              <div
+                className="border-2 border-dashed border-slate-200 rounded-2xl p-6 text-center hover:border-emerald-400 transition-colors cursor-pointer h-[calc(100%-2rem)]"
+                onClick={() => document.getElementById('image-input')?.click()}
               >
-                <option value="">Select category</option>
-                <option>Food & Groceries</option>
-                <option>Fashion</option>
-                <option>Electronics</option>
-                <option>Home & Garden</option>
-                <option>Beauty & Health</option>
-                <option>Others</option>
-              </select>
+                {imagePreview ? (
+                  <div className="relative w-full h-full min-h-36">
+                    <img src={imagePreview} alt="Preview" className="w-full h-full max-h-48 object-cover rounded-xl" />
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setImagePreview(null);
+                        setFormData({ ...formData, imageUrl: '' });
+                      }}
+                      className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="py-8">
+                    <div className="text-4xl mb-3">📸</div>
+                    <p className="text-slate-600 font-medium">Click to upload product image</p>
+                    <p className="text-slate-400 text-sm mt-1">PNG, JPG up to 5MB</p>
+                  </div>
+                )}
+                <input
+                  id="image-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Pricing & Stock */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Price (₦) <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                placeholder="e.g., 25000"
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600"
-              />
-            </div>
+            {/* Name + Category + Price + Quantity stacked */}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  Product Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g., Premium Rice (50kg)"
+                  value={formData.productName}
+                  onChange={(e) => setFormData({ ...formData, productName: e.target.value })}
+                  className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600"
+                />
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Quantity in Stock <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                placeholder="e.g., 50"
-                value={formData.quantity}
-                onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600"
-              />
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                  Category <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white"
+                >
+                  <option value="">Select category</option>
+                  <option>Food & Groceries</option>
+                  <option>Fashion</option>
+                  <option>Electronics</option>
+                  <option>Home & Garden</option>
+                  <option>Beauty & Health</option>
+                  <option>Others</option>
+                </select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                    Price (₦) <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="e.g., 25000"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                    Qty in Stock <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="e.g., 50"
+                    value={formData.quantity}
+                    onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+                    className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -211,16 +216,16 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
         </div>
 
         {/* Footer Buttons */}
-        <div className="border-t border-slate-100 p-5 md:p-6 flex gap-3 md:gap-4">
+        <div className="border-t cursor-pointer border-slate-100 p-5 md:p-6 sm:block md:flex gap-3 md:gap-4">
           <button
             onClick={onClose}
-            className="flex-1 py-4 border-2 border-emerald-600 text-emerald-600 font-semibold rounded-2xl hover:bg-emerald-50 transition-colors text-base"
+            className="md:flex-1 w-full mb-2 md:mb-0 py-4 border-2 border-emerald-600 text-emerald-600 font-semibold rounded-2xl hover:bg-emerald-50 transition-colors text-base"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] transition-all text-white font-semibold rounded-2xl flex items-center justify-center gap-2 text-base"
+            className="md:flex-1 py-4 w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] transition-all text-white font-semibold rounded-2xl flex items-center justify-center gap-2 text-base"
           >
             <Plus className="w-5 h-5" /> Create Product
           </button>

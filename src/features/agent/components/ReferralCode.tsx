@@ -29,7 +29,7 @@ const ReferralCode = () => {
 
       <button
         onClick={copyCode}
-        className="w-full border border-emerald-600 text-emerald-600 hover:bg-emerald-100 font-semibold
+        className="w-full border cursor-pointer border-emerald-600 text-emerald-600 hover:bg-emerald-100 font-semibold
                    py-3 sm:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl
                    flex items-center justify-center gap-2
                    text-sm sm:text-[15px] transition-all"

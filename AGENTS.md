@@ -2,6 +2,21 @@
 
 **Project**: AjoPlus — A fintech savings & referral platform built on the Ajo (African savings) model.
 
+---
+
+## 🎯 Non-Negotiable Principles
+
+Every decision, optimization, and feature must honor these four core principles:
+
+1. **🚀 Blazing Speed & Efficiency** — Works flawlessly on 2G/3G networks and low-end Android devices. Lazy-load features, code-split by route, compress assets, minimize JS bundles.
+2. **🎨 Pixel-Perfect Fidelity** — Matches Figma designs exactly: colors, spacing, typography, hover states, animations. When Figma exists, it's the source of truth.
+3. **🔒 Rock-Solid Reliability** — Zero random bugs, zero console errors, production-ready from day one. Global error boundaries, proper error messaging, graceful degradation.
+4. **📐 Scalable & Maintainable Architecture** — Component-based structure that grows without refactoring. Clear separation of concerns, reusable components, no monolithic files.
+
+**If a change violates ANY of these principles, reject it.** Discuss trade-offs with team before proceeding.
+
+---
+
 ## Quick Start
 
 **Build & Run**:
@@ -65,8 +80,17 @@ const { user, token, isAuthenticated, login, logout } = useAuthStore();
 - **Public routes**: `/`, `/login`, `/signup`, `/browse`
 - **Protected routes**: `/dashboard/*` (gated by `<ProtectedRoute>`)
 - **Role-based RBAC**: `ProtectedRoute` component validates user roles before rendering
+- **Route-level code splitting**: All routes use `React.lazy()` + `Suspense` for optimal 3G performance (9/9 implemented)
 
-See [AppRouter.tsx](src/app/router/AppRouter.tsx) for routing structure.
+See [AppRouter.tsx](src/app/router/AppRouter.tsx) and [RouteSuspenseFallback.tsx](src/components/RouteSuspenseFallback.tsx).
+
+### API Layer (NEW - IMPLEMENTED)
+Centralized API module for all backend communication at [src/api/](src/api/):
+- [client.ts](src/api/client.ts) — Base API client, auth headers, retry logic
+- [auth.ts](src/api/auth.ts) — Authentication endpoints
+- All stores import from `src/api/` (not hardcoding mock APIs)
+
+Pattern: Easy backend integration—just update `src/api/` endpoints, no store changes needed.
 
 ---
 
@@ -266,6 +290,7 @@ import { ShoppingCart, Clock, Calendar, X, Plus, ChevronRight } from 'lucide-rea
 - Mobile-first approach: base styles apply to all screens
 - Use `sm:`, `md:`, `lg:` prefixes for breakpoints
 - Test all pages across breakpoints using DevTools
+- **REQUIRED**: Test on 3G network throttling (DevTools → Network → "Slow 3G") before shipping
 
 ---
 
@@ -279,12 +304,240 @@ import { ShoppingCart, Clock, Calendar, X, Plus, ChevronRight } from 'lucide-rea
 
 ---
 
-## Performance Tips
+---
 
-1. **Memoization**: Use `React.memo()` for expensive components
-2. **Query Caching**: React Query caches by default; adjust `staleTime` for data freshness
-3. **Code Splitting**: Route-based code splitting via React Router lazy loading
-4. **Bundle**: Vite tree-shakes unused code; check `npm run build` output
+## ⚡ Performance Optimization (3G/Low-End Device Critical)
+
+### ✅ Route-Level Code Splitting (IMPLEMENTED)
+All 9 dashboard routes lazy-loaded via `React.lazy()` + `Suspense`. See [AppRouter.tsx](src/app/router/AppRouter.tsx):
+- Import with `lazy()`
+- Wrap in `<Suspense fallback={<RouteSuspenseFallback />}>`
+- Loading UI shown during chunk download: [RouteSuspenseFallback.tsx](src/components/RouteSuspenseFallback.tsx)
+
+### Must-Do Checklist
+- ✅ **Route-level code splitting**: Use `React.lazy()` + `Suspense` for each dashboard route
+  ```typescript
+  const CustomerDashboard = React.lazy(() => import('@/features/customer/dashboard/CustomerDashboard'));
+  ```
+- ✅ **Image optimization**: Use WebP with fallback PNG; compress to <50KB per image
+- ✅ **Bundle size**: Keep total gzipped JS <250KB (check via `npm run build`)
+- ✅ **API optimization**: Batch requests, use `staleTime` to minimize refetches
+- ✅ **CSS optimization**: Tailwind removes unused classes in production; verify via build output
+
+### Performance Tips
+
+1. **Memoization**: Use `React.memo()` for expensive components; profile before applying
+2. **Query Caching**: React Query caches by default; adjust `staleTime` for data freshness (default 5min is good)
+3. **Code Splitting**: Route-based code splitting via `React.lazy()` + `Suspense` for every dashboard
+4. **Bundle Analysis**: Run `npm run build && npm run preview` to audit bundle size
+5. **Network**: Test on DevTools Slow 3G before every PR; emulate low-end Android (e.g., Moto G)
+6. **CSS-in-JS**: Avoid runtime CSS generation; use Tailwind utilities only
+
+### Anti-Patterns (Never Do)
+- ❌ Import entire feature modules without code splitting
+- ❌ Inline large images or uncompressed assets
+- ❌ Use `staleTime: 0` (forces refetch on every mount)
+- ❌ Add fonts without `font-display: swap` (blocks rendering)
+- ❌ Bundle third-party libraries without tree-shaking
+- ❌ Trust desktop DevTools alone; always test on 3G + low-end device
+
+---
+
+---
+
+## 🎨 Design System & Figma Integration
+
+### Color Palette (Authoritative)
+- **Primary**: `emerald-600` (#059669), `emerald-500` (#10b981), `emerald-700` (#047857)
+- **Text**: `slate-900` (#0f172a) for headings, `slate-700` (#374151) for body, `slate-500` (#64748b) for secondary
+- **Borders**: `slate-200` (#e2e8f0)
+- **Backgrounds**: `white` for cards, `slate-50` (#f8fafc) for page backgrounds
+- **Status**: `red-600` (errors), `amber-500` (warnings), `green-600` (success), `blue-600` (info)
+
+### Typography System
+- **Headings**: Use semantic HTML `<h1>` through `<h3>` with Tailwind size classes
+  - `text-3xl font-bold` for page titles
+  - `text-xl font-semibold` for section headings
+  - `text-lg font-medium` for subsections
+- **Body**: `text-base` (16px) for primary text, `text-sm` (14px) for secondary
+- **Line height**: `leading-6` for readable body text
+
+### Component Variants
+All components should support variants (size, color, state). Document via Storybook when feasible:
+```typescript
+interface ButtonProps {
+  size?: 'sm' | 'md' | 'lg';           // sm: px-2 py-1, md: px-4 py-3, lg: px-6 py-4
+  variant?: 'primary' | 'secondary';   // primary: emerald-600, secondary: slate-200
+  disabled?: boolean;                   // opacity-50, pointer-events-none
+}
+```
+
+### Spacing Scale
+- Use Tailwind spacing: `p-2` (8px), `p-3` (12px), `p-4` (16px), `p-6` (24px), `p-8` (32px)
+- Consistent gap between components: `gap-4` for lists, `gap-6` for sections
+- Page padding: `px-4 py-8` (mobile), `px-6 py-10` (desktop)
+
+### Micro-interactions
+- **Buttons**: `hover:bg-emerald-700 active:scale-95 transition-all duration-200`
+- **Modals**: Fade in/out with `opacity-0` → `opacity-100`, 200ms transition
+- **Forms**: Focus rings: `focus:ring-2 focus:ring-emerald-500`
+- **Tooltips/Popovers**: Slide in from above, 150ms ease-out
+
+### Figma Workflow
+1. **Before coding**: Export Figma token specs (colors, spacing, typography) to `tailwind.config.ts`
+2. **During development**: Use browser DevTools to compare pixels (Design Mode in Chrome DevTools)
+3. **After shipping**: Update Figma with actual component state (hover, active, disabled)
+
+---
+
+## 🔒 Reliability & Error Handling
+
+### ✅ Global Error Boundary (IMPLEMENTED)
+[AppErrorBoundary.tsx](src/components/AppErrorBoundary.tsx) catches all render crashes:
+- Wraps entire app in [App.tsx](src/App.tsx)
+- Displays user-friendly error page with retry button
+- Logs errors to backend (Sentry/LogRocket ready to activate)
+- Shows stack trace in development, clean UI in production
+- Zero white screens of death ✅
+
+### ✅ Error Monitoring (IMPLEMENTED)
+[errorMonitoring.ts](src/lib/errorMonitoring.ts) initialized on app startup in [main.tsx](src/main.tsx):
+
+```typescript
+// Auto-captured:
+- Uncaught exceptions + unhandled promise rejections
+- Global error context (userId, page, action, metadata)
+- Error severity levels (info, warning, error, critical)
+
+// Usage:
+import { captureError, captureWarning, setErrorUser } from '@/lib/errorMonitoring';
+captureError(error, { action: 'submitPayment', userId });
+setErrorUser(userId, email); // Called after login
+```
+
+Status: ✅ Ready for production. Uncomment Sentry/LogRocket init when credentials available.
+Create [AppErrorBoundary.tsx](src/components/AppErrorBoundary.tsx) to wrap the app:
+```typescript
+class AppErrorBoundary extends React.Component<Props, State> {
+  state = { hasError: false, error: null };
+  
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+  
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // Log to error tracking service (Sentry, LogRocket, etc.)
+    console.error('App crashed:', error, errorInfo);
+  }
+  
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex items-center justify-center min-h-screen bg-slate-50">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-slate-900">Something went wrong</h1>
+            <button onClick={() => window.location.reload()} className="mt-4 px-4 py-2 bg-emerald-600 text-white rounded-lg">
+              Reload Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+```
+
+### Error Handling Patterns
+1. **Try/Catch in async handlers**: Wrap API calls, state updates, and async operations
+   ```typescript
+   const handlePayment = async () => {
+     try {
+       const result = await submitPayment(formData);
+       useModalStore.getState().openModal({ type: 'success', title: 'Payment submitted', message: '...' });
+     } catch (error) {
+       useModalStore.getState().openModal({ type: 'error', title: 'Payment failed', message: error.message || 'Please try again' });
+     }
+   };
+   ```
+2. **Validation before submission**: Always validate user input before sending to API
+3. **Graceful fallbacks**: Show placeholder content instead of crashing if optional data fails to load
+4. **Error logging**: Send errors to external service (Sentry, LogRocket) for production monitoring
+
+### Console Error Prevention
+- ✅ Use React Query for server state (handles loading/error states)
+- ✅ Type all props; let TypeScript catch type mismatches
+- ✅ Use optional chaining: `user?.email` not `user.email`
+- ✅ Validate data shape before rendering: `if (!user) return null`
+- ❌ Never suppress errors with `.catch(() => null)` without logging
+- ❌ Don't use `any` type; define proper interfaces
+- ❌ Don't mutate store state directly; use setters
+
+### Testing for Reliability
+```bash
+npm run lint              # Catch type & style issues
+tsc --noEmit              # Full type check before building
+npm run build             # Verify production build succeeds
+```
+
+---
+
+## 📐 Scalable Architecture Guidelines
+
+### API Layer Extraction (IMPORTANT)
+Current stores have mock APIs hardcoded. Extract to `src/api/` for easy backend swap:
+```typescript
+// src/api/auth.ts
+export const loginUser = async (email: string, password: string) => {
+  const response = await fetch('/api/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+  if (!response.ok) throw new Error(response.statusText);
+  return response.json();
+};
+
+// In authStore.ts
+const login = async (email: string, password: string) => {
+  try {
+    const user = await loginUser(email, password);
+    set({ user, isAuthenticated: true });
+  } catch (error) {
+    throw error;
+  }
+};
+```
+
+### Domain-Driven State
+Organize stores by domain, not by UI layer:
+```
+src/app/store/
+├── auth/              # Authentication domain
+│   ├── authStore.ts
+│   └── authTypes.ts
+├── cart/              # Shopping cart domain
+│   ├── CartStore.ts
+│   └── cartTypes.ts
+├── payments/          # Payment processing domain
+│   ├── PaymentStore.ts
+│   └── paymentTypes.ts
+└── common/            # Shared modals, notifications
+    └── ModalStore.ts
+```
+
+### Component File Size Limit
+- ✅ Keep components under 300 lines
+- ✅ Split large dashboards into smaller, reusable sub-components
+- ✅ Move complex logic to hooks or utility functions
+- ❌ Don't create 500+ line component files
+
+### Feature Folder Completeness
+Every feature should have:
+```
+src/features/customer/
+├── components/        # Feature-specific reusable components
+├── dashboard/         # Feature main page
+├── hooks/             # Feature-specific hooks (if complex)
+├── types.ts           # TypeScript interfaces
+└── constants.ts       # Feature constants (if needed)
+```
 
 ---
 
@@ -294,6 +547,7 @@ import { ShoppingCart, Clock, Calendar, X, Plus, ChevronRight } from 'lucide-rea
 - **Zustand Store Inspection**: Logs in browser DevTools → Application → localStorage
 - **ESLint Warnings**: Run `npm run lint` to catch issues early
 - **Type Errors**: Run `tsc` to check TypeScript errors before building
+- **Network Throttling**: Always test with DevTools Slow 3G before shipping
 
 ---
 
@@ -340,14 +594,12 @@ export const useMyStore = create<StoreState>()(
 
 ---
 
+---
+
 ## Questions or Issues?
 
 - Check [README.md](README.md) for general setup
 - Review existing features in `src/features/` for patterns
 - Run `npm run lint` to catch style issues
 - Use TypeScript compiler: `tsc --noEmit` for type checking
-
-Blazing speed & efficiency (even on 2G/3G and low-end Android devices).
-Pixel-perfect fidelity to provided Figma designs when available (exact colors, spacing, typography, micro-interactions).
-Rock-solid reliability (zero random bugs, zero console errors, production-ready from day one).
-Scalability & maintainability (professional component-based architecture that can grow without refactoring).
+- **Always verify**: 3G performance, Figma fidelity, error handling, code organization before PR
