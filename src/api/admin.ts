@@ -1,4 +1,6 @@
+// src/api/admin.ts
 import { apiCall } from './client';
+import { AdminOverview } from '@/features/admin/types';
 
 export interface AdminUser {
 	id: string;
@@ -41,20 +43,22 @@ interface AdminRegisterResponse {
 	data: AdminUser;
 }
 
-/**
- * Register a new admin account
- * Private endpoint - only authorized admins can create new admins
- */
+interface AdminOverviewResponse {
+	success: boolean;
+	statusCode: number;
+	message: string;
+	data: AdminOverview;
+}
+
 export const registerAdmin = async (data: AdminRegisterData): Promise<AdminUser> => {
 	try {
 		const response = await apiCall<AdminRegisterResponse>('/api/admin/register-admin', {
 			method: 'POST',
 			body: JSON.stringify(data),
+			headers: { Authorization: '' },
 		});
 
-		if (!response.success) {
-			throw new Error(response.message || 'Admin registration failed');
-		}
+		if (!response.success) throw new Error(response.message || 'Admin registration failed');
 
 		return response.data;
 	} catch (error) {
@@ -63,10 +67,6 @@ export const registerAdmin = async (data: AdminRegisterData): Promise<AdminUser>
 	}
 };
 
-/**
- * Login admin
- * Separate from customer/agent login
- */
 export const loginAdmin = async (
 	credentials: AdminLoginCredentials
 ): Promise<{ admin: { id: string; email: string; role: 'admin' }; token: string }> => {
@@ -74,30 +74,38 @@ export const loginAdmin = async (
 		const response = await apiCall<AdminLoginResponse>('/api/admin/login-admin', {
 			method: 'POST',
 			body: JSON.stringify(credentials),
+			headers: { Authorization: '' }, // Ensure no token is sent for login
 		});
 
-		if (!response.success) {
-			throw new Error(response.message || 'Admin login failed');
-		}
+		if (!response.success) throw new Error(response.message || 'Admin login failed');
 
-		return {
-			admin: response.data.admin,
-			token: response.data.token,
-		};
+		return { admin: response.data.admin, token: response.data.token };
 	} catch (error) {
 		console.error('[Admin Login Error]', error);
 		throw error;
 	}
 };
 
-/**
- * Logout admin
- */
 export const logoutAdmin = async (): Promise<void> => {
 	try {
 		// Optionally call backend logout endpoint if needed
-		// For now, frontend just clears tokens
 	} catch (error) {
 		console.warn('[Admin Logout Error]', error);
+	}
+};
+
+/**
+ * Fetch admin dashboard overview stats
+ */
+export const fetchAdminOverview = async (): Promise<AdminOverview> => {
+	try {
+		const response = await apiCall<AdminOverviewResponse>('/api/admin/dashboard');
+
+		if (!response.success) throw new Error(response.message || 'Failed to load admin overview');
+
+		return response.data;
+	} catch (error) {
+		console.error('[Admin Overview Error]', error);
+		throw error;
 	}
 };

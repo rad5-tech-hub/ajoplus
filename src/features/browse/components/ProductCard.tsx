@@ -53,22 +53,13 @@ const ProductCard = ({ item }: ProductCardProps) => {
     if (isPackage) {
       joinPackageAPI(item.id, {
         onSuccess: () => {
-          openModal({
-            type: 'success',
-            title: 'Package Joined!',
-            message: `You've successfully joined ${item.title}.`,
-          });
+          // Store's onSuccess already shows the modal — just handle navigation
           setTimeout(() => {
-            useModalStore.getState().closeModal();
             navigate(`/dashboard/customer/package/${item.id}`);
           }, 2500);
         },
-        onError: (err: unknown) => {
-          openModal({
-            type: 'error',
-            title: 'Failed to Join',
-            message: err instanceof Error ? err.message : 'Something went wrong. Please try again.',
-          });
+        onError: () => {
+          // Store's onError already shows the error modal — nothing extra needed
         },
       });
     } else {
@@ -156,13 +147,13 @@ const ProductCard = ({ item }: ProductCardProps) => {
                 <ul className="space-y-2">
                   {item.packageItems.slice(0, 4).map((packageItem, index) => (
                     <li key={index} className="flex items-start gap-2 text-sm text-slate-700">
-                      <span className="font-medium text-emerald-600 flex-shrink-0">{index + 1}.</span>
+                      <span className="font-medium text-emerald-600 hrink-0">{index + 1}.</span>
                       <span>{packageItem}</span>
                     </li>
                   ))}
                   {item.packageItems.length > 4 && (
                     <li className="flex items-start gap-2 text-sm text-slate-600 italic">
-                      <span className="font-medium text-emerald-600 flex-shrink-0">+</span>
+                      <span className="font-medium text-emerald-600 shrink-0">+</span>
                       <span>{item.packageItems.length - 4} more item{item.packageItems.length - 4 !== 1 ? 's' : ''}...</span>
                     </li>
                   )}

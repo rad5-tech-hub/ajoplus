@@ -3,38 +3,28 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as packageAPI from '@/api/package';
 import { useModalStore } from './ModalStore';
 
-export type { UserPackage } from '@/api/package';
+export type { UserPackage, Category } from '@/api/package';
 
-/**
- * Hook to fetch all packages joined by the current user
- * Uses React Query for automatic caching and refetching
- */
 export const useUserPackages = () => {
   return useQuery({
     queryKey: ['userPackages'],
     queryFn: packageAPI.getUserPackages,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
     retry: 2,
   });
 };
 
-/**
- * Hook to fetch all available packages for browsing
- */
 export const useAvailablePackages = () => {
   return useQuery({
     queryKey: ['availablePackages'],
     queryFn: packageAPI.getAvailablePackages,
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 10 * 60 * 1000,
     gcTime: 15 * 60 * 1000,
     retry: 2,
   });
 };
 
-/**
- * Hook to fetch a specific package by ID
- */
 export const usePackageById = (packageId: string) => {
   return useQuery({
     queryKey: ['package', packageId],
@@ -45,9 +35,16 @@ export const usePackageById = (packageId: string) => {
   });
 };
 
-/**
- * Hook to join a package
- */
+export const useCategories = () => {
+  return useQuery({
+    queryKey: ['categories'],
+    queryFn: packageAPI.getCategories,
+    staleTime: 15 * 60 * 1000, // categories rarely change
+    gcTime: 30 * 60 * 1000,
+    retry: 2,
+  });
+};
+
 export const useJoinPackage = () => {
   const queryClient = useQueryClient();
   const openModal = useModalStore((state) => state.openModal);
@@ -56,7 +53,6 @@ export const useJoinPackage = () => {
   return useMutation({
     mutationFn: (packageId: string) => packageAPI.joinPackage(packageId),
     onSuccess: () => {
-      // Invalidate user packages query to refetch
       queryClient.invalidateQueries({ queryKey: ['userPackages'] });
       openModal({
         type: 'success',
@@ -76,9 +72,6 @@ export const useJoinPackage = () => {
   });
 };
 
-/**
- * Hook to create a new package (Admin only)
- */
 export const useCreatePackage = () => {
   const queryClient = useQueryClient();
   const openModal = useModalStore((state) => state.openModal);
@@ -106,4 +99,3 @@ export const useCreatePackage = () => {
     },
   });
 };
-

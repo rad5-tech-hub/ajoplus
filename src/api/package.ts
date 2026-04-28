@@ -4,6 +4,35 @@ import { apiCall } from './client';
  * Package API Types
  */
 
+// Add to existing imports/exports in src/api/package.ts
+
+export interface Category {
+	id: string;
+	name: string;
+	description: string;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export const getCategories = async (): Promise<Category[]> => {
+	try {
+		const response = await apiCall<{
+			success: boolean;
+			statusCode: number;
+			message: string;
+			data: Category[];
+		}>('/api/category/categories');
+
+		if (!response.success) throw new Error(response.message || 'Failed to fetch categories');
+		if (!Array.isArray(response.data)) throw new Error('Invalid response format: expected array');
+
+		return response.data;
+	} catch (error) {
+		console.error('[Get Categories Error]', error);
+		throw error;
+	}
+};
+
 export interface PackageItem {
 	itemName: string;
 	quantity: string;
@@ -23,10 +52,12 @@ export interface Package {
 	id: string;
 	name: string;
 	categoryId: string;
+	category?: { id: string; name: string };  // ← included in GET responses
 	totalPrice: number | string;
 	duration: number;
 	paymentFrequency: 'daily' | 'weekly' | 'monthly';
 	description: string;
+	items?: PackageItem[];                     // ← included in GET responses
 	createdBy: string;
 	createdAt: string;
 	updatedAt: string;
