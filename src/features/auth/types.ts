@@ -4,9 +4,10 @@ export interface User {
   id: string;
   fullName: string;
   email: string;
-  phone: string;
+  phoneNumber: string;       // API returns `phoneNumber`, not `phone`
   role: 'customer' | 'agent' | 'admin';
-  createdAt: string;
+  agentId?: string;          // Only present for agents
+  accountStatus: 'active' | 'inactive' | 'suspended';
 }
 
 export interface LoginCredentials {
@@ -26,9 +27,16 @@ export interface SignupData {
   referralCode?: string;
 }
 
+// Mirrors the `data` envelope from the API
+export interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
 export interface AuthState {
   user: User | null;
   token: string | null;
+  refreshToken: string | null;   // store refresh token for renewal
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
@@ -37,6 +45,6 @@ export interface AuthState {
 export interface AuthStore extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;
   signup: (data: SignupData) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   clearError: () => void;
 }

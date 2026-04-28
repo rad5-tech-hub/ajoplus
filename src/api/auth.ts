@@ -1,87 +1,86 @@
-/**
- * Authentication API
- * Handles all auth-related API calls
- */
+// src/api/auth.ts
+import { User, AuthTokens, LoginCredentials, SignupData } from '@/features/auth/types';
 
-import { apiCall, retryApiCall } from './client';
-import { LoginCredentials, SignupData, User } from '@/features/auth/types';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
 
-export interface AuthResponse {
-  user: User;
-  token: string;
+interface LoginResponse {
+	success: boolean;
+	statusCode: number;
+	message: string;
+	data: AuthTokens & { user: User };
 }
 
-/**
- * Login with email and password
- * @param credentials - Email and password
- * @returns User and auth token
- */
+interface SignupResponse {
+	success: boolean;
+	statusCode: number;
+	message: string;
+	data: AuthTokens & { user: User };
+}
+
 export async function loginUser(
-  credentials: LoginCredentials
-): Promise<AuthResponse> {
-  return retryApiCall(
-    () => apiCall<AuthResponse>('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify(credentials),
-    }),
-    3
-  );
+	credentials: LoginCredentials
+): Promise<{ user: User; token: string; refreshToken: string }> {
+	const response = await fetch(`${BASE_URL}/api/auth/login`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({
+			email: credentials.email,
+			password: credentials.password,
+		}),
+	});
+
+	const json: LoginResponse = await response.json();
+
+	if (!response.ok || !json.success) {
+		throw new Error(json.message ?? 'Login failed');
+	}
+
+	return {
+		user: json.data.user,
+		token: json.data.accessToken,
+		refreshToken: json.data.refreshToken,
+	};
 }
 
-/**
- * Sign up new user
- * @param data - Full name, email, phone, password, account type
- * @returns New user and auth token
- */
-export async function signupUser(data: SignupData): Promise<AuthResponse> {
-  return retryApiCall(
-    () => apiCall<AuthResponse>('/auth/signup', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
-    3
-  );
+export async function signupUser(
+	data: SignupData
+): Promise<{ user: User; token: string; refreshToken: string }> {
+	const response = await fetch(`${BASE_URL}/api/auth/register`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({
+			fullName: data.fullName,
+			email: data.email,
+			phoneNumber: data.phone,
+			accountNumber: data.accountNumber,
+			bankName: data.bankName,
+			role: data.accountType,
+			password: data.password,
+			confirmPassword: data.password,
+			referralCode: data.referralCode,
+		}),
+	});
+
+	const json: SignupResponse = await response.json();
+
+	if (!response.ok || !json.success) {
+		throw new Error(json.message ?? 'Signup failed');
+	}
+
+	return {
+		user: json.data.user,
+		token: json.data.accessToken,
+		refreshToken: json.data.refreshToken,
+	};
 }
 
-/**
- * Verify auth token (check if user is still logged in)
- * @returns Current user info
- */
-export async function verifyToken(): Promise<User> {
-  return apiCall<User>('/auth/verify', {
-    method: 'GET',
-  });
-}
-
-/**
- * Logout (optional - mainly for notifying backend)
- */
 export async function logoutUser(): Promise<void> {
-  try {
-    await apiCall('/auth/logout', {
-      method: 'POST',
-    });
-  } catch (error) {
-    // Logout can fail gracefully - just clear local state
-    console.warn('Logout API call failed, but clearing local auth state', error);
-  }
-}
+	const response = await fetch(`${BASE_URL}/api/auth/logout`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+	});
 
-/**
- * Request password reset
- * @param email - User email
- */
-export async function requestPasswordReset(email: string): Promise<void> {
-  return apiCall('/auth/password-reset-request', {
-    method: 'POST',
-    body: JSON.stringify({ email }),
-  });
+	if (!response.ok) {
+		throw new Error('Logout request failed');
+	}
 }
-
-export default {
-  loginUser,
-  signupUser,
-  verifyToken,
-  logoutUser,
-  requestPasswordReset,
-};

@@ -1,8 +1,8 @@
 // src/features/agent/dashboard/components/CommissionStructure.tsx
 const rows = [
-  { label: 'Per Referral',      value: '₦4,000'  },
-  { label: 'Minimum Package',   value: '₦50,000' },
-  { label: 'Payout Threshold',  value: '₦10,000' },
+  { label: 'Per Referral', value: '₦2,000' },
+  { label: 'Minimum Package', value: '₦50,000' },
+  { label: 'Payout Threshold', value: '₦10,000' },
 ];
 
 const CommissionStructure = () => {

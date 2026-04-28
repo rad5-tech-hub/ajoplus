@@ -7,6 +7,11 @@ import { useAuthStore } from '@/app/store/authStore';
 const LoginPage = () => {
   const navigate = useNavigate();
   const { login, isLoading, error, clearError } = useAuthStore();
+  const ROLE_ROUTES: Record<string, string> = {
+    customer: '/dashboard/customer',
+    agent: '/dashboard/agent',
+    admin: '/dashboard/admin',
+  };
 
   const [formData, setFormData] = useState({
     email: '',
@@ -38,22 +43,14 @@ const LoginPage = () => {
     setLocalError('');
 
     if (!validateForm()) return;
-
     try {
-      await login({
-        email: formData.email.trim(),
-        password: formData.password,
-        remember: formData.remember,
-      });
+      await login({ email: formData.email.trim(), password: formData.password });
 
-      // Redirect based on role (handled in store or here)
-      navigate('/dashboard/customer'); // Will be improved with role-based routing later
+      const { user } = useAuthStore.getState();
+      const destination = user ? (ROLE_ROUTES[user.role] ?? '/dashboard/customer') : '/dashboard/customer';
+      navigate(destination, { replace: true });
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setLocalError(err.message);
-      } else {
-        setLocalError('Login failed. Please try again.');
-      }
+      setLocalError(err instanceof Error ? err.message : 'Login failed. Please try again.');
     }
   };
 

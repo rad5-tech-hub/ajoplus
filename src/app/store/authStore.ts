@@ -15,6 +15,7 @@ export const useAuthStore = create<AuthStore>()(
     (set) => ({
       user: null,
       token: null,
+      refreshToken: null,
       isAuthenticated: false,
       isLoading: false,
       error: null,
@@ -22,8 +23,8 @@ export const useAuthStore = create<AuthStore>()(
       login: async (credentials: LoginCredentials) => {
         set({ isLoading: true, error: null });
         try {
-          const { user, token } = await authAPI.loginUser(credentials);
-          set({ user, token, isAuthenticated: true, isLoading: false });
+          const { user, token, refreshToken } = await authAPI.loginUser(credentials);
+          set({ user, token, refreshToken, isAuthenticated: true, isLoading: false });
         } catch (err: unknown) {
           set({ error: getErrorMessage(err, 'Invalid credentials'), isLoading: false });
           throw err;
@@ -33,8 +34,8 @@ export const useAuthStore = create<AuthStore>()(
       signup: async (data: SignupData) => {
         set({ isLoading: true, error: null });
         try {
-          const { user, token } = await authAPI.signupUser(data);
-          set({ user, token, isAuthenticated: true, isLoading: false });
+          const { user, token, refreshToken } = await authAPI.signupUser(data);
+          set({ user, token, refreshToken, isAuthenticated: true, isLoading: false });
         } catch (err: unknown) {
           set({ error: getErrorMessage(err, 'Failed to create account'), isLoading: false });
           throw err;
@@ -43,7 +44,7 @@ export const useAuthStore = create<AuthStore>()(
 
       logout: async () => {
         authAPI.logoutUser().catch(console.warn);
-        set({ user: null, token: null, isAuthenticated: false, error: null });
+        set({ user: null, token: null, refreshToken: null, isAuthenticated: false, error: null });
       },
 
       clearError: () => set({ error: null }),
@@ -53,6 +54,7 @@ export const useAuthStore = create<AuthStore>()(
       partialize: (state) => ({
         user: state.user,
         token: state.token,
+        refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
       }),
     }

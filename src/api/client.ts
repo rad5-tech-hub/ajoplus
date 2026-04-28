@@ -1,101 +1,107 @@
-/**
- * API Configuration & Utilities
- * Centralized API client for all backend communication
- */
-
-// Base API URL - environment variable or default
+// src/api/client.ts
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://api.ajoplus.com';
 
 export class APIError extends Error {
-  constructor(
-    public status: number,
-    public data: any,
-    message: string
-  ) {
-    super(message);
-    this.name = 'APIError';
-  }
+	constructor(
+		public status: number,
+		public data: unknown,
+		message: string
+	) {
+		super(message);
+		this.name = 'APIError';
+	}
 }
 
 /**
- * Generic fetch wrapper with error handling
+ * Base API client with auth, retry, and consistent response handling
+ * Optimized for AjoPlus (3G networks + reliability)
  */
 export async function apiCall<T>(
-  endpoint: string,
-  options: RequestInit = {}
+	endpoint: string,
+	options: RequestInit = {}
 ): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint}`;
-  
-  const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-    ...options,
-  });
+	const url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
 
-  const data = await response.json();
+	const token = getAuthToken();
+	const headers: HeadersInit = {
+		'Content-Type': 'application/json',
+		...(token && { Authorization: `Bearer ${token}` }),
+		...options.headers,
+	};
 
-  if (!response.ok) {
-    throw new APIError(
-      response.status,
-      data,
-      data.message || `API Error: ${response.status}`
-    );
-  }
+	const makeRequest = async (): Promise<T> => {
+		const response = await fetch(url, {
+			...options,
+			headers,
+		});
 
-  return data;
+		let rawData: unknown;
+		try {
+			rawData = await response.json();
+		} catch {
+			rawData = null;
+		}
+
+		// Handle non-OK responses
+		if (!response.ok) {
+			const errorData = rawData as Record<string, unknown> | null;
+			throw new APIError(
+				response.status,
+				rawData,
+				(errorData?.message as string | undefined) || `API Error: ${response.status}`
+			);
+		}
+
+		// IMPORTANT: Return the FULL response object (not just .data)
+		// This matches your actual API structure: { success, statusCode, message, data }
+		return rawData as T;
+	};
+
+	// Retry only GET requests (safe for 3G flaky networks)
+	const isGet = (options.method || 'GET').toUpperCase() === 'GET';
+	return isGet ? retryApiCall(makeRequest, 3) : makeRequest();
 }
 
 /**
- * Get authorization token from localStorage
+ * Get authorization token from Zustand persisted storage
  */
 export function getAuthToken(): string | null {
-  try {
-    const auth = localStorage.getItem('ajoplus-auth-storage');
-    if (auth) {
-      const { state } = JSON.parse(auth);
-      return state?.token || null;
-    }
-  } catch (error) {
-    console.error('Failed to retrieve auth token', error);
-  }
-  return null;
+	try {
+		const auth = localStorage.getItem('ajoplus-auth-storage');
+		if (auth) {
+			const parsed = JSON.parse(auth);
+			return parsed.state?.token || null;
+		}
+	} catch (error) {
+		console.error('Failed to retrieve auth token', error);
+	}
+	return null;
 }
 
 /**
- * Add auth token to request headers
- */
-export function getAuthHeaders() {
-  const token = getAuthToken();
-  return token ? { Authorization: `Bearer ${token}` } : {};
-}
-
-/**
- * Retry logic for failed requests (max 3 attempts with exponential backoff)
+ * Retry logic with exponential backoff — critical for low-end devices & 3G
  */
 export async function retryApiCall<T>(
-  fn: () => Promise<T>,
-  maxRetries = 3
+	fn: () => Promise<T>,
+	maxRetries = 3
 ): Promise<T> {
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      return await fn();
-    } catch (error) {
-      if (attempt === maxRetries - 1) throw error;
-      
-      // Exponential backoff: 1s, 2s, 4s
-      const delay = Math.pow(2, attempt) * 1000;
-      await new Promise(resolve => setTimeout(resolve, delay));
-    }
-  }
-  throw new Error('Max retries exceeded');
+	for (let attempt = 0; attempt < maxRetries; attempt++) {
+		try {
+			return await fn();
+		} catch (error) {
+			if (attempt === maxRetries - 1) throw error;
+
+			// Exponential backoff: 1s → 2s → 4s
+			const delay = Math.pow(2, attempt) * 1000;
+			await new Promise((resolve) => setTimeout(resolve, delay));
+		}
+	}
+	throw new Error('Max retries exceeded');
 }
 
 export default {
-  apiCall,
-  getAuthHeaders,
-  getAuthToken,
-  retryApiCall,
-  APIError,
+	apiCall,
+	getAuthToken,
+	retryApiCall,
+	APIError,
 };

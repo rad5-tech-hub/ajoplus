@@ -108,9 +108,8 @@ const SignupPage = () => {
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
-                className={`flex-1 h-1.5 rounded-full transition-all ${
-                  s <= step ? 'bg-emerald-600' : 'bg-slate-200'
-                }`}
+                className={`flex-1 h-1.5 rounded-full transition-all ${s <= step ? 'bg-emerald-600' : 'bg-slate-200'
+                  }`}
               />
             ))}
           </div>
@@ -169,7 +168,7 @@ const SignupPage = () => {
                   <div className="relative">
                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
-                      type="tel"
+                      type="number"
                       placeholder="+234 803 456 7890"
                       className="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 outline-none"
                       value={formData.phone}
@@ -210,7 +209,7 @@ const SignupPage = () => {
                     Account Number *
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     placeholder="Your bank account number"
                     className="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 outline-none"
                     value={formData.accountNumber}
