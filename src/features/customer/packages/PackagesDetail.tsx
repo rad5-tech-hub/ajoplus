@@ -15,21 +15,23 @@ const PackageDetail = () => {
   const userPackageData = userPackages?.find((pkg) => pkg.packageId === packageId);
 
   // Format package data from API
-  const packageData = userPackageData ? {
-    id: userPackageData.id,
-    title: userPackageData.package.name,
-    subtitle: userPackageData.package.description,
-    status: userPackageData.status,
-    totalAmount: `₦${parseFloat(userPackageData.package.totalPrice as string).toLocaleString()}`,
-    category: userPackageData.package.category.name,
-    totalPaid: `₦${parseFloat(userPackageData.totalPaid).toLocaleString('en-NG', { minimumFractionDigits: 2 })}`,
-    remaining: `₦${userPackageData.remainingBalance.toLocaleString()}`,
-    perPayment: `₦${parseFloat(userPackageData.installmentAmount).toLocaleString('en-NG', { minimumFractionDigits: 2 })}`,
-    duration: `${userPackageData.duration} months`,
-    frequency: userPackageData.paymentFrequency,
-    nextDue: new Date(userPackageData.nextPaymentDate).toLocaleDateString('en-GB'),
-    progress: userPackageData.progress,
-  } : null;
+  const packageData = userPackageData
+    ? {
+      id: userPackageData.id,
+      title: userPackageData.package.name,
+      subtitle: userPackageData.package.description,
+      status: userPackageData.status,
+      totalAmount: `₦${parseFloat(userPackageData.package.totalPrice as string).toLocaleString()}`,
+      category: userPackageData.package.category.name,
+      totalPaid: `₦${parseFloat(userPackageData.totalPaid).toLocaleString('en-NG', { minimumFractionDigits: 2 })}`,
+      remaining: `₦${userPackageData.remainingBalance.toLocaleString()}`,
+      perPayment: `₦${parseFloat(userPackageData.installmentAmount).toLocaleString('en-NG', { minimumFractionDigits: 2 })}`,
+      duration: `${userPackageData.duration} months`,
+      frequency: userPackageData.paymentFrequency,
+      nextDue: new Date(userPackageData.nextPaymentDate).toLocaleDateString('en-GB'),
+      progress: userPackageData.progress,
+    }
+    : null;
 
   // Fallback to default data if package not found
   const displayData = packageData || {
@@ -110,12 +112,8 @@ const PackageDetail = () => {
                 {index + 1}
               </div>
               <div>
-                <p className="font-medium text-slate-900 text-sm">
-                  {typeof item === 'string' ? item : item.name}
-                </p>
-                {typeof item === 'object' && item.detail && (
-                  <p className="text-xs text-slate-500">{item.detail}</p>
-                )}
+                <p className="font-medium text-slate-900 text-sm">{item.name}</p>
+                <p className="text-xs text-slate-500">{item.detail}</p>
               </div>
             </div>
           ))}
@@ -187,18 +185,27 @@ const PackageDetail = () => {
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                     <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 leading-tight">
-                      {packageData.title}
+                      {displayData.title}
                     </h1>
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-100 border border-blue-200 text-blue-700 text-xs font-medium rounded-full shrink-0">
-                      <span className="w-2 h-2 bg-blue-700 rounded-full" />
-                      Active
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full shrink-0 border
+                        ${displayData.status === 'active'
+                          ? 'bg-blue-100 border-blue-200 text-blue-700'
+                          : 'bg-amber-100 border-amber-200 text-amber-700'
+                        }`}
+                    >
+                      <span
+                        className={`w-2 h-2 rounded-full ${displayData.status === 'active' ? 'bg-blue-700' : 'bg-amber-500'
+                          }`}
+                      />
+                      {displayData.status.charAt(0).toUpperCase() + displayData.status.slice(1)}
                     </span>
                   </div>
-                  <p className="text-slate-500 mt-1.5 text-sm sm:text-base">{packageData.subtitle}</p>
+                  <p className="text-slate-500 mt-1.5 text-sm sm:text-base">{displayData.subtitle}</p>
                 </div>
                 <div className="sm:text-right shrink-0">
-                  <p className="text-2xl sm:text-3xl font-bold text-emerald-600">{packageData.totalAmount}</p>
-                  <p className="text-xs sm:text-sm text-slate-400 mt-0.5">{packageData.category}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-emerald-600">{displayData.totalAmount}</p>
+                  <p className="text-xs sm:text-sm text-slate-400 mt-0.5">{displayData.category}</p>
                 </div>
               </div>
 
@@ -227,11 +234,14 @@ const PackageDetail = () => {
               {/* 2-col on mobile, 3-col on md+ */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 sm:gap-4 lg:gap-6 mb-5 sm:mb-6 lg:mb-8">
                 {[
-                  { label: 'Total Package Price', value: packageData.totalAmount, red: false },
-                  { label: 'Total Paid', value: packageData.totalPaid, red: false },
-                  { label: 'Remaining Balance', value: packageData.remaining, red: true },
+                  { label: 'Total Package Price', value: displayData.totalAmount, red: false },
+                  { label: 'Total Paid', value: displayData.totalPaid, red: false },
+                  { label: 'Remaining Balance', value: displayData.remaining, red: true },
                 ].map(({ label, value, red }) => (
-                  <div key={label} className="bg-emerald-50 p-3 sm:p-4 rounded-xl text-center col-span-1 last:col-span-2 md:last:col-span-1">
+                  <div
+                    key={label}
+                    className="bg-emerald-50 p-3 sm:p-4 rounded-xl text-center col-span-1 last:col-span-2 md:last:col-span-1"
+                  >
                     <p className="text-slate-500 text-xs sm:text-sm">{label}</p>
                     <p className={`text-lg sm:text-xl lg:text-2xl font-bold mt-1.5 ${red ? 'text-red-600' : 'text-slate-900'}`}>
                       {value}
@@ -243,12 +253,12 @@ const PackageDetail = () => {
               <div className="mb-5 sm:mb-6 lg:mb-8">
                 <div className="flex justify-between text-xs sm:text-sm mb-2">
                   <span className="text-slate-500">Overall Progress</span>
-                  <span className="font-semibold text-emerald-600">{packageData.progress}%</span>
+                  <span className="font-semibold text-emerald-600">{displayData.progress}%</span>
                 </div>
                 <div className="h-2.5 sm:h-3 bg-slate-100 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-emerald-600 rounded-full transition-all duration-500"
-                    style={{ width: `${packageData.progress}%` }}
+                    style={{ width: `${displayData.progress}%` }}
                   />
                 </div>
               </div>
@@ -290,8 +300,13 @@ const PackageDetail = () => {
                         <p className="text-xs sm:text-sm text-slate-400">{c.date}</p>
                       </div>
                     </div>
-                    <div className={`px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-medium text-center
-                      ${c.status === 'approved' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                    <div
+                      className={`px-3 py-1 sm:px-4 sm:py-1.5 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-medium text-center
+                        ${c.status === 'approved'
+                          ? 'bg-emerald-100 text-emerald-700'
+                          : 'bg-amber-100 text-amber-700'
+                        }`}
+                    >
                       {c.status}
                       {c.status === 'pending' && (
                         <span className="text-[10px] sm:text-xs block leading-tight mt-0.5 opacity-80">
@@ -304,7 +319,7 @@ const PackageDetail = () => {
               </div>
             </div>
 
-            {/* Sidebar renders inline on mobile/tablet, hidden on lg (shown in sidebar col) */}
+            {/* Sidebar renders inline on mobile/tablet, hidden on lg */}
             <div className="lg:hidden">
               <SidebarContent />
             </div>
@@ -322,11 +337,11 @@ const PackageDetail = () => {
       <UploadReceiptModal
         isOpen={showUploadModal}
         onClose={() => setShowUploadModal(false)}
-        packageName={packageData.title}
+        packageName={displayData.title}
         recommendedAmount="₦5,769.23"
         onSuccess={(amount) =>
           navigate('/payment/success', {
-            state: { packageName: packageData.title, amount: `₦${amount}` },
+            state: { packageName: displayData.title, amount: `₦${amount}` },
           })
         }
       />
