@@ -1,13 +1,13 @@
 // src/features/customer/dashboard/components/MyPackages.tsx
 import { Calendar, ChevronRight, Package as PackageIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { usePackageStore } from '@/app/store/PackageStore';
+import { useUserPackages } from '@/app/store/PackageStore';
 
 interface Package {
   id: string;
   title: string;
   subtitle: string;
-  status: 'Active' | 'Completed';
+  status: 'active' | 'inactive' | 'completed' | 'suspended';
   totalPaid: string;
   remaining: string;
   progress: number;
@@ -19,21 +19,21 @@ interface Package {
 
 const MyPackages = () => {
   const navigate = useNavigate();
-  const joinedPackages = usePackageStore((state) => state.getPackages());
+  const { data: userPackages, isLoading, error } = useUserPackages();
 
-  // Transform JoinedPackage to Package format for display
-  const packages: Package[] = joinedPackages.map((pkg) => ({
+  // Transform API response to display format
+  const packages: Package[] = (userPackages ?? []).map((pkg) => ({
     id: pkg.id,
-    title: pkg.title,
-    subtitle: pkg.description,
+    title: pkg.package.name,
+    subtitle: pkg.package.description,
     status: pkg.status,
-    totalPaid: pkg.totalPaid,
-    remaining: pkg.remaining,
+    totalPaid: `₦${parseFloat(pkg.totalPaid).toLocaleString('en-NG', { minimumFractionDigits: 2 })}`,
+    remaining: `₦${pkg.remainingBalance.toLocaleString()}`,
     progress: pkg.progress,
-    duration: pkg.duration,
-    nextDue: pkg.nextDue,
-    amount: `₦${pkg.price.toLocaleString()}`,
-    frequency: pkg.frequency,
+    duration: `${pkg.duration} months`,
+    nextDue: new Date(pkg.nextPaymentDate).toLocaleDateString('en-GB'),
+    amount: `₦${parseFloat(pkg.package.totalPrice as string).toLocaleString()}`,
+    frequency: pkg.paymentFrequency,
   }));
 
   const handlePackageClick = (packageId: string) => {
@@ -43,6 +43,40 @@ const MyPackages = () => {
   const handleJoinPackage = () => {
     navigate('/browse');
   };
+
+  // Loading State
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="bg-white border border-slate-200 rounded-3xl p-6 animate-pulse">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex-1 space-y-3">
+                <div className="h-5 bg-slate-200 rounded-full w-1/3" />
+                <div className="h-4 bg-slate-100 rounded-full w-2/3" />
+              </div>
+              <div className="h-6 bg-slate-200 rounded-full w-20" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  // Error State
+  if (error) {
+    return (
+      <div className="bg-white border border-red-200 rounded-3xl p-8 text-center">
+        <p className="text-red-600 mb-4">Failed to load packages</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="text-red-600 underline text-sm hover:text-red-700"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   // Empty State
   if (packages.length === 0) {
@@ -86,7 +120,7 @@ const MyPackages = () => {
                   {pkg.title}
                 </h3>
 
-                {pkg.status === 'Active' ? (
+                {pkg.status === 'active' ? (
                   <span className="inline-flex items-center px-3 py-1 bg-blue-100 border border-blue-200 text-blue-700 text-xs font-medium rounded-2xl whitespace-nowrap">
                     <span className="w-2 h-2 bg-blue-700 rounded-full mr-1.5"></span>
                     Active

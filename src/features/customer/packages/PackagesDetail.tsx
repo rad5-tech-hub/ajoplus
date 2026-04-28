@@ -2,37 +2,41 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, CheckCircle, Clock, CreditCard } from 'lucide-react';
 import UploadReceiptModal from '@/components/ui/UploadReceiptModal';
-import { usePackageStore } from '@/app/store/PackageStore';
+import { useUserPackages } from '@/app/store/PackageStore';
 import { useState } from 'react';
 
 const PackageDetail = () => {
   const { packageId } = useParams<{ packageId: string }>();
   const navigate = useNavigate();
   const [showUploadModal, setShowUploadModal] = useState(false);
-  const getPackageById = usePackageStore((state) => state.getPackageById);
-  
-  const joinedPackage = getPackageById(packageId || '');
+  const { data: userPackages, isLoading } = useUserPackages();
+
+  // Find the specific package from user packages
+  const userPackageData = userPackages?.find((pkg) => pkg.packageId === packageId);
+
+  // Format package data from API
+  const packageData = userPackageData ? {
+    id: userPackageData.id,
+    title: userPackageData.package.name,
+    subtitle: userPackageData.package.description,
+    status: userPackageData.status,
+    totalAmount: `₦${parseFloat(userPackageData.package.totalPrice as string).toLocaleString()}`,
+    category: userPackageData.package.category.name,
+    totalPaid: `₦${parseFloat(userPackageData.totalPaid).toLocaleString('en-NG', { minimumFractionDigits: 2 })}`,
+    remaining: `₦${userPackageData.remainingBalance.toLocaleString()}`,
+    perPayment: `₦${parseFloat(userPackageData.installmentAmount).toLocaleString('en-NG', { minimumFractionDigits: 2 })}`,
+    duration: `${userPackageData.duration} months`,
+    frequency: userPackageData.paymentFrequency,
+    nextDue: new Date(userPackageData.nextPaymentDate).toLocaleDateString('en-GB'),
+    progress: userPackageData.progress,
+  } : null;
 
   // Fallback to default data if package not found
-  const packageData = joinedPackage ? {
-    id: joinedPackage.id,
-    title: joinedPackage.title,
-    subtitle: joinedPackage.description,
-    status: joinedPackage.status,
-    totalAmount: `₦${joinedPackage.price.toLocaleString()}`,
-    category: joinedPackage.category,
-    totalPaid: joinedPackage.totalPaid,
-    remaining: joinedPackage.remaining,
-    perPayment: `₦${(joinedPackage.price / 26).toLocaleString('en-US', { maximumFractionDigits: 2 })}`,
-    duration: joinedPackage.duration,
-    frequency: joinedPackage.frequency,
-    nextDue: joinedPackage.nextDue,
-    progress: joinedPackage.progress,
-  } : {
+  const displayData = packageData || {
     id: packageId,
     title: 'Smart Phone Package',
     subtitle: 'Save weekly and get the latest smartphone',
-    status: 'Active',
+    status: 'active',
     totalAmount: '₦150,000',
     category: 'Electronics',
     totalPaid: '₦97,500',
@@ -46,18 +50,27 @@ const PackageDetail = () => {
 
   const contributions = [
     { amount: '₦25,000', date: '15 Mar 2026', status: 'approved' },
-    { amount: '₦25,000', date: '8 Mar 2026',  status: 'approved' },
-    { amount: '₦25,000', date: '1 Mar 2026',  status: 'approved' },
+    { amount: '₦25,000', date: '8 Mar 2026', status: 'approved' },
+    { amount: '₦25,000', date: '1 Mar 2026', status: 'approved' },
     { amount: '₦25,000', date: '22 Feb 2026', status: 'approved' },
-    { amount: '₦25,000', date: '15 Feb 2026', status: 'pending'  },
+    { amount: '₦25,000', date: '15 Feb 2026', status: 'pending' },
   ];
 
   const metrics = [
-    { icon: Calendar,   label: 'Duration',    value: packageData.duration,   green: false },
-    { icon: Clock,      label: 'Frequency',   value: packageData.frequency,  green: false },
-    { icon: CreditCard, label: 'Per Payment', value: packageData.perPayment, green: true  },
-    { icon: Calendar,   label: 'Next Due',    value: packageData.nextDue,    green: false },
+    { icon: Calendar, label: 'Duration', value: displayData.duration, green: false },
+    { icon: Clock, label: 'Frequency', value: displayData.frequency, green: false },
+    { icon: CreditCard, label: 'Per Payment', value: displayData.perPayment, green: true },
+    { icon: Calendar, label: 'Next Due', value: displayData.nextDue, green: false },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 p-4 sm:p-6 lg:p-8 animate-pulse">
+        <div className="h-8 bg-slate-200 rounded-lg w-1/4 mb-8" />
+        <div className="h-96 bg-slate-200 rounded-3xl" />
+      </div>
+    );
+  }
 
   const SidebarContent = () => (
     <div className="space-y-4 sm:space-y-6">
@@ -66,10 +79,10 @@ const PackageDetail = () => {
         <h3 className="font-semibold text-base sm:text-lg mb-3 sm:mb-4 lg:mb-5">Payment Summary</h3>
         <div className="divide-y divide-emerald-100 text-sm sm:text-[15px]">
           {[
-            { label: 'Total Price',  value: '₦150,000',   cls: 'text-slate-900' },
-            { label: 'Total Paid',   value: '₦97,500',    cls: 'text-slate-900' },
-            { label: 'Remaining',    value: '₦52,500',    cls: 'text-red-600'   },
-            { label: 'Per Weekly',   value: '₦5,769.23',  cls: 'text-emerald-600' },
+            { label: 'Total Price', value: displayData.totalAmount, cls: 'text-slate-900' },
+            { label: 'Total Paid', value: displayData.totalPaid, cls: 'text-slate-900' },
+            { label: 'Remaining', value: displayData.remaining, cls: 'text-red-600' },
+            { label: 'Per Payment', value: displayData.perPayment, cls: 'text-emerald-600' },
           ].map(({ label, value, cls }) => (
             <div key={label} className="flex justify-between py-2.5 sm:py-3">
               <span className="text-slate-500">{label}</span>
@@ -88,11 +101,11 @@ const PackageDetail = () => {
           <h3 className="font-semibold text-sm sm:text-base">Package Items</h3>
         </div>
         <div className="space-y-3 sm:space-y-4">
-          {(joinedPackage?.packageItems || [
-            { n: 1, name: 'Bag of Rice',   detail: '50kg'     },
-            { n: 2, name: 'Cooking Oil',   detail: '5 liters' },
-          ]).map((item, index) => (
-            <div key={typeof item === 'string' ? index : item.n} className="flex gap-2.5 sm:gap-3">
+          {[
+            { n: 1, name: 'Bag of Rice', detail: '50kg' },
+            { n: 2, name: 'Cooking Oil', detail: '5 liters' },
+          ].map((item, index) => (
+            <div key={item.n} className="flex gap-2.5 sm:gap-3">
               <div className="w-6 h-6 sm:w-7 sm:h-7 bg-emerald-100 text-emerald-700 rounded-lg sm:rounded-2xl flex items-center justify-center text-xs font-medium shrink-0">
                 {index + 1}
               </div>
@@ -215,8 +228,8 @@ const PackageDetail = () => {
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 sm:gap-4 lg:gap-6 mb-5 sm:mb-6 lg:mb-8">
                 {[
                   { label: 'Total Package Price', value: packageData.totalAmount, red: false },
-                  { label: 'Total Paid',           value: packageData.totalPaid,   red: false },
-                  { label: 'Remaining Balance',    value: packageData.remaining,   red: true  },
+                  { label: 'Total Paid', value: packageData.totalPaid, red: false },
+                  { label: 'Remaining Balance', value: packageData.remaining, red: true },
                 ].map(({ label, value, red }) => (
                   <div key={label} className="bg-emerald-50 p-3 sm:p-4 rounded-xl text-center col-span-1 last:col-span-2 md:last:col-span-1">
                     <p className="text-slate-500 text-xs sm:text-sm">{label}</p>

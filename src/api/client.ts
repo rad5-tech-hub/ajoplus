@@ -1,5 +1,5 @@
 // src/api/client.ts
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://api.ajoplus.com';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.ajoplus.com';
 
 export class APIError extends Error {
 	constructor(
@@ -64,13 +64,22 @@ export async function apiCall<T>(
 
 /**
  * Get authorization token from Zustand persisted storage
+ * Checks both customer/agent auth and admin auth
  */
 export function getAuthToken(): string | null {
 	try {
+		// Check customer/agent auth first
 		const auth = localStorage.getItem('ajoplus-auth-storage');
 		if (auth) {
 			const parsed = JSON.parse(auth);
-			return parsed.state?.token || null;
+			if (parsed.state?.token) return parsed.state.token;
+		}
+
+		// Check admin auth
+		const adminAuth = localStorage.getItem('ajoplus-admin-auth-storage');
+		if (adminAuth) {
+			const parsed = JSON.parse(adminAuth);
+			if (parsed.state?.token) return parsed.state.token;
 		}
 	} catch (error) {
 		console.error('Failed to retrieve auth token', error);

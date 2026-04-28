@@ -1,64 +1,109 @@
 // src/app/store/PackageStore.ts
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import * as packageAPI from '@/api/package';
+import { useModalStore } from './ModalStore';
 
-export interface JoinedPackage {
-  id: string;
-  title: string;
-  price: number;
-  category: string;
-  duration: string;
-  frequency: string;
-  progress: number;
-  description: string;
-  packageItems: string[];
-  joinedDate: string;
-  status: 'Active' | 'Completed';
-  totalPaid: string;
-  remaining: string;
-  nextDue: string;
-}
+export type { UserPackage } from '@/api/package';
 
-interface PackageStore {
-  packages: JoinedPackage[];
-  joinPackage: (pkg: Omit<JoinedPackage, 'joinedDate' | 'status' | 'totalPaid' | 'remaining' | 'nextDue'>) => void;
-  removePackage: (id: string) => void;
-  getPackageById: (id: string) => JoinedPackage | undefined;
-  getPackages: () => JoinedPackage[];
-}
+/**
+ * Hook to fetch all packages joined by the current user
+ * Uses React Query for automatic caching and refetching
+ */
+export const useUserPackages = () => {
+  return useQuery({
+    queryKey: ['userPackages'],
+    queryFn: packageAPI.getUserPackages,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+    retry: 2,
+  });
+};
 
-export const usePackageStore = create<PackageStore>()(
-  persist(
-    (set, get) => ({
-      packages: [],
-      joinPackage: (pkg) =>
-        set((state) => {
-          const existingPackage = state.packages.find((p) => p.id === pkg.id);
+/**
+ * Hook to fetch all available packages for browsing
+ */
+export const useAvailablePackages = () => {
+  return useQuery({
+    queryKey: ['availablePackages'],
+    queryFn: packageAPI.getAvailablePackages,
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 15 * 60 * 1000,
+    retry: 2,
+  });
+};
 
-          if (existingPackage) {
-            return state; // Package already joined
-          }
+/**
+ * Hook to fetch a specific package by ID
+ */
+export const usePackageById = (packageId: string) => {
+  return useQuery({
+    queryKey: ['package', packageId],
+    queryFn: () => packageAPI.getPackageById(packageId),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    retry: 2,
+  });
+};
 
-          const newPackage: JoinedPackage = {
-            ...pkg,
-            joinedDate: new Date().toISOString().split('T')[0],
-            status: 'Active',
-            totalPaid: '₦0',
-            remaining: `₦${pkg.price.toLocaleString()}`,
-            nextDue: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-          };
+/**
+ * Hook to join a package
+ */
+export const useJoinPackage = () => {
+  const queryClient = useQueryClient();
+  const openModal = useModalStore((state) => state.openModal);
+  const closeModal = useModalStore((state) => state.closeModal);
 
-          return {
-            packages: [...state.packages, newPackage],
-          };
-        }),
-      removePackage: (id) =>
-        set((state) => ({
-          packages: state.packages.filter((pkg) => pkg.id !== id),
-        })),
-      getPackageById: (id) => get().packages.find((pkg) => pkg.id === id),
-      getPackages: () => get().packages,
-    }),
-    { name: 'ajoplus-packages' }
-  )
-);
+  return useMutation({
+    mutationFn: (packageId: string) => packageAPI.joinPackage(packageId),
+    onSuccess: () => {
+      // Invalidate user packages query to refetch
+      queryClient.invalidateQueries({ queryKey: ['userPackages'] });
+      openModal({
+        type: 'success',
+        title: 'Success!',
+        message: 'Package joined successfully. Redirecting...',
+      });
+      setTimeout(() => closeModal(), 2500);
+    },
+    onError: (error) => {
+      openModal({
+        type: 'error',
+        title: 'Failed to Join Package',
+        message: error instanceof Error ? error.message : 'Please try again',
+      });
+      setTimeout(() => closeModal(), 3000);
+    },
+  });
+};
+
+/**
+ * Hook to create a new package (Admin only)
+ */
+export const useCreatePackage = () => {
+  const queryClient = useQueryClient();
+  const openModal = useModalStore((state) => state.openModal);
+  const closeModal = useModalStore((state) => state.closeModal);
+
+  return useMutation({
+    mutationFn: (data: Parameters<typeof packageAPI.createPackage>[0]) =>
+      packageAPI.createPackage(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['availablePackages'] });
+      openModal({
+        type: 'success',
+        title: 'Package Created!',
+        message: 'New package has been created successfully.',
+      });
+      setTimeout(() => closeModal(), 2500);
+    },
+    onError: (error) => {
+      openModal({
+        type: 'error',
+        title: 'Failed to Create Package',
+        message: error instanceof Error ? error.message : 'Please try again',
+      });
+      setTimeout(() => closeModal(), 3000);
+    },
+  });
+};
+

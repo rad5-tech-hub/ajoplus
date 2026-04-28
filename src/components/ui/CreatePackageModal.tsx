@@ -1,34 +1,39 @@
 import { X, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { useCreatePackage } from '@/app/store/PackageStore';
 
 interface CreatePackageModalProps {
   isOpen: boolean;
   onClose: () => void;
+  categories?: Array<{ id: string; name: string }>;
 }
 
 interface PackageItem {
   id: number;
-  name: string;
+  itemName: string;
   quantity: string;
 }
 
-const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
+const CreatePackageModal = ({ isOpen, onClose, categories = [] }: CreatePackageModalProps) => {
+  const { mutate: createPackage, isPending } = useCreatePackage();
   const [packageItems, setPackageItems] = useState<PackageItem[]>([
-    { id: 1, name: '', quantity: '' }
+    { id: 1, itemName: '', quantity: '' }
   ]);
 
-  // Form state (this was missing!)
+  // Form state
   const [formData, setFormData] = useState({
-    productName: '',
-    category: '',
-    paymentFrequency: 'Monthly',
-    price: '',
+    name: '',
+    categoryId: '',
+    paymentFrequency: 'daily' as 'daily' | 'weekly' | 'monthly',
+    totalPrice: '',
     duration: '',
     description: '',
   });
 
+  const [formError, setFormError] = useState<string>('');
+
   const addItem = () => {
-    setPackageItems([...packageItems, { id: Date.now(), name: '', quantity: '' }]);
+    setPackageItems([...packageItems, { id: Date.now(), itemName: '', quantity: '' }]);
   };
 
   const removeItem = (id: number) => {
@@ -36,7 +41,7 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
     setPackageItems(packageItems.filter(item => item.id !== id));
   };
 
-  const updateItem = (id: number, field: 'name' | 'quantity', value: string) => {
+  const updateItem = (id: number, field: 'itemName' | 'quantity', value: string) => {
     setPackageItems(packageItems.map(item =>
       item.id === id ? { ...item, [field]: value } : item
     ));
@@ -45,28 +50,65 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    setFormError('');
   };
 
-  const handleSubmit = () => {
-    if (!formData.productName.trim() || !formData.category || !formData.price) {
-      alert('Please fill in all required fields');
-      return;
+  const validateForm = () => {
+    if (!formData.name.trim()) {
+      setFormError('Package name is required');
+      return false;
     }
+    if (!formData.categoryId) {
+      setFormError('Please select a category');
+      return false;
+    }
+    if (!formData.totalPrice || isNaN(Number(formData.totalPrice))) {
+      setFormError('Please enter a valid price');
+      return false;
+    }
+    if (!formData.duration || isNaN(Number(formData.duration))) {
+      setFormError('Please enter a valid duration (in months)');
+      return false;
+    }
+    if (!formData.description.trim()) {
+      setFormError('Description is required');
+      return false;
+    }
+    return true;
+  };
 
-    console.log('Creating package:', { ...formData, items: packageItems });
-    alert('Package created successfully! (Mock)');
-    onClose();
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
 
-    // Reset form after submit (optional)
-    setFormData({
-      productName: '',
-      category: '',
-      paymentFrequency: 'Monthly',
-      price: '',
-      duration: '',
-      description: '',
+    // Filter out empty items
+    const items = packageItems.filter(item => item.itemName.trim());
+
+    const payload = {
+      name: formData.name,
+      categoryId: formData.categoryId,
+      totalPrice: Number(formData.totalPrice),
+      duration: Number(formData.duration),
+      paymentFrequency: formData.paymentFrequency,
+      description: formData.description,
+      items: items.length > 0 ? items : [{ itemName: 'Standard Item', quantity: '1' }],
+    };
+
+    createPackage(payload, {
+      onSuccess: () => {
+        // Reset form
+        setFormData({
+          name: '',
+          categoryId: '',
+          paymentFrequency: 'daily',
+          totalPrice: '',
+          duration: '',
+          description: '',
+        });
+        setPackageItems([{ id: 1, itemName: '', quantity: '' }]);
+        setFormError('');
+        onClose();
+      },
     });
-    setPackageItems([{ id: 1, name: '', quantity: '' }]);
   };
 
   if (!isOpen) return null;
@@ -87,13 +129,20 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
               Create New Package
             </h2>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors" disabled={isPending}>
             <X className="w-5 h-5 md:w-6 md:h-6" />
           </button>
         </div>
 
         {/* Form Content */}
         <div className="flex-1 overflow-auto p-5 md:p-6 space-y-6">
+
+          {/* Error Message */}
+          {formError && (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-2xl">
+              <p className="text-sm text-red-700">{formError}</p>
+            </div>
+          )}
 
           {/* Row 1: Name + Category + Payment Frequency */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -102,12 +151,13 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                 Package Name <span className="text-red-500">*</span>
               </label>
               <input
-                name="productName"
+                name="name"
                 type="text"
                 placeholder="e.g., Special Food Package"
-                value={formData.productName}
+                value={formData.name}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600"
+                disabled={isPending}
+                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 disabled:bg-slate-50"
               />
             </div>
 
@@ -116,17 +166,25 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                 Category <span className="text-red-500">*</span>
               </label>
               <select
-                name="category"
-                value={formData.category}
+                name="categoryId"
+                value={formData.categoryId}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white"
+                disabled={isPending}
+                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white disabled:bg-slate-50"
               >
                 <option value="">Select category</option>
-                <option value="Food & Groceries">Food & Groceries</option>
-                <option value="Fashion">Fashion</option>
-                <option value="Electronics">Electronics</option>
-                <option value="Events">Events</option>
-                <option value="Others">Others</option>
+                {categories.length > 0 ? (
+                  categories.map(cat => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))
+                ) : (
+                  <>
+                    <option value="cat-1">Food & Groceries</option>
+                    <option value="cat-2">Fashion</option>
+                    <option value="cat-3">Electronics</option>
+                    <option value="cat-4">Events</option>
+                  </>
+                )}
               </select>
             </div>
 
@@ -137,12 +195,15 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
               <select
                 name="paymentFrequency"
                 value={formData.paymentFrequency}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white"
+                onChange={(e) => {
+                  setFormData(prev => ({ ...prev, paymentFrequency: e.target.value as 'daily' | 'weekly' | 'monthly' }));
+                }}
+                disabled={isPending}
+                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white disabled:bg-slate-50"
               >
-                <option value="Daily">Daily</option>
-                <option value="Weekly">Weekly</option>
-                <option value="Monthly">Monthly</option>
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
               </select>
             </div>
           </div>
@@ -154,39 +215,44 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                 Total Price (₦) <span className="text-red-500">*</span>
               </label>
               <input
-                name="price"
-                type="text"
+                name="totalPrice"
+                type="number"
                 placeholder="e.g., 350000"
-                value={formData.price}
+                value={formData.totalPrice}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600"
+                disabled={isPending}
+                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 disabled:bg-slate-50"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Duration <span className="text-red-500">*</span>
+                Duration (months) <span className="text-red-500">*</span>
               </label>
               <input
                 name="duration"
-                type="text"
-                placeholder="e.g., 12 months"
+                type="number"
+                placeholder="e.g., 12"
                 value={formData.duration}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600"
+                disabled={isPending}
+                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 disabled:bg-slate-50"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Description</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              Description <span className="text-red-500">*</span>
+            </label>
             <textarea
               name="description"
               placeholder="Brief description of the package..."
               rows={4}
               value={formData.description}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 text-base border border-slate-200 rounded-3xl focus:outline-none focus:border-emerald-600 resize-y"
+              disabled={isPending}
+              className="w-full px-4 py-3 text-base border border-slate-200 rounded-3xl focus:outline-none focus:border-emerald-600 resize-y disabled:bg-slate-50"
             />
           </div>
 

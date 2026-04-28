@@ -2,6 +2,7 @@
 import { Routes, Route, } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import ProtectedRoute from './ProtectedRoute';
+import AdminProtectedRoute from './AdminProtectedRoute';
 import RouteSuspenseFallback from '@/components/RouteSuspenseFallback';
 
 /**
@@ -15,6 +16,10 @@ const LoginPage = lazy(() => import('@/features/auth/LoginPage'));
 const SignupPage = lazy(() => import('@/features/auth/SignUpPage'));
 const BrowsePage = lazy(() => import('@/features/browse/BrowsePage'));
 
+// Admin auth routes (lazy-loaded)
+const AdminLoginPage = lazy(() => import('@/features/admin/auth/AdminLoginPage'));
+const AdminSignupPage = lazy(() => import('@/features/admin/auth/AdminSignupPage'));
+
 // Protected routes (lazy-loaded)
 const CustomerDashboard = lazy(() => import('@/features/customer/dashboard/CustomerDashboard'));
 const AgentDashboard = lazy(() => import('@/features/agent/dashboard/AgentDashboard'));
@@ -24,10 +29,13 @@ const MakePayment = lazy(() => import('@/features/customer/Payments/MakePayment'
 const ShoppingCart = lazy(() => import('@/features/cart/ShoppingCart'));
 const Checkout = lazy(() => import('@/features/cart/Checkout'));
 const PaymentSuccess = lazy(() => import('@/components/ui/PaymentSuccess'));
+
 const AppRouter = () => {
   return (
     <Routes>
-      {/* Public Routes - Lazy loaded */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* PUBLIC ROUTES */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
       <Route
         path="/"
         element={
@@ -36,6 +44,8 @@ const AppRouter = () => {
           </Suspense>
         }
       />
+
+      {/* Customer/Agent Auth Routes */}
       <Route
         path="/login"
         element={
@@ -52,6 +62,25 @@ const AppRouter = () => {
           </Suspense>
         }
       />
+
+      {/* ADMIN AUTH ROUTES (SEPARATE & PRIVATE) */}
+      <Route
+        path="/admin/login"
+        element={
+          <Suspense fallback={<RouteSuspenseFallback />}>
+            <AdminLoginPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/admin/signup"
+        element={
+          <Suspense fallback={<RouteSuspenseFallback />}>
+            <AdminSignupPage />
+          </Suspense>
+        }
+      />
+
       <Route
         path="/browse"
         element={
@@ -61,29 +90,15 @@ const AppRouter = () => {
         }
       />
 
-      {/* Protected Routes - Lazy loaded */}
-      <Route element={<ProtectedRoute />}>
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* CUSTOMER PROTECTED ROUTES (role: 'customer') */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      <Route element={<ProtectedRoute requiredRoles={['customer']} />}>
         <Route
           path="/dashboard/customer"
           element={
             <Suspense fallback={<RouteSuspenseFallback />}>
               <CustomerDashboard />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/dashboard/agent"
-          element={
-            <Suspense fallback={<RouteSuspenseFallback />}>
-              <AgentDashboard />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/dashboard/admin"
-          element={
-            <Suspense fallback={<RouteSuspenseFallback />}>
-              <AdminDashboard />
             </Suspense>
           }
         />
@@ -111,6 +126,40 @@ const AppRouter = () => {
             </Suspense>
           }
         />
+      </Route>
+
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* AGENT PROTECTED ROUTES (role: 'agent') */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      <Route element={<ProtectedRoute requiredRoles={['agent']} />}>
+        <Route
+          path="/dashboard/agent"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <AgentDashboard />
+            </Suspense>
+          }
+        />
+      </Route>
+
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* ADMIN PROTECTED ROUTES (SEPARATE AUTH SYSTEM - role: 'admin') */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      <Route element={<AdminProtectedRoute />}>
+        <Route
+          path="/dashboard/admin"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <AdminDashboard />
+            </Suspense>
+          }
+        />
+      </Route>
+
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* SHARED ROUTES (customer & agent) */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      <Route element={<ProtectedRoute requiredRoles={['customer', 'agent']} />}>
         <Route
           path="/cart"
           element={

@@ -52,7 +52,7 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
           </button>
         </div>
 
-        {process.env.NODE_ENV === 'development' && (
+        {/* {process.env.NODE_ENV === 'development' && (
           <div className="mt-4 pt-3 border-t border-slate-200 text-center">
             <button
               onClick={() => window.location.reload()}
@@ -61,7 +61,7 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
               Switch to Active State (Dev)
             </button>
           </div>
-        )}
+        )} */}
       </div>
     );
   }
@@ -134,7 +134,7 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
           </button>
         </div>
 
-        {process.env.NODE_ENV === 'development' && (
+        {/* {process.env.NODE_ENV === 'development' && (
           <div className="mt-4 pt-3 border-t border-white/20 text-center">
             <button
               onClick={() => {
@@ -146,7 +146,7 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
               Switch to Empty State (Dev)
             </button>
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Withdraw Modal */}

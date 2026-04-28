@@ -29,13 +29,38 @@ export interface AgentDashboardData {
 }
 
 export const getAgentDashboard = async (): Promise<AgentDashboardData> => {
-	const response = await apiCall<{
-		success: boolean;
-		statusCode: number;
-		message: string;
-		data: AgentDashboardData;
-	}>('/api/agents/dashboard');
+	try {
+		const response = await apiCall<{
+			success: boolean;
+			statusCode: number;
+			message: string;
+			data: AgentDashboardData;
+		}>('/api/agents/dashboard');
 
-	// Extract the inner "data" to match what your UI components expect
-	return response.data;
+		// Validate response structure
+		if (!response || typeof response !== 'object') {
+			throw new Error('Invalid API response: not an object');
+		}
+
+		if (!('data' in response)) {
+			throw new Error('Invalid API response: missing data field');
+		}
+
+		// Extract the inner "data" to match what your UI components expect
+		const data = response.data as AgentDashboardData;
+
+		// Validate required fields
+		if (!data.stats || !data.referral || !data.earningsBreakdown || !Array.isArray(data.referredUsers)) {
+			throw new Error('Invalid data structure: missing required fields');
+		}
+
+		return data;
+	} catch (error) {
+		// Log detailed error for debugging
+		console.error('[AgentDashboard API Error]', {
+			error: error instanceof Error ? error.message : String(error),
+			timestamp: new Date().toISOString(),
+		});
+		throw error;
+	}
 };

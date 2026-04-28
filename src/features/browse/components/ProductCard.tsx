@@ -2,7 +2,7 @@
 import { ShoppingCart, Clock, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '@/app/store/CartStore';
-import { usePackageStore } from '@/app/store/PackageStore';
+import { useJoinPackage } from '@/app/store/PackageStore';
 import { useModalStore } from '@/app/store/ModalStore';
 import Modal from '@/components/ui/GeneralModal';
 
@@ -25,7 +25,7 @@ interface ProductCardProps {
 const ProductCard = ({ item }: ProductCardProps) => {
   const navigate = useNavigate();
   const addToCart = useCartStore((state) => state.addToCart);
-  const joinPackage = usePackageStore((state) => state.joinPackage);
+  const { mutate: joinPackageAPI, isPending } = useJoinPackage();
   const openModal = useModalStore((state) => state.openModal);
 
   const handleAddToCart = () => {
@@ -51,35 +51,31 @@ const ProductCard = ({ item }: ProductCardProps) => {
 
   const handleAction = () => {
     if (isPackage) {
-      // Join the package to the store
-      joinPackage({
-        id: item.id,
-        title: item.title,
-        price: item.price,
-        category: item.category,
-        duration: item.duration || '',
-        frequency: item.frequency || '',
-        progress: item.progress || 0,
-        description: item.description || '',
-        packageItems: item.packageItems || [],
+      joinPackageAPI(item.id, {
+        onSuccess: () => {
+          openModal({
+            type: 'success',
+            title: 'Package Joined!',
+            message: `You've successfully joined ${item.title}.`,
+          });
+          setTimeout(() => {
+            useModalStore.getState().closeModal();
+            navigate(`/dashboard/customer/package/${item.id}`);
+          }, 2500);
+        },
+        onError: (err: unknown) => {
+          openModal({
+            type: 'error',
+            title: 'Failed to Join',
+            message: err instanceof Error ? err.message : 'Something went wrong. Please try again.',
+          });
+        },
       });
-
-      // Show success modal
-      openModal({
-        type: 'success',
-        title: 'Package Joined!',
-        message: `You've successfully joined ${item.title}. Redirecting to package details...`,
-      });
-
-      // Navigate to package details page after a short delay
-      setTimeout(() => {
-        useModalStore.getState().closeModal();
-        navigate(`/dashboard/customer/package/${item.id}`);
-      }, 2500);
     } else {
       handleAddToCart();
     }
   };
+
 
   return (
     <>
@@ -179,10 +175,11 @@ const ProductCard = ({ item }: ProductCardProps) => {
           <div className="mt-auto pt-2">
             <button
               onClick={handleAction}
-              className="w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] text-white font-semibold py-3.5 rounded-2xl flex items-center justify-center gap-2 transition-all duration-200 text-sm sm:text-base"
+              disabled={isPending}
+              className="w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] disabled:bg-emerald-400 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-2xl flex items-center justify-center gap-2 transition-all duration-200 text-sm sm:text-base"
             >
               <ShoppingCart className="w-4 h-4" />
-              {isPackage ? 'JOIN NOW' : 'ADD TO CART'}
+              {isPending ? 'Joining...' : isPackage ? 'JOIN NOW' : 'ADD TO CART'}
             </button>
           </div>
         </div>
