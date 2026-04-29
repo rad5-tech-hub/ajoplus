@@ -2,25 +2,46 @@
 import { useState } from 'react';
 import { Search, ArrowLeft, Package as PackageIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import BrowseTabs from './components/BrowseTabs';
 import ProductCard from './components/ProductCard';
 import { useAvailablePackages } from '@/app/store/PackageStore';
+import { getProducts, type Product } from '@/api/product';
 import type { Package } from '@/api/package';
 
-// ─── Transform API Package → ProductCard item shape ───────────────────────────
+// ─── Transform API Package → card item ────────────────────────────────────────
 
-function toCardItem(pkg: Package) {
+function toPackageCardItem(pkg: Package) {
   return {
     id: pkg.id,
     title: pkg.name,
     price: typeof pkg.totalPrice === 'string' ? parseFloat(pkg.totalPrice) : pkg.totalPrice,
     category: pkg.category?.name ?? 'Package',
-    type: 'package' as 'package' | 'product',
+    type: 'package' as const,
     duration: `${pkg.duration} month${pkg.duration !== 1 ? 's' : ''}`,
     frequency: pkg.paymentFrequency.charAt(0).toUpperCase() + pkg.paymentFrequency.slice(1),
     description: pkg.description,
-    image: '',  // API doesn't return images yet — ProductCard handles empty gracefully
+    image: '',
     packageItems: pkg.items?.map((i) => `${i.quantity} ${i.itemName}`) ?? [],
+  };
+}
+
+// ─── Transform API Product → card item ────────────────────────────────────────
+
+function toProductCardItem(product: Product) {
+  return {
+    id: product.id,
+    title: product.name,
+    price: typeof product.price === 'string' ? parseFloat(product.price) : product.price,
+    category: product.category?.name ?? 'Product',
+    type: 'product' as const,
+    duration: undefined,
+    frequency: undefined,
+    description: product.description,
+    image: product.imageUrl ?? '',
+    packageItems: [],
+    stockStatus: product.stockStatus,
+    quantityInStock: product.quantityInStock,
   };
 }
 
@@ -47,12 +68,44 @@ const BrowsePage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
 
-  const { data: packages, isLoading, error, refetch } = useAvailablePackages();
+  // Packages
+  const {
+    data: packages,
+    isLoading: packagesLoading,
+    error: packagesError,
+    refetch: refetchPackages,
+  } = useAvailablePackages();
 
-  const allItems = (packages ?? []).map(toCardItem);
+  // Products
+  const {
+    data: productsResp,
+    isLoading: productsLoading,
+    error: productsError,
+    refetch: refetchProducts,
+  } = useQuery({
+    queryKey: ['products', 'browse'],
+    queryFn: () => getProducts(1, 100),
+    staleTime: 5 * 60 * 1000,
+  });
 
-  // Derive category list from live data rather than hardcoding
-  const categories = ['All Categories', ...Array.from(new Set(allItems.map((i) => i.category)))];
+  const isLoading = packagesLoading || productsLoading;
+  const error = packagesError || productsError;
+
+  const refetchAll = () => {
+    refetchPackages();
+    refetchProducts();
+  };
+
+  // Merge both data sources into a unified list
+  const packageItems = (packages ?? []).map(toPackageCardItem);
+  const productItems = (productsResp?.products ?? []).map(toProductCardItem);
+  const allItems = [...packageItems, ...productItems];
+
+  // Derive category list from live data
+  const categories = [
+    'All Categories',
+    ...Array.from(new Set(allItems.map((i) => i.category))),
+  ];
 
   const filteredItems = allItems.filter((item) => {
     const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase());
@@ -116,16 +169,16 @@ const BrowsePage = () => {
         {/* Loading */}
         {isLoading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-            {[1, 2, 3, 4, 5, 6].map((i) => <CardSkeleton key={i} />)}
+            {Array.from({ length: 6 }).map((_, i) => <CardSkeleton key={i} />)}
           </div>
         )}
 
         {/* Error */}
         {error && !isLoading && (
           <div className="mt-12 text-center py-16 bg-white rounded-3xl border border-red-200">
-            <p className="text-red-600 mb-4">Failed to load packages</p>
+            <p className="text-red-600 mb-4">Failed to load items. Please try again.</p>
             <button
-              onClick={() => refetch()}
+              onClick={refetchAll}
               className="text-sm text-red-600 underline hover:text-red-700"
             >
               Retry

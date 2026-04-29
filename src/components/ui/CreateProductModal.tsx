@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getCategories, type Category } from '@/api/categories';
 import { createProduct } from '@/api/product';
+import { useModalStore } from '@/app/store/ModalStore';
 
 interface CreateProductModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface CreateProductModalProps {
 
 const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
   const queryClient = useQueryClient();
+  const { openModal } = useModalStore();
 
   const [formData, setFormData] = useState({
     productName: '',
@@ -33,17 +35,20 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
   const createMutation = useMutation({
     mutationFn: (payload: FormData) => createProduct(payload),
     onSuccess: () => {
-      // ✅ Fixed: removed unused `product` parameter
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      openModal('success', 'Product created successfully!');
       onClose();
     },
     onError: (err) => {
       console.error('Create product failed', err);
-      alert(err instanceof Error ? err.message : 'Failed to create product');
+      openModal('error', err instanceof Error ? err.message : 'Failed to create product');
     },
   });
 
-  const isSubmitting = createMutation.isPending ?? (createMutation as unknown as { isLoading: boolean }).isLoading ?? false;
+  const isSubmitting =
+    createMutation.isPending ??
+    (createMutation as unknown as { isLoading: boolean }).isLoading ??
+    false;
 
   useEffect(() => {
     return () => {
@@ -74,8 +79,21 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
   };
 
   const handleSubmit = () => {
-    if (!formData.productName.trim() || !formData.category || !formData.price) {
-      alert('Please fill in required fields');
+    if (!formData.productName.trim()) {
+      openModal('error', 'Product name is required.');
+      return;
+    }
+    if (!formData.category) {
+      openModal('error', 'Please select a category.');
+      return;
+    }
+    if (!formData.price) {
+      openModal('error', 'Price is required.');
+      return;
+    }
+    if (!formData.imageFile) {
+      // ✅ Caught client-side before even hitting the API
+      openModal('error', 'Please upload a product image.');
       return;
     }
 
@@ -86,7 +104,8 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
     fd.append('price', String(formData.price));
     fd.append('quantityInStock', String(formData.quantity || '0'));
     fd.append('stockStatus', formData.status);
-    if (formData.imageFile) fd.append('image', formData.imageFile);
+    // ✅ Fixed: was "image" — API expects "productImage"
+    fd.append('productImage', formData.imageFile);
 
     createMutation.mutate(fd);
   };
@@ -156,7 +175,13 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
                     <p className="text-slate-400 text-sm mt-1">PNG, JPG up to 5MB</p>
                   </div>
                 )}
-                <input id="image-input" type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                <input
+                  id="image-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
               </div>
             </div>
 
@@ -249,7 +274,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
 
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">
-              Description <span className="text-red-500">*</span>
+              Description
             </label>
             <textarea
               placeholder="Product description..."

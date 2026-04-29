@@ -1,8 +1,15 @@
 // src/features/customer/payments/components/PaymentUploadReceipt.tsx
 import { useState, useRef, DragEvent, ChangeEvent } from 'react';
-import { Upload } from 'lucide-react';
+import { Upload, Loader2 } from 'lucide-react';
 import { formatCurrency, convertToUSD } from '@/lib/currency';
+import { type PaymentType } from '@/api/payments';
+import { useSubmitPayment } from '@/app/store/PaymentStore';
+// import { useModalStore } from '@/app/store/ModalStore';
+import { useCartStore, useClearCart } from '@/app/store/CartStore';
+import { useQueryClient } from '@tanstack/react-query';
 import PaymentSuccess from '@/components/ui/PaymentSuccess';
+
+// ─── Types ─────────────────────────────────────────────────────────────────────
 
 interface CartItem {
   id: string;
@@ -23,33 +30,30 @@ interface PaymentUploadReceiptProps {
   cartItems?: CartItem[];
 }
 
+// ─── Component ─────────────────────────────────────────────────────────────────
+
 const PaymentUploadReceipt = ({
   onBack,
   amountPaid,
   setAmountPaid,
   packageId,
-  expectedAmount = 37500,
+  expectedAmount = 0,
   isCartPayment = false,
   cartItems = [],
 }: PaymentUploadReceiptProps) => {
+  const { mutate: submitPaymentMutation, isPending: isSubmittingMutation } = useSubmitPayment();
+  const { clearCart: clearCartLocal } = useCartStore();
+  const { mutate: clearCartAPI } = useClearCart();
+  const queryClient = useQueryClient();
+  // const closeModal = useModalStore((state) => state.closeModal);
 
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile]           = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted]   = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Derived hidden fields — sent to backend but never shown in UI
-  const savingsId = `${packageId}-${Date.now()}`;
-  const paymentType = isCartPayment ? 'cart' : packageId ? 'package' : 'savings';
-  const paymentItems = isCartPayment
-    ? cartItems.map((item) => ({
-        itemId: item.id,
-        itemName: item.title,
-        itemPrice: item.price,
-        itemType: item.type,
-        quantity: item.quantity,
-      }))
-    : [];
+  // ── File handlers ────────────────────────────────────────────────────────────
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -61,18 +65,15 @@ const PaymentUploadReceipt = ({
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
-    const droppedFile = e.dataTransfer.files[0];
-    if (
-      droppedFile &&
-      ['image/png', 'image/jpeg', 'application/pdf'].includes(droppedFile.type)
-    ) {
-      setFile(droppedFile);
+    const dropped = e.dataTransfer.files[0];
+    if (dropped && ['image/png', 'image/jpeg', 'application/pdf'].includes(dropped.type)) {
+      setFile(dropped);
     }
   };
 
   const handleFileSelect = (e: ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) setFile(selectedFile);
+    const selected = e.target.files?.[0];
+    if (selected) setFile(selected);
   };
 
   const removeFile = () => {
@@ -80,32 +81,74 @@ const PaymentUploadReceipt = ({
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const handleSubmit = () => {
+  // ── Submit ───────────────────────────────────────────────────────────────────
+
+  const handleSubmit = async () => {
     if (!amountPaid || !file) return;
 
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('amountPaid', amountPaid);
-    formData.append('packageId', packageId);
-    formData.append('savingsId', savingsId);       // always sent
-    formData.append('paymentType', paymentType);   // 'cart' | 'package' | 'savings'
+    setIsSubmitting(true);
+    try {
+      const paymentType: PaymentType = isCartPayment ? 'cart' : 'package';
 
-    if (isCartPayment && paymentItems.length > 0) {
-      formData.append('paymentItems', JSON.stringify(paymentItems));
+      // Call the mutation hook which handles errors/success automatically
+      submitPaymentMutation(
+        {
+          receipt:        file,
+          amountPaid:     amountPaid,
+          expectedAmount: String(expectedAmount),
+          paymentType,
+          packageId:      isCartPayment ? undefined : packageId,
+          cartItems: isCartPayment && cartItems.length > 0
+            ? JSON.stringify(
+                cartItems.map((item) => ({
+                  itemId:    item.id,
+                  itemName:  item.title,
+                  itemPrice: item.price,
+                  itemType:  item.type,
+                  quantity:  item.quantity,
+                }))
+              )
+            : undefined,
+        },
+        {
+          onSuccess: () => {
+            // Clear local cart and API cart on successful checkout
+            if (isCartPayment) {
+              clearCartLocal();
+              clearCartAPI(undefined, {
+                onError: (err) => {
+                  console.error('[Clear cart error]', err);
+                  // Don't fail the payment flow if cart clear fails
+                },
+              });
+              queryClient.invalidateQueries({ queryKey: ['cart'] });
+            }
+
+            // Close any existing modals and wait a moment for success modal to show
+            setTimeout(() => {
+              setIsSubmitted(true);
+            }, 2500);
+          },
+          onError: (err) => {
+            console.error('[Submit payment error]', err);
+            setIsSubmitting(false);
+            // Error modal is shown by the useSubmitPayment hook
+          },
+        }
+      );
+    } catch (err) {
+      console.error('[Handle submit error]', err);
+      setIsSubmitting(false);
     }
-
-    // TODO: Send formData to backend API
-    // const response = await fetch('/api/payments/submit', {
-    //   method: 'POST',
-    //   body: formData,
-    // });
-
-    setIsSubmitted(true);
   };
 
-  if (isSubmitted) {
-    return <PaymentSuccess />;
-  }
+  // ── Success screen ────────────────────────────────────────────────────────────
+
+  if (isSubmitted) return <PaymentSuccess />;
+
+  // ── Form ─────────────────────────────────────────────────────────────────────
+
+  const canSubmit = !!amountPaid && !!file && !isSubmittingMutation;
 
   return (
     <div className="space-y-8">
@@ -120,9 +163,10 @@ const PaymentUploadReceipt = ({
           <input
             type="text"
             value={amountPaid}
+            disabled={isSubmitting}
             onChange={(e) => setAmountPaid(e.target.value.replace(/[^0-9]/g, ''))}
             placeholder="Enter amount"
-            className="w-full bg-white border-2 border-emerald-500 focus:border-emerald-600 rounded-2xl px-5 py-4 text-lg focus:outline-none transition-all"
+            className="w-full bg-white border-2 border-emerald-500 focus:border-emerald-600 rounded-2xl px-5 py-4 text-lg focus:outline-none transition-all disabled:opacity-50"
           />
           <p className="text-xs text-slate-500 mt-2">
             Expected: {formatCurrency(expectedAmount, 'NGN')} (
@@ -141,9 +185,12 @@ const PaymentUploadReceipt = ({
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-              className={`border-2 border-dashed rounded-3xl p-12 text-center transition-all cursor-pointer min-h-55 flex flex-col items-center justify-center
-                ${isDragging ? 'border-emerald-600 bg-emerald-50' : 'border-slate-300 hover:border-slate-400'}`}
+              onClick={() => !isSubmitting && fileInputRef.current?.click()}
+              className={`border-2 border-dashed rounded-3xl p-12 text-center transition-all cursor-pointer min-h-48 flex flex-col items-center justify-center ${
+                isDragging
+                  ? 'border-emerald-600 bg-emerald-50'
+                  : 'border-slate-300 hover:border-slate-400'
+              } ${isSubmitting ? 'opacity-50 pointer-events-none' : ''}`}
             >
               <div className="mx-auto w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-6">
                 <Upload className="w-8 h-8 text-slate-400" />
@@ -173,7 +220,8 @@ const PaymentUploadReceipt = ({
               <p className="font-medium text-slate-900">{file.name}</p>
               <button
                 onClick={removeFile}
-                className="text-red-600 hover:text-red-700 text-sm mt-3 font-medium"
+                disabled={isSubmitting}
+                className="text-red-600 hover:text-red-700 text-sm mt-3 font-medium disabled:opacity-50"
               >
                 Remove
               </button>
@@ -202,21 +250,32 @@ const PaymentUploadReceipt = ({
       <div className="flex gap-4 pt-4">
         <button
           onClick={onBack}
-          className="flex-1 bg-slate-900 hover:bg-slate-800 cursor-pointer transition-colors text-white font-semibold py-4 rounded-2xl"
+          disabled={isSubmittingMutation}
+          className="flex-1 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors text-white font-semibold py-4 rounded-2xl"
         >
           Back
         </button>
 
         <button
           onClick={handleSubmit}
-          disabled={!amountPaid || !file}
-          className={`flex-1 font-semibold py-4 rounded-2xl transition-all ${
-            amountPaid && file
+          disabled={!canSubmit}
+          className={`flex-1 font-semibold py-4 rounded-2xl transition-all flex items-center justify-center gap-2 ${
+            canSubmit
               ? 'bg-emerald-600 hover:bg-emerald-700 cursor-pointer text-white'
               : 'bg-slate-200 text-slate-400 cursor-not-allowed'
           }`}
         >
-          Submit Receipt
+          {isSubmittingMutation ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Submitting…
+            </>
+          ) : (
+            <>
+              <Upload className="w-5 h-5" />
+              Submit Receipt
+            </>
+          )}
         </button>
       </div>
     </div>

@@ -1,14 +1,20 @@
 // src/app/store/cartStore.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import * as cartAPI from '@/api/cart';
 
 interface CartItem {
   id: string;
-  title: string;
+  title?: string;
   price: number;
   image?: string;
   type: 'package' | 'product';
   quantity: number;
+  itemId?: string;
+  cartId?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface CartStore {
@@ -19,6 +25,7 @@ interface CartStore {
   clearCart: () => void;
   getCount: () => number;
   getTotal: () => number;
+  syncCart: (items: CartItem[]) => void;
 }
 
 export const useCartStore = create<CartStore>()(
@@ -57,6 +64,7 @@ export const useCartStore = create<CartStore>()(
                 ),
         })),
       clearCart: () => set({ items: [] }),
+      syncCart: (items: CartItem[]) => set({ items }),
       getCount: () => get().items.reduce((sum, item) => sum + item.quantity, 0),
       getTotal: () =>
         get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),
@@ -64,3 +72,84 @@ export const useCartStore = create<CartStore>()(
     { name: 'ajoplus-cart' }
   )
 );
+
+/**
+ * React Query hook to fetch user's cart from server
+ */
+export const useGetCart = () => {
+  return useQuery({
+    queryKey: ['cart'],
+    queryFn: cartAPI.getCart,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    retry: 1,
+  });
+};
+
+/**
+ * React Query hook to add item to cart
+ */
+export const useAddToCart = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: cartAPI.AddToCartRequest) => cartAPI.addToCart(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cart'] });
+    },
+    onError: (error) => {
+      console.error('Failed to add item to cart:', error);
+    },
+  });
+};
+
+/**
+ * React Query hook to update cart item quantity
+ */
+export const useUpdateCartItem = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ itemId, quantity }: { itemId: string; quantity: number }) =>
+      cartAPI.updateCartItem(itemId, { quantity }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cart'] });
+    },
+    onError: (error) => {
+      console.error('Failed to update cart item:', error);
+    },
+  });
+};
+
+/**
+ * React Query hook to remove item from cart
+ */
+export const useRemoveFromCart = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (itemId: string) => cartAPI.removeFromCart(itemId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cart'] });
+    },
+    onError: (error) => {
+      console.error('Failed to remove item from cart:', error);
+    },
+  });
+};
+
+/**
+ * React Query hook to clear the cart
+ */
+export const useClearCart = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => cartAPI.clearCart(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cart'] });
+    },
+    onError: (error) => {
+      console.error('Failed to clear cart:', error);
+    },
+  });
+};

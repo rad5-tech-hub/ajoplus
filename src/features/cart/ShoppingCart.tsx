@@ -1,13 +1,18 @@
 // src/features/cart/ShoppingCart.tsx
 import { useNavigate } from 'react-router-dom';
 import { Trash2, Plus, Minus, ArrowLeft, ShoppingBag } from 'lucide-react';
-import { useCartStore } from '@/app/store/CartStore';
+import { useCartStore, useRemoveFromCart, useUpdateCartItem, useClearCart } from '@/app/store/CartStore';
 import { formatCurrency, convertToUSD } from '@/lib/currency';
+import { useModalStore } from '@/app/store/ModalStore';
 import CustomerNavbar from '../customer/components/CustomerNavbar';
 
 const ShoppingCart = () => {
   const navigate = useNavigate();
-  const { items, removeFromCart, clearCart, updateQuantity } = useCartStore();
+  const { items, removeFromCart: removeFromCartLocal, clearCart: clearCartLocal, updateQuantity } = useCartStore();
+  const { mutate: removeFromCartAPI } = useRemoveFromCart();
+  const { mutate: updateCartItemAPI } = useUpdateCartItem();
+  const { mutate: clearCartAPI } = useClearCart();
+  const openModal = useModalStore((state) => state.openModal);
 
   const itemCount = items.reduce(
     (sum, item) => sum + Number(item.quantity || 0),
@@ -27,12 +32,89 @@ const ShoppingCart = () => {
     if (!item) return;
 
     const currentQty = Number(item.quantity || 0);
+    const newQty = type === 'inc' ? currentQty + 1 : currentQty - 1;
 
-    if (type === 'inc') {
-      updateQuantity(id, currentQty + 1);
+    // Update local store immediately for optimistic UI
+    updateQuantity(id, newQty);
+
+    // If quantity is 0, remove from cart; otherwise update
+    if (newQty < 1) {
+      removeFromCartAPI(item.cartId || id, {
+        onError: () => {
+          // Revert on error
+          updateQuantity(id, currentQty);
+          openModal({
+            type: 'error',
+            title: 'Failed',
+            message: 'Could not update cart',
+          });
+          setTimeout(() => useModalStore.getState().closeModal(), 2500);
+        },
+      });
     } else {
-      updateQuantity(id, currentQty - 1);
+      updateCartItemAPI(
+        { itemId: item.cartId || id, quantity: newQty },
+        {
+          onError: () => {
+            // Revert on error
+            updateQuantity(id, currentQty);
+            openModal({
+              type: 'error',
+              title: 'Failed',
+              message: 'Could not update quantity',
+            });
+            setTimeout(() => useModalStore.getState().closeModal(), 2500);
+          },
+        }
+      );
     }
+  };
+
+  const handleRemoveItem = (id: string, cartId: string | undefined) => {
+    // Remove from local store immediately for optimistic UI
+    removeFromCartLocal(id);
+
+    // Call API to sync
+    removeFromCartAPI(cartId || id, {
+      onError: () => {
+        // Revert on error by adding back to local store
+        const item = items.find((i) => i.id === id);
+        if (item) {
+          const addBackStore = useCartStore.getState();
+          addBackStore.addToCart({
+            id: item.id,
+            title: item.title || '',
+            price: item.price,
+            type: item.type,
+          });
+        }
+      },
+    });
+  };
+
+  const handleClearCart = () => {
+    // Clear local store immediately
+    clearCartLocal();
+
+    // Call API to sync
+    clearCartAPI(undefined, {
+      onSuccess: () => {
+        openModal({
+          type: 'success',
+          title: 'Cart Cleared',
+          message: 'Your cart has been cleared.',
+        });
+        setTimeout(() => useModalStore.getState().closeModal(), 2000);
+      },
+      onError: () => {
+        openModal({
+          type: 'error',
+          title: 'Failed',
+          message: 'Could not clear cart',
+        });
+        setTimeout(() => useModalStore.getState().closeModal(), 2500);
+      },
+    });
   };
 
   if (items.length === 0) {
@@ -161,7 +243,7 @@ const ShoppingCart = () => {
                     </div>
 
                     <button
-                      onClick={() => removeFromCart(item.id)}
+                      onClick={() => handleRemoveItem(item.id, item.cartId)}
                       className="text-red-500 hover:text-red-600 p-2 transition-colors"
                       aria-label="Remove item"
                     >
@@ -176,7 +258,7 @@ const ShoppingCart = () => {
 
             <div className="flex justify-center sm:justify-end">
               <button
-                onClick={clearCart}
+                onClick={handleClearCart}
                 className="w-full sm:w-auto flex items-center justify-center gap-2 text-red-600 hover:text-red-700 font-medium px-5 py-3 rounded-2xl border border-red-200 hover:border-red-300 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />

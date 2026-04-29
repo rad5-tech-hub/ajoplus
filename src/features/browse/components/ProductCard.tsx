@@ -1,7 +1,7 @@
 // src/features/browse/components/ProductCard.tsx
 import { ShoppingCart, Clock, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useCartStore } from '@/app/store/CartStore';
+import { useCartStore, useAddToCart } from '@/app/store/CartStore';
 import { useJoinPackage } from '@/app/store/PackageStore';
 import { useModalStore } from '@/app/store/ModalStore';
 import Modal from '@/components/ui/GeneralModal';
@@ -25,10 +25,12 @@ interface ProductCardProps {
 const ProductCard = ({ item }: ProductCardProps) => {
   const navigate = useNavigate();
   const addToCart = useCartStore((state) => state.addToCart);
-  const { mutate: joinPackageAPI, isPending } = useJoinPackage();
+  const { mutate: addToCartAPI, isPending: isAddingToCart } = useAddToCart();
+  const { mutate: joinPackageAPI, isPending: isJoiningPackage } = useJoinPackage();
   const openModal = useModalStore((state) => state.openModal);
 
   const handleAddToCart = () => {
+    // Update local store immediately for optimistic UI
     addToCart({
       id: item.id,
       title: item.title,
@@ -36,30 +38,45 @@ const ProductCard = ({ item }: ProductCardProps) => {
       type: item.type,
     });
 
-    openModal({
-      type: 'success',
-      title: 'Added to Cart',
-      message: `${item.title} has been added successfully.`,
-    });
-
-    setTimeout(() => {
-      useModalStore.getState().closeModal();
-    }, 2500);
+    // Call API to sync with server
+    addToCartAPI(
+      {
+        itemId: item.id,
+        type: item.type,
+        quantity: 1,
+        price: item.price,
+      },
+      {
+        onSuccess: () => {
+          openModal({
+            type: 'success',
+            title: 'Added to Cart',
+            message: `${item.title} has been added successfully.`,
+          });
+          setTimeout(() => useModalStore.getState().closeModal(), 2500);
+        },
+        onError: (error) => {
+          openModal({
+            type: 'error',
+            title: 'Failed to Add to Cart',
+            message: error instanceof Error ? error.message : 'Please try again',
+          });
+          setTimeout(() => useModalStore.getState().closeModal(), 2500);
+        },
+      }
+    );
   };
 
   const isPackage = item.type === 'package';
+  const isPending = isPackage ? isJoiningPackage : isAddingToCart;
 
   const handleAction = () => {
     if (isPackage) {
       joinPackageAPI(item.id, {
         onSuccess: () => {
-          // Store's onSuccess already shows the modal — just handle navigation
           setTimeout(() => {
             navigate(`/dashboard/customer/package/${item.id}`);
           }, 2500);
-        },
-        onError: () => {
-          // Store's onError already shows the error modal — nothing extra needed
         },
       });
     } else {
