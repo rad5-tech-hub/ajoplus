@@ -1,86 +1,81 @@
-// src/api/auth.ts
 import { User, AuthTokens, LoginCredentials, SignupData } from '@/features/auth/types';
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
+import { apiCall } from './client';
 
 interface LoginResponse {
-	success: boolean;
-	statusCode: number;
-	message: string;
-	data: AuthTokens & { user: User };
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: AuthTokens & { user: User };
 }
 
 interface SignupResponse {
-	success: boolean;
-	statusCode: number;
-	message: string;
-	data: AuthTokens & { user: User };
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: AuthTokens & { user: User };
 }
 
 export async function loginUser(
-	credentials: LoginCredentials
+  credentials: LoginCredentials
 ): Promise<{ user: User; token: string; refreshToken: string }> {
-	const response = await fetch(`${BASE_URL}/api/auth/login`, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({
-			email: credentials.email,
-			password: credentials.password,
-		}),
-	});
+  const json = await apiCall<LoginResponse>('/api/auth/login', {
+    method: 'POST',
+    body: JSON.stringify({
+      email: credentials.email,
+      password: credentials.password,
+    }),
+    headers: { 'Content-Type': 'application/json' },
+  });
 
-	const json: LoginResponse = await response.json();
+  if (!json?.success) throw new Error(json?.message || 'Login failed');
 
-	if (!response.ok || !json.success) {
-		throw new Error(json.message ?? 'Login failed');
-	}
-
-	return {
-		user: json.data.user,
-		token: json.data.accessToken,
-		refreshToken: json.data.refreshToken,
-	};
+  return {
+    user: json.data.user,
+    token: json.data.accessToken,
+    refreshToken: json.data.refreshToken,
+  };
 }
 
 export async function signupUser(
-	data: SignupData
+  data: SignupData
 ): Promise<{ user: User; token: string; refreshToken: string }> {
-	const response = await fetch(`${BASE_URL}/api/auth/register`, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({
-			fullName: data.fullName,
-			email: data.email,
-			phoneNumber: data.phone,
-			accountNumber: data.accountNumber,
-			bankName: data.bankName,
-			role: data.accountType,
-			password: data.password,
-			confirmPassword: data.password,
-			referralCode: data.referralCode,
-		}),
-	});
+  const json = await apiCall<SignupResponse>('/api/auth/register', {
+    method: 'POST',
+    body: JSON.stringify({
+      fullName: data.fullName,
+      email: data.email,
+      phoneNumber: data.phone,
+      accountNumber: data.accountNumber,
+      bankName: data.bankName,
+      role: data.accountType,
+      password: data.password,
+      confirmPassword: data.password,
+      referralCode: data.referralCode,
+    }),
+    headers: { 'Content-Type': 'application/json' },
+  });
 
-	const json: SignupResponse = await response.json();
+  if (!json?.success) throw new Error(json?.message || 'Signup failed');
 
-	if (!response.ok || !json.success) {
-		throw new Error(json.message ?? 'Signup failed');
-	}
-
-	return {
-		user: json.data.user,
-		token: json.data.accessToken,
-		refreshToken: json.data.refreshToken,
-	};
+  return {
+    user: json.data.user,
+    token: json.data.accessToken,
+    refreshToken: json.data.refreshToken,
+  };
 }
 
 export async function logoutUser(): Promise<void> {
-	const response = await fetch(`${BASE_URL}/api/auth/logout`, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-	});
+  try {
+    const resp = await apiCall<{ success: boolean; message?: string; data: null }>(
+      '/api/auth/logout',
+      { method: 'POST' }
+    );
 
-	if (!response.ok) {
-		throw new Error('Logout request failed');
-	}
+    if (!resp?.success) throw new Error(resp?.message || 'Logout failed');
+  } catch (error) {
+    console.warn('[logoutUser] error', error);
+    throw error;
+  }
 }
+
+export default { loginUser, signupUser, logoutUser };

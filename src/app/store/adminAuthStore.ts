@@ -72,13 +72,18 @@ export const useAdminAuthStore = create<AdminAuthStore>()(
 			},
 
 			logout: async () => {
-				await adminAPI.logoutAdmin().catch(console.warn);
-				set({
-					admin: null,
-					token: null,
-					isAuthenticated: false,
-					error: null,
-				});
+				try {
+					await adminAPI.logoutAdmin();
+				} catch (err) {
+					console.warn('[adminAuthStore.logout] logout API failed', err);
+				} finally {
+					set({
+						admin: null,
+						token: null,
+						isAuthenticated: false,
+						error: null,
+					});
+				}
 			},
 
 			clearError: () => set({ error: null }),

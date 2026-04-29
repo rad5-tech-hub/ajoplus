@@ -4,6 +4,7 @@ import { PiggyBank } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useDailyAjoStore } from '@/app/store/DailyAjoStore';
 import DailyAjoWithdrawModal from '@/components/ui/DailyAjoWithdrawModal';
+import { useCustomerWallet } from '@/app/store/CustomerStore';
 
 interface AjoDailySavingsProps {
   onOpenDailyModal: () => void;
@@ -18,6 +19,8 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
     availableBalance,
     daysSaved,
   } = useDailyAjoStore();
+
+  const { data: wallet } = useCustomerWallet();
 
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const navigate = useNavigate();
@@ -40,7 +43,7 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
           </div>
 
           <h3 className="font-semibold text-slate-900 text-base mb-1">No Active Daily Ajo Yet</h3>
-          <p className="text-slate-500 text-sm max-w-[260px] mx-auto leading-snug">
+          <p className="text-slate-500 text-sm max-w-65 mx-auto leading-snug">
             Start saving daily and build your emergency fund with just ₦500 per day.
           </p>
 
@@ -79,7 +82,7 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
         {/* Daily Amount */}
         <div className="mb-4">
           <p className="text-emerald-100 text-xs font-medium">Daily Amount</p>
-          <p className="text-2xl font-bold mt-0.5">₦{dailyAmount.toLocaleString()}</p>
+          <p className="text-2xl font-bold mt-0.5">₦{(wallet?.dailyAmount ?? dailyAmount).toLocaleString()}</p>
         </div>
 
         {/* First Info Box */}
@@ -87,15 +90,15 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
           <div className="space-y-2.5">
             <div>
               <p className="text-emerald-100 text-xs">Total Saved</p>
-              <p className="text-base font-semibold text-white">₦{totalSaved.toLocaleString()}</p>
+              <p className="text-base font-semibold text-white">₦{(wallet?.totalSaved ?? totalSaved).toLocaleString()}</p>
             </div>
             <div>
               <p className="text-emerald-100 text-xs">Commission Paid (5%)</p>
-              <p className="text-base font-semibold text-red-300">-₦{commissionPaid.toLocaleString()}</p>
+              <p className="text-base font-semibold text-red-300">-₦{(wallet?.commissionPaid ?? commissionPaid).toLocaleString()}</p>
             </div>
             <div className="pt-2 border-t border-emerald-100/40">
               <p className="text-emerald-100 text-xs">Available Balance</p>
-              <p className="text-lg font-bold text-white">₦{availableBalance.toLocaleString()}</p>
+              <p className="text-lg font-bold text-white">₦{(wallet?.availableBalance ?? availableBalance).toLocaleString()}</p>
             </div>
           </div>
         </div>
@@ -105,7 +108,7 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
           <div className="space-y-2.5">
             <div>
               <p className="text-emerald-100 text-xs">You've saved for</p>
-              <p className="text-sm font-medium text-white">{daysSaved} days</p>
+              <p className="text-sm font-medium text-white">{wallet?.daysSaved ?? daysSaved} days</p>
             </div>
             <div>
               <p className="text-emerald-100 text-xs">Next commission deduction</p>
@@ -113,7 +116,7 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
             </div>
             <div>
               <p className="text-emerald-100 text-xs">Monthly summary</p>
-              <p className="text-sm font-medium text-white">₦{(dailyAmount * 30).toLocaleString()}/month</p>
+              <p className="text-sm font-medium text-white">₦{((wallet?.dailyAmount ?? dailyAmount) * 30).toLocaleString()}/month</p>
             </div>
           </div>
         </div>

@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react';
 import { Trash2, Edit2, AlertTriangle } from 'lucide-react';
 import CreatePackageModal from '@/components/ui/CreatePackageModal';
 import CategoryManagement from '@/components/ui/CategoryManagement';
-import { useAvailablePackages } from '@/app/store/PackageStore';
+import { useAvailablePackages} from '@/app/store/PackageStore';
 import type { Package as APIPackage } from '@/api/package';
 
 // ─── Display shape (UI only) ──────────────────────────────────────────────────
@@ -64,11 +64,14 @@ const PackageManagement = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [editingPackage, setEditingPackage] = useState<APIPackage | null>(null);
+  // const deletePackageMutation = useDeletePackage();
 
   // TODO: wire to DELETE /api/package/packages/:id when endpoint is ready
-  // const handleDelete = (id: string) => {
+  // const handleDelete = (id: string | null) => {
+  //   if (!id) return;
+  //   deletePackageMutation.mutate(id);
   //   setDeleteConfirmId(null);
-  //   // deletePackageMutation.mutate(_id);
   // };
 
   // TODO: wire to PATCH /api/package/packages/:id when endpoint is ready
@@ -154,7 +157,7 @@ const PackageManagement = () => {
                     <td className="py-5 px-4 text-slate-600 text-sm">{pkg.frequency}</td>
                     <td className="py-5 px-6 lg:px-8 text-right whitespace-nowrap">
                       {/* TODO: uncomment onClick when PATCH endpoint is ready */}
-                      <button className="text-emerald-600 hover:text-emerald-700 hover:underline cursor-not-allowed opacity-50 mr-4 text-sm font-medium transition-colors inline-flex items-center gap-1">
+                      <button onClick={() => { setEditingPackage(apiPackages?.find(p => p.id === pkg.id) ?? null); setIsCreateModalOpen(true); }} className="text-emerald-600 cursor-pointer hover:text-emerald-700 mr-4 text-sm font-medium transition-colors inline-flex items-center gap-1">
                         <Edit2 className="w-3 h-3" /> Edit
                       </button>
                       <button
@@ -197,7 +200,7 @@ const PackageManagement = () => {
                 </div>
                 <div className="flex gap-3 border-t border-slate-100 pt-3">
                   {/* TODO: uncomment onClick when PATCH endpoint is ready */}
-                  <button className="flex-1 text-center text-emerald-600 text-sm font-medium py-1.5 rounded-lg opacity-50 cursor-not-allowed inline-flex items-center justify-center gap-1">
+                  <button onClick={() => { setEditingPackage(apiPackages?.find(p => p.id === pkg.id) ?? null); setIsCreateModalOpen(true); }} className="flex-1 text-center text-emerald-600 text-sm font-medium py-1.5 rounded-lg inline-flex items-center justify-center gap-1">
                     <Edit2 className="w-4 h-4" /> Edit
                   </button>
                   <div className="w-px bg-slate-100" />
@@ -215,7 +218,8 @@ const PackageManagement = () => {
 
       <CreatePackageModal
         isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
+        onClose={() => { setIsCreateModalOpen(false); setEditingPackage(null); }}
+        initialPackage={editingPackage}
       />
 
       <CategoryManagement

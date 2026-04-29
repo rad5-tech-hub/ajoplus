@@ -213,3 +213,43 @@ export const getPackageById = async (packageId: string): Promise<Package> => {
 		throw error;
 	}
 };
+
+/**
+ * Update an existing package (Admin)
+ */
+export const updatePackage = async (
+	packageId: string,
+	data: Partial<CreatePackageRequest>
+): Promise<Package> => {
+	try {
+		const response = await apiCall<{
+			success: boolean;
+			statusCode: number;
+			message: string;
+			data: Package;
+		}>(`/api/package/packages/${packageId}`, {
+			method: 'PATCH',
+			body: JSON.stringify(data),
+		});
+
+		if (!response.success) {
+			throw new Error(response.message || 'Failed to update package');
+		}
+
+		return response.data;
+	} catch (error) {
+		console.error('[Update Package Error]', error);
+		throw error;
+	}
+};
+
+export const deletePackage = async (packageId: string): Promise<void> => {
+	try {
+		await apiCall<{ success: boolean }>(`/api/package/packages/${packageId}`, {
+			method: 'DELETE',
+		});
+	} catch (error) {
+		console.error('[Delete Package Error]', error);
+		throw error;
+	}
+};

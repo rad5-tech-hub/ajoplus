@@ -1,11 +1,13 @@
 // src/components/ui/CreatePackageModal.tsx
 import { X, Plus, Trash2 } from 'lucide-react';
-import { useState } from 'react';
-import { useCreatePackage, useCategories } from '@/app/store/PackageStore';
+import { useState, useEffect } from 'react';
+import { useCreatePackage, useCategories, useUpdatePackage } from '@/app/store/PackageStore';
+import type { Package as APIPackage } from '@/api/package';
 
 interface CreatePackageModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialPackage?: APIPackage | null;
 }
 
 interface PackageItem {
@@ -29,9 +31,28 @@ const INITIAL_FORM = {
   description: '',
 };
 
-const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
-  const { mutate: createPackage, isPending } = useCreatePackage();
+const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageModalProps) => {
+  const { mutate: createPackage, isPending: isCreating } = useCreatePackage();
+  const updatePackageMutation = useUpdatePackage();
   const { data: categories = [], isLoading: categoriesLoading } = useCategories();
+
+  // If editing, prefill form
+  useEffect(() => {
+    if (initialPackage) {
+      setFormData({
+        name: initialPackage.name || '',
+        categoryId: initialPackage.categoryId || '',
+        paymentFrequency: initialPackage.paymentFrequency || 'daily',
+        totalPrice: String(initialPackage.totalPrice ?? ''),
+        duration: String(initialPackage.duration ?? ''),
+        description: initialPackage.description || '',
+      });
+
+      // map items
+      const items = (initialPackage.items || []).map((it: unknown) => ({ id: Date.now() + Math.random(), itemName: it.itemName, quantity: it.quantity }));
+      setPackageItems(items.length ? items : [EMPTY_ITEM()]);
+    }
+  }, [initialPackage]);
 
   const [packageItems, setPackageItems] = useState<PackageItem[]>([EMPTY_ITEM()]);
   const [formData, setFormData] = useState(INITIAL_FORM);
@@ -78,7 +99,7 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
   };
 
   const handleClose = () => {
-    if (isPending) return;
+    if (isCreating || updatePackageMutation.isLoading) return;
     resetForm();
     onClose();
   };
@@ -88,39 +109,41 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
   const handleSubmit = () => {
     if (!validateForm()) return;
 
-    // Filter rows where itemName is blank — quantity alone doesn't count
     const validItems = packageItems.filter((item) => item.itemName.trim());
 
-    createPackage(
-      {
-        name: formData.name.trim(),
-        categoryId: formData.categoryId,
-        totalPrice: Number(formData.totalPrice),
-        duration: Number(formData.duration),
-        paymentFrequency: formData.paymentFrequency,
-        description: formData.description.trim(),
-        // API requires at least one item — fall back to a generic placeholder
-        items: validItems.length > 0
-          ? validItems.map(({ itemName, quantity }) => ({ itemName, quantity }))
-          : [{ itemName: 'Standard Item', quantity: '1' }],
-      },
-      {
+    const payload = {
+      name: formData.name.trim(),
+      categoryId: formData.categoryId,
+      totalPrice: Number(formData.totalPrice),
+      duration: Number(formData.duration),
+      paymentFrequency: formData.paymentFrequency,
+      description: formData.description.trim(),
+      items: validItems.length > 0 ? validItems.map(({ itemName, quantity }) => ({ itemName, quantity })) : [{ itemName: 'Standard Item', quantity: '1' }],
+    };
+
+    if (initialPackage) {
+      updatePackageMutation.mutate({ packageId: initialPackage.id, data: payload } as unknown as { packageId: string; data: unknown }, {
         onSuccess: () => {
           resetForm();
           onClose();
-          // Store's onSuccess already shows the success modal
         },
-        onError: (err: unknown) => {
-          // Show inline error in addition to the store's modal
-          setFormError(
-            err instanceof Error ? err.message : 'Failed to create package. Please try again.'
-          );
-        },
-      }
-    );
+        onError: (err: unknown) => setFormError(err instanceof Error ? err.message : 'Failed to update package'),
+      });
+      return;
+    }
+
+    createPackage(payload, {
+      onSuccess: () => {
+        resetForm();
+        onClose();
+      },
+      onError: (err: unknown) => setFormError(err instanceof Error ? err.message : 'Failed to create package. Please try again.'),
+    });
   };
 
   if (!isOpen) return null;
+
+  const isSaving = isCreating || updatePackageMutation.isLoading;
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-100 p-4">
@@ -136,7 +159,7 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
           </div>
           <button
             onClick={handleClose}
-            disabled={isPending}
+            disabled={isCreating || updatePackageMutation.isLoading}
             className="text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40"
           >
             <X className="w-5 h-5 md:w-6 md:h-6" />
@@ -165,7 +188,7 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                 placeholder="e.g., Special Food Package"
                 value={formData.name}
                 onChange={handleInputChange}
-                disabled={isPending}
+                disabled={isSaving}
                 className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 disabled:bg-slate-50"
               />
             </div>
@@ -178,7 +201,7 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                 name="categoryId"
                 value={formData.categoryId}
                 onChange={handleInputChange}
-                disabled={isPending || categoriesLoading}
+                disabled={isSaving || categoriesLoading}
                 className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white disabled:bg-slate-50"
               >
                 <option value="">
@@ -205,7 +228,7 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                     paymentFrequency: e.target.value as 'daily' | 'weekly' | 'monthly',
                   }))
                 }
-                disabled={isPending}
+                disabled={isSaving}
                 className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white disabled:bg-slate-50"
               >
                 <option value="daily">Daily</option>
@@ -228,7 +251,7 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                 placeholder="e.g., 350000"
                 value={formData.totalPrice}
                 onChange={handleInputChange}
-                disabled={isPending}
+                disabled={isSaving}
                 className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 disabled:bg-slate-50"
               />
             </div>
@@ -243,7 +266,7 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                 placeholder="e.g., 12"
                 value={formData.duration}
                 onChange={handleInputChange}
-                disabled={isPending}
+                disabled={isSaving}
                 className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 disabled:bg-slate-50"
               />
             </div>
@@ -260,7 +283,7 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
               rows={3}
               value={formData.description}
               onChange={handleInputChange}
-              disabled={isPending}
+              disabled={isSaving}
               className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 resize-y disabled:bg-slate-50"
             />
           </div>
@@ -274,7 +297,7 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
               </div>
               <button
                 onClick={addItem}
-                disabled={isPending}
+                disabled={isSaving}
                 className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2.5 rounded-2xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Plus className="w-4 h-4" /> Add Item
@@ -292,7 +315,7 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                     placeholder="Item name (e.g., Bag of Rice)"
                     value={item.itemName}
                     onChange={(e) => updateItem(item.id, 'itemName', e.target.value)}
-                    disabled={isPending}
+                    disabled={isSaving}
                     className="flex-1 px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 disabled:bg-slate-50"
                   />
                   <input
@@ -300,12 +323,12 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
                     placeholder="Quantity (e.g., 1, 50kg)"
                     value={item.quantity}
                     onChange={(e) => updateItem(item.id, 'quantity', e.target.value)}
-                    disabled={isPending}
+                    disabled={isSaving}
                     className="w-full sm:w-44 px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 disabled:bg-slate-50"
                   />
                   <button
                     onClick={() => removeItem(item.id)}
-                    disabled={isPending || packageItems.length === 1}
+                    disabled={isSaving || packageItems.length === 1}
                     className="text-red-400 hover:text-red-600 p-2 mt-2 transition-colors disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
                   >
                     <Trash2 className="w-5 h-5" />
@@ -320,26 +343,26 @@ const CreatePackageModal = ({ isOpen, onClose }: CreatePackageModalProps) => {
         <div className="border-t border-slate-100 px-5 py-4 md:px-6 md:py-5 flex flex-col sm:flex-row gap-3 shrink-0">
           <button
             onClick={handleClose}
-            disabled={isPending}
+            disabled={isCreating || updatePackageMutation.isLoading}
             className="flex-1 py-4 border-2 border-slate-300 text-slate-700 font-semibold rounded-2xl hover:bg-slate-50 transition-colors disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            disabled={isPending}
+            disabled={isSaving}
             className="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] transition-all text-white font-semibold rounded-2xl flex items-center justify-center gap-2 disabled:bg-emerald-400 disabled:cursor-not-allowed"
           >
-            {isPending ? (
+            {isSaving ? (
               <>
                 <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                 </svg>
-                Creating…
+                {initialPackage ? 'Updating…' : 'Creating…'}
               </>
             ) : (
-              <><Plus className="w-5 h-5" /> Create Package</>
+              <><Plus className="w-5 h-5" /> {initialPackage ? 'Update Package' : 'Create Package'}</>
             )}
           </button>
         </div>

@@ -88,9 +88,13 @@ export const loginAdmin = async (
 
 export const logoutAdmin = async (): Promise<void> => {
 	try {
-		// Optionally call backend logout endpoint if needed
+		await apiCall<{ success: boolean; message?: string; data: null }>(
+			'/api/auth/logout',
+			{ method: 'POST' }
+		);
 	} catch (error) {
 		console.warn('[Admin Logout Error]', error);
+		throw error;
 	}
 };
 

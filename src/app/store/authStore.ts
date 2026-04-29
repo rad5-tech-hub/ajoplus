@@ -43,8 +43,13 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       logout: async () => {
-        authAPI.logoutUser().catch(console.warn);
-        set({ user: null, token: null, refreshToken: null, isAuthenticated: false, error: null });
+        try {
+          await authAPI.logoutUser();
+        } catch (err) {
+          console.warn('[authStore.logout] logout API failed', err);
+        } finally {
+          set({ user: null, token: null, refreshToken: null, isAuthenticated: false, error: null });
+        }
       },
 
       clearError: () => set({ error: null }),

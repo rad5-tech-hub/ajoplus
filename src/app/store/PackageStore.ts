@@ -99,3 +99,44 @@ export const useCreatePackage = () => {
     },
   });
 };
+
+export const useUpdatePackage = () => {
+  const queryClient = useQueryClient();
+  const openModal = useModalStore((state) => state.openModal);
+  const closeModal = useModalStore((state) => state.closeModal);
+
+  return useMutation({
+    mutationFn: ({ packageId, data }: { packageId: string; data: Partial<Parameters<typeof import('@/api/package').updatePackage>[1]> }) =>
+      // dynamic import to satisfy type references
+      import('@/api/package').then((m) => m.updatePackage(packageId, data)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['availablePackages'] });
+      queryClient.invalidateQueries({ queryKey: ['package'] });
+      openModal({ type: 'success', title: 'Package Updated', message: 'Package updated successfully.' });
+      setTimeout(() => closeModal(), 2500);
+    },
+    onError: (error) => {
+      openModal({ type: 'error', title: 'Update Failed', message: error instanceof Error ? error.message : 'Please try again' });
+      setTimeout(() => closeModal(), 3000);
+    },
+  });
+};
+
+export const useDeletePackage = () => {
+  const queryClient = useQueryClient();
+  const openModal = useModalStore((state) => state.openModal);
+  const closeModal = useModalStore((state) => state.closeModal);
+
+  return useMutation({
+    mutationFn: (packageId: string) => import('@/api/package').then((m) => m.deletePackage(packageId)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['availablePackages'] });
+      openModal({ type: 'success', title: 'Deleted', message: 'Package deleted successfully.' });
+      setTimeout(() => closeModal(), 2500);
+    },
+    onError: (error) => {
+      openModal({ type: 'error', title: 'Delete Failed', message: error instanceof Error ? error.message : 'Please try again' });
+      setTimeout(() => closeModal(), 3000);
+    },
+  });
+};

@@ -1,16 +1,17 @@
 // src/features/customer/dashboard/components/OverviewCards.tsx
 import { PiggyBank, Clock, DollarSign, Package } from 'lucide-react';
-// import { useNavigate } from 'react-router-dom';
+import { useCustomerDashboard } from '@/app/store/CustomerStore';
 
 const OverviewCards = () => {
+  const { data, isLoading } = useCustomerDashboard();
 
-  // TODO: Replace with real data from Zustand / React Query later
-  const totalSaved = 0;
-  const pendingPayments = 0;
-  const availableBalance = 0;
-  const activePackages = 0;
+  const summary = data?.summary;
+  const totalSaved = summary?.totalSaved ?? 0;
+  const pendingPayments = summary?.pendingPayments ?? 0;
+  const availableBalance = summary?.availableBalance ?? 0;
+  const activePackages = summary?.activePackages ?? 0;
 
-  const isEmpty = totalSaved === 0 && pendingPayments === 0 && availableBalance === 0 && activePackages === 0;
+  const isEmpty = !isLoading && totalSaved === 0 && pendingPayments === 0 && availableBalance === 0 && activePackages === 0;
 
   return (
     <div className="space-y-6">
@@ -28,7 +29,7 @@ const OverviewCards = () => {
           </div>
           <div className="mt-auto pt-6">
             <p className="text-2xl sm:text-3xl font-semibold text-slate-900">
-              ₦{totalSaved.toLocaleString()}
+              ₦{Number(totalSaved).toLocaleString()}
             </p>
             {isEmpty ? (
               <p className="text-slate-400 text-sm mt-1">No savings yet</p>
@@ -68,7 +69,7 @@ const OverviewCards = () => {
           </div>
           <div className="mt-auto pt-6">
             <p className="text-2xl sm:text-3xl font-bold text-slate-900">
-              ₦{availableBalance.toLocaleString()}
+              ₦{Number(availableBalance).toLocaleString()}
             </p>
             {isEmpty && <p className="text-slate-400 text-sm mt-1">Nothing available yet</p>}
           </div>
