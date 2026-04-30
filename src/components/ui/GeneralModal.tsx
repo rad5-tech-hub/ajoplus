@@ -28,11 +28,11 @@ const Modal = () => {
   };
 
   return (
-    <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md md:w-[380px]">
+    <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md md:w-95">
       <div
         className={`text-sm px-4 md:px-6 py-3 md:py-4 rounded-2xl flex items-center gap-3 shadow-xl border ${colorStyles[type || 'info']}`}
       >
-        <span className="text-xl flex-shrink-0">{icons[type || 'info']}</span>
+        <span className="text-xl shrink-0">{icons[type || 'info']}</span>
 
         <p className="flex-1 font-medium pr-2">{message}</p>
 

@@ -36,6 +36,7 @@ const ProductCard = ({ item }: ProductCardProps) => {
       title: item.title,
       price: item.price,
       type: item.type,
+      image: item.image,
     });
 
     // Call API to sync with server

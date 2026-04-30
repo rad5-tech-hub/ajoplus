@@ -36,12 +36,12 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
     mutationFn: (payload: FormData) => createProduct(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
-      openModal('success', 'Product created successfully!');
+      openModal({ type: 'success', title: 'Success', message: 'Product created successfully!' });
       onClose();
     },
     onError: (err) => {
       console.error('Create product failed', err);
-      openModal('error', err instanceof Error ? err.message : 'Failed to create product');
+      openModal({ type: 'error', title: 'Failed', message: err instanceof Error ? err.message : 'Failed to create product' });
     },
   });
 
@@ -80,20 +80,20 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
 
   const handleSubmit = () => {
     if (!formData.productName.trim()) {
-      openModal('error', 'Product name is required.');
+      openModal({ type: 'error', title: 'Validation Error', message: 'Product name is required.' });
       return;
     }
     if (!formData.category) {
-      openModal('error', 'Please select a category.');
+      openModal({ type: 'error', title: 'Validation Error', message: 'Please select a category.' });
       return;
     }
     if (!formData.price) {
-      openModal('error', 'Price is required.');
+      openModal({ type: 'error', title: 'Validation Error', message: 'Price is required.' });
       return;
     }
     if (!formData.imageFile) {
       // ✅ Caught client-side before even hitting the API
-      openModal('error', 'Please upload a product image.');
+      openModal({ type: 'error', title: 'Validation Error', message: 'Please upload a product image.' });
       return;
     }
 
@@ -260,11 +260,10 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
                   type="button"
                   disabled={isSubmitting}
                   onClick={() => setFormData((p) => ({ ...p, status }))}
-                  className={`py-3 px-4 rounded-2xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
-                    formData.status === status
+                  className={`py-3 px-4 rounded-2xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${formData.status === status
                       ? 'bg-emerald-600 text-white'
                       : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
+                    }`}
                 >
                   {status}
                 </button>

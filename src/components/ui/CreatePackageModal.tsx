@@ -2,7 +2,9 @@
 import { X, Plus, Trash2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useCreatePackage, useCategories, useUpdatePackage } from '@/app/store/PackageStore';
-import type { Package as APIPackage } from '@/api/package';
+import type { Package as APIPackage, PackageItem as APIPackageItem, CreatePackageRequest } from '@/api/package';
+import type { Category } from '@/api/categories';
+// ─── Types ───────────────────────────────────────────────────────────────────
 
 interface CreatePackageModalProps {
   isOpen: boolean;
@@ -16,8 +18,10 @@ interface PackageItem {
   quantity: string;
 }
 
+// ─── Constants ───────────────────────────────────────────────────────────────
+
 const EMPTY_ITEM = (): PackageItem => ({
-  id: Date.now() + Math.random(), // avoid collisions on rapid add
+  id: Date.now() + Math.random(),
   itemName: '',
   quantity: '',
 });
@@ -31,34 +35,40 @@ const INITIAL_FORM = {
   description: '',
 };
 
+// ─── Component ────────────────────────────────────────────────────────────────
+
 const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageModalProps) => {
   const { mutate: createPackage, isPending: isCreating } = useCreatePackage();
   const updatePackageMutation = useUpdatePackage();
   const { data: categories = [], isLoading: categoriesLoading } = useCategories();
 
-  // If editing, prefill form
-  useEffect(() => {
-    if (initialPackage) {
-      setFormData({
-        name: initialPackage.name || '',
-        categoryId: initialPackage.categoryId || '',
-        paymentFrequency: initialPackage.paymentFrequency || 'daily',
-        totalPrice: String(initialPackage.totalPrice ?? ''),
-        duration: String(initialPackage.duration ?? ''),
-        description: initialPackage.description || '',
-      });
-
-      // map items
-      const items = (initialPackage.items || []).map((it: unknown) => ({ id: Date.now() + Math.random(), itemName: it.itemName, quantity: it.quantity }));
-      setPackageItems(items.length ? items : [EMPTY_ITEM()]);
-    }
-  }, [initialPackage]);
-
   const [packageItems, setPackageItems] = useState<PackageItem[]>([EMPTY_ITEM()]);
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [formError, setFormError] = useState('');
 
-  // ─── Item helpers ──────────────────────────────────────────────────────────
+  // Prefill form when editing
+  useEffect(() => {
+    if (initialPackage) {
+      setFormData({
+        name: initialPackage.name ?? '',
+        categoryId: initialPackage.categoryId ?? '',
+        paymentFrequency: initialPackage.paymentFrequency ?? 'daily',
+        totalPrice: String(initialPackage.totalPrice ?? ''),
+        duration: String(initialPackage.duration ?? ''),
+        description: initialPackage.description ?? '',
+      });
+      const mapped = (initialPackage.items ?? []).map(
+        (it: APIPackageItem): PackageItem => ({
+          id: Date.now() + Math.random(),
+          itemName: it.itemName,
+          quantity: it.quantity,
+        })
+      );
+      setPackageItems(mapped.length ? mapped : [EMPTY_ITEM()]);
+    }
+  }, [initialPackage]);
+
+  // ─── Item helpers ─────────────────────────────────────────────────────────
 
   const addItem = () => setPackageItems((prev) => [...prev, EMPTY_ITEM()]);
 
@@ -73,7 +83,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
     );
   };
 
-  // ─── Form helpers ──────────────────────────────────────────────────────────
+  // ─── Form helpers ─────────────────────────────────────────────────────────
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -86,8 +96,12 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
   const validateForm = (): boolean => {
     if (!formData.name.trim()) { setFormError('Package name is required'); return false; }
     if (!formData.categoryId) { setFormError('Please select a category'); return false; }
-    if (!formData.totalPrice || isNaN(Number(formData.totalPrice)) || Number(formData.totalPrice) <= 0) { setFormError('Please enter a valid price'); return false; }
-    if (!formData.duration || isNaN(Number(formData.duration)) || Number(formData.duration) <= 0) { setFormError('Please enter a valid duration in months'); return false; }
+    if (!formData.totalPrice || isNaN(Number(formData.totalPrice)) || Number(formData.totalPrice) <= 0) {
+      setFormError('Please enter a valid price'); return false;
+    }
+    if (!formData.duration || isNaN(Number(formData.duration)) || Number(formData.duration) <= 0) {
+      setFormError('Please enter a valid duration in months'); return false;
+    }
     if (!formData.description.trim()) { setFormError('Description is required'); return false; }
     return true;
   };
@@ -98,52 +112,56 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
     setFormError('');
   };
 
+  const isSaving = isCreating || updatePackageMutation.isPending;
+
   const handleClose = () => {
-    if (isCreating || updatePackageMutation.isLoading) return;
+    if (isSaving) return;
     resetForm();
     onClose();
   };
 
-  // ─── Submit ────────────────────────────────────────────────────────────────
+  // ─── Submit ───────────────────────────────────────────────────────────────
 
   const handleSubmit = () => {
     if (!validateForm()) return;
 
     const validItems = packageItems.filter((item) => item.itemName.trim());
 
-    const payload = {
+    const payload: CreatePackageRequest = {
       name: formData.name.trim(),
       categoryId: formData.categoryId,
       totalPrice: Number(formData.totalPrice),
       duration: Number(formData.duration),
       paymentFrequency: formData.paymentFrequency,
       description: formData.description.trim(),
-      items: validItems.length > 0 ? validItems.map(({ itemName, quantity }) => ({ itemName, quantity })) : [{ itemName: 'Standard Item', quantity: '1' }],
+      items:
+        validItems.length > 0
+          ? validItems.map(({ itemName, quantity }) => ({ itemName, quantity }))
+          : [{ itemName: 'Standard Item', quantity: '1' }],
     };
 
     if (initialPackage) {
-      updatePackageMutation.mutate({ packageId: initialPackage.id, data: payload } as unknown as { packageId: string; data: unknown }, {
-        onSuccess: () => {
-          resetForm();
-          onClose();
-        },
-        onError: (err: unknown) => setFormError(err instanceof Error ? err.message : 'Failed to update package'),
-      });
+      updatePackageMutation.mutate(
+        { packageId: initialPackage.id, data: payload },
+        {
+          onSuccess: () => { resetForm(); onClose(); },
+          onError: (err: Error) => setFormError(err.message || 'Failed to update package'),
+        }
+      );
       return;
     }
 
     createPackage(payload, {
-      onSuccess: () => {
-        resetForm();
-        onClose();
-      },
-      onError: (err: unknown) => setFormError(err instanceof Error ? err.message : 'Failed to create package. Please try again.'),
+      onSuccess: () => { resetForm(); onClose(); },
+      onError: (err: Error) => setFormError(err.message || 'Failed to create package. Please try again.'),
     });
   };
 
   if (!isOpen) return null;
 
-  const isSaving = isCreating || updatePackageMutation.isLoading;
+  const modalTitle = initialPackage ? 'Edit Package' : 'Create New Package';
+  const submitLabel = initialPackage ? 'Update Package' : 'Create Package';
+  const savingLabel = initialPackage ? 'Updating…' : 'Creating…';
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-100 p-4">
@@ -155,12 +173,13 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
             <div className="w-8 h-8 md:w-9 md:h-9 bg-emerald-100 rounded-2xl flex items-center justify-center text-lg">
               📦
             </div>
-            <h2 className="text-xl md:text-2xl font-semibold text-slate-900">Create New Package</h2>
+            <h2 className="text-xl md:text-2xl font-semibold text-slate-900">{modalTitle}</h2>
           </div>
           <button
             onClick={handleClose}
-            disabled={isCreating || updatePackageMutation.isLoading}
+            disabled={isSaving}
             className="text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40"
+            aria-label="Close modal"
           >
             <X className="w-5 h-5 md:w-6 md:h-6" />
           </button>
@@ -207,7 +226,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
                 <option value="">
                   {categoriesLoading ? 'Loading…' : 'Select category'}
                 </option>
-                {categories.map((cat) => (
+                {categories.map((cat: Category) => (
                   <option key={cat.id} value={cat.id}>
                     {cat.name}
                   </option>
@@ -292,7 +311,10 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
           <div>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className="font-medium text-slate-900">Package Items <span className="text-slate-400 font-normal">(Optional)</span></p>
+                <p className="font-medium text-slate-900">
+                  Package Items{' '}
+                  <span className="text-slate-400 font-normal">(Optional)</span>
+                </p>
                 <p className="text-xs text-slate-500 mt-0.5">Items included in this package</p>
               </div>
               <button
@@ -330,6 +352,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
                     onClick={() => removeItem(item.id)}
                     disabled={isSaving || packageItems.length === 1}
                     className="text-red-400 hover:text-red-600 p-2 mt-2 transition-colors disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+                    aria-label="Remove item"
                   >
                     <Trash2 className="w-5 h-5" />
                   </button>
@@ -343,7 +366,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
         <div className="border-t border-slate-100 px-5 py-4 md:px-6 md:py-5 flex flex-col sm:flex-row gap-3 shrink-0">
           <button
             onClick={handleClose}
-            disabled={isCreating || updatePackageMutation.isLoading}
+            disabled={isSaving}
             className="flex-1 py-4 border-2 border-slate-300 text-slate-700 font-semibold rounded-2xl hover:bg-slate-50 transition-colors disabled:opacity-50"
           >
             Cancel
@@ -359,10 +382,10 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                 </svg>
-                {initialPackage ? 'Updating…' : 'Creating…'}
+                {savingLabel}
               </>
             ) : (
-              <><Plus className="w-5 h-5" /> {initialPackage ? 'Update Package' : 'Create Package'}</>
+              <><Plus className="w-5 h-5" /> {submitLabel}</>
             )}
           </button>
         </div>
