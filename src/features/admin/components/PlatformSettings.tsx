@@ -1,5 +1,3 @@
-// src/features/admin/dashboard/components/PlatformSettings.tsx
-
 const PlatformSettings = () => {
   return (
     <div className="space-y-4 sm:space-y-6 lg:space-y-8">
@@ -44,9 +42,9 @@ const PlatformSettings = () => {
 
         <div className="space-y-4 sm:space-y-6">
           {[
-            { label: 'Bank Name',       placeholder: 'Enter bank name'       },
-            { label: 'Account Number',  placeholder: 'Enter account number'  },
-            { label: 'Account Name',    placeholder: 'Enter account name'    },
+            { label: 'Bank Name', placeholder: 'Enter bank name' },
+            { label: 'Account Number', placeholder: 'Enter account number' },
+            { label: 'Account Name', placeholder: 'Enter account name' },
           ].map(({ label, placeholder }) => (
             <div key={label}>
               <label className="block text-xs sm:text-sm text-slate-600 mb-1.5 sm:mb-2 font-medium">

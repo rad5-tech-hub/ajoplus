@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react';
 import { Trash2, Edit2, AlertTriangle } from 'lucide-react';
 import CreatePackageModal from '@/components/ui/CreatePackageModal';
 import CategoryManagement from '@/components/ui/CategoryManagement';
-import { useAvailablePackages} from '@/app/store/PackageStore';
+import { useAvailablePackages } from '@/app/store/PackageStore';
 import type { Package as APIPackage } from '@/api/package';
 
 // ─── Display shape (UI only) ──────────────────────────────────────────────────
@@ -24,7 +24,10 @@ function toDisplay(pkg: APIPackage): DisplayPackage {
     id: pkg.id,
     name: pkg.name,
     desc: pkg.description,
-    category: pkg.category?.name ?? 'Uncategorised',
+    category:
+      pkg.category && typeof pkg.category !== 'string'
+        ? pkg.category.name
+        : (pkg.category as string | undefined) ?? 'Uncategorised',
     price: `₦${price.toLocaleString('en-NG')}`,
     duration: `${pkg.duration} month${pkg.duration !== 1 ? 's' : ''}`,
     frequency: pkg.paymentFrequency.charAt(0).toUpperCase() + pkg.paymentFrequency.slice(1),
@@ -74,8 +77,10 @@ const PackageManagement = () => {
   //   setDeleteConfirmId(null);
   // };
 
-  // TODO: wire to PATCH /api/package/packages/:id when endpoint is ready
-  // const handleEdit = (pkg: DisplayPackage) => { ... };
+  const handleEditClick = (id: string) => {
+    setEditingPackage(apiPackages?.find((p) => p.id === id) ?? null);
+    setIsCreateModalOpen(true);
+  };
 
   return (
     <div>
@@ -98,15 +103,23 @@ const PackageManagement = () => {
         </div>
       </div>
 
-      {/* Error */}
-      {error && !isLoading && (
+      {/* ── Error banner ── */}
+      {/* !!error collapses `unknown | Error | null` → boolean, preventing the   */}
+      {/* "Type 'unknown' is not assignable to type 'ReactNode'" TS error that    */}
+      {/* occurs when `unknown` propagates through the && chain into JSX.         */}
+      {!!error && !isLoading && (
         <div className="bg-white border border-red-200 rounded-3xl p-8 text-center mb-6">
           <p className="text-red-600 mb-3">Failed to load packages</p>
-          <button onClick={() => refetch()} className="text-sm text-red-600 underline hover:text-red-700">
+          <button
+            onClick={() => refetch()}
+            className="text-sm text-red-600 underline hover:text-red-700"
+          >
             Retry
           </button>
         </div>
       )}
+
+      {/* ── Empty state ── */}
       {!isLoading && !error && packages.length === 0 && (
         <div className="bg-white border border-slate-200 rounded-3xl p-12 text-center">
           <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mb-5">
@@ -124,6 +137,7 @@ const PackageManagement = () => {
           </button>
         </div>
       )}
+
       {/* ── Desktop Table (md+) ── */}
       {(isLoading || packages.length > 0) && (
         <div className="hidden md:block bg-white rounded-3xl overflow-hidden border border-slate-100">
@@ -142,7 +156,10 @@ const PackageManagement = () => {
               {isLoading
                 ? [1, 2, 3, 4].map((i) => <SkeletonRow key={i} />)
                 : packages.map((pkg) => (
-                  <tr key={pkg.id} className="border-b border-slate-100 last:border-b-0 hover:bg-slate-50 transition-colors">
+                  <tr
+                    key={pkg.id}
+                    className="border-b border-slate-100 last:border-b-0 hover:bg-slate-50 transition-colors"
+                  >
                     <td className="py-5 px-6 lg:px-8">
                       <p className="font-semibold text-slate-900 text-sm lg:text-base">{pkg.name}</p>
                       <p className="text-xs text-slate-500 mt-0.5 max-w-55">{pkg.desc}</p>
@@ -152,12 +169,16 @@ const PackageManagement = () => {
                         {pkg.category}
                       </span>
                     </td>
-                    <td className="py-5 px-4 font-semibold text-emerald-600 text-sm whitespace-nowrap">{pkg.price}</td>
+                    <td className="py-5 px-4 font-semibold text-emerald-600 text-sm whitespace-nowrap">
+                      {pkg.price}
+                    </td>
                     <td className="py-5 px-4 text-slate-600 text-sm whitespace-nowrap">{pkg.duration}</td>
                     <td className="py-5 px-4 text-slate-600 text-sm">{pkg.frequency}</td>
                     <td className="py-5 px-6 lg:px-8 text-right whitespace-nowrap">
-                      {/* TODO: uncomment onClick when PATCH endpoint is ready */}
-                      <button onClick={() => { setEditingPackage(apiPackages?.find(p => p.id === pkg.id) ?? null); setIsCreateModalOpen(true); }} className="text-emerald-600 cursor-pointer hover:text-emerald-700 mr-4 text-sm font-medium transition-colors inline-flex items-center gap-1">
+                      <button
+                        onClick={() => handleEditClick(pkg.id)}
+                        className="text-emerald-600 cursor-pointer hover:text-emerald-700 mr-4 text-sm font-medium transition-colors inline-flex items-center gap-1"
+                      >
                         <Edit2 className="w-3 h-3" /> Edit
                       </button>
                       <button
@@ -175,7 +196,6 @@ const PackageManagement = () => {
       )}
 
       {/* ── Mobile Cards (below md) ── */}
-
       {(isLoading || packages.length > 0) && (
         <div className="md:hidden space-y-3">
           {isLoading
@@ -199,14 +219,16 @@ const PackageManagement = () => {
                   <span>{pkg.frequency}</span>
                 </div>
                 <div className="flex gap-3 border-t border-slate-100 pt-3">
-                  {/* TODO: uncomment onClick when PATCH endpoint is ready */}
-                  <button onClick={() => { setEditingPackage(apiPackages?.find(p => p.id === pkg.id) ?? null); setIsCreateModalOpen(true); }} className="flex-1 text-center text-emerald-600 text-sm font-medium py-1.5 rounded-lg inline-flex items-center justify-center gap-1">
+                  <button
+                    onClick={() => handleEditClick(pkg.id)}
+                    className="flex-1 text-center text-emerald-600 cursor-pointer text-sm font-medium py-1.5 rounded-lg hover:bg-emerald-50 transition-colors inline-flex items-center justify-center gap-1"
+                  >
                     <Edit2 className="w-4 h-4" /> Edit
                   </button>
                   <div className="w-px bg-slate-100" />
                   <button
                     onClick={() => setDeleteConfirmId(pkg.id)}
-                    className="flex-1 text-center text-red-500 text-sm font-medium py-1.5 rounded-lg hover:bg-red-50 transition-colors inline-flex items-center justify-center gap-1"
+                    className="flex-1 text-center text-red-500 cursor-pointer text-sm font-medium py-1.5 rounded-lg hover:bg-red-50 transition-colors inline-flex items-center justify-center gap-1"
                   >
                     <Trash2 className="w-4 h-4" /> Delete
                   </button>
@@ -227,7 +249,7 @@ const PackageManagement = () => {
         onClose={() => setIsCategoryModalOpen(false)}
       />
 
-      {/* Delete Confirmation */}
+      {/* ── Delete Confirmation ── */}
       {deleteConfirmId && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full">
@@ -236,7 +258,7 @@ const PackageManagement = () => {
             </div>
             <h3 className="text-xl font-bold text-center text-slate-900 mb-2">Delete Package?</h3>
             <p className="text-center text-slate-600 mb-6">
-              Are you sure you want to delete "{packages.find((p) => p.id === deleteConfirmId)?.name}"?
+              Are you sure you want to delete &quot;{packages.find((p) => p.id === deleteConfirmId)?.name}&quot;?
               This action cannot be undone.
             </p>
             <div className="flex gap-3">

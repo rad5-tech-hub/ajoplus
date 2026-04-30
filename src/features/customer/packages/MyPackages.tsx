@@ -21,9 +21,11 @@ const MyPackages = () => {
   const navigate = useNavigate();
   const { data: userPackages, isLoading, error } = useUserPackages();
 
-  // Transform API response to display format
   const packages: Package[] = (userPackages ?? []).map((pkg) => ({
-    id: pkg.id,
+    // ✅ Use pkg.packageId (the actual Package ID) — not pkg.id (the UserPackage/subscription ID).
+    // PackageDetail searches userPackages.find(p => p.packageId === packageId),
+    // so the URL param must be the Package ID or the find will never match.
+    id: pkg.packageId,
     title: pkg.package.name,
     subtitle: pkg.package.description,
     status: pkg.status,
@@ -44,7 +46,6 @@ const MyPackages = () => {
     navigate('/browse');
   };
 
-  // Loading State
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -63,7 +64,6 @@ const MyPackages = () => {
     );
   }
 
-  // Error State
   if (error) {
     return (
       <div className="bg-white border border-red-200 rounded-3xl p-8 text-center">
@@ -78,21 +78,16 @@ const MyPackages = () => {
     );
   }
 
-  // Empty State
   if (packages.length === 0) {
     return (
       <div className="bg-white border border-slate-200 rounded-3xl p-12 text-center">
         <div className="mx-auto w-20 h-20 bg-emerald-100 rounded-3xl flex items-center justify-center mb-6">
           <PackageIcon className="w-10 h-10 text-emerald-600" />
         </div>
-
-        <h3 className="text-2xl font-semibold text-slate-900 mb-3">
-          No Active Packages Yet
-        </h3>
+        <h3 className="text-2xl font-semibold text-slate-900 mb-3">No Active Packages Yet</h3>
         <p className="text-slate-600 max-w-sm mx-auto mb-8 leading-relaxed">
           Browse and join exciting Ajo packages to start saving towards your goals — phones, laptops, appliances, and more.
         </p>
-
         <button
           onClick={handleJoinPackage}
           className="inline-flex cursor-pointer items-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-4 rounded-2xl transition-all active:scale-[0.985]"
@@ -104,7 +99,6 @@ const MyPackages = () => {
     );
   }
 
-  // Active Packages List
   return (
     <div className="space-y-6">
       {packages.map((pkg) => (
@@ -119,22 +113,20 @@ const MyPackages = () => {
                 <h3 className="text-lg font-semibold text-slate-900 group-hover:text-emerald-700 transition-colors">
                   {pkg.title}
                 </h3>
-
                 {pkg.status === 'active' ? (
                   <span className="inline-flex items-center px-3 py-1 bg-blue-100 border border-blue-200 text-blue-700 text-xs font-medium rounded-2xl whitespace-nowrap">
-                    <span className="w-2 h-2 bg-blue-700 rounded-full mr-1.5"></span>
+                    <span className="w-2 h-2 bg-blue-700 rounded-full mr-1.5" />
                     Active
                   </span>
                 ) : (
                   <span className="inline-flex items-center px-3 py-1 bg-emerald-100 border border-emerald-200 text-emerald-700 text-xs font-medium rounded-2xl whitespace-nowrap">
-                    <span className="w-2 h-2 bg-emerald-600 rounded-full mr-1.5"></span>
+                    <span className="w-2 h-2 bg-emerald-600 rounded-full mr-1.5" />
                     Completed
                   </span>
                 )}
               </div>
               <p className="text-slate-600 text-sm mt-1 line-clamp-2">{pkg.subtitle}</p>
             </div>
-
             <div className="text-right shrink-0 ml-4 flex items-center gap-2">
               <div>
                 <p className="text-2xl font-bold text-emerald-600">{pkg.amount}</p>
@@ -151,7 +143,7 @@ const MyPackages = () => {
             </div>
             <div>
               <p className="text-xs text-slate-500">Remaining</p>
-              <p className={`font-semibold mt-1 ${pkg.remaining === "₦0" ? "text-emerald-600" : "text-red-600"}`}>
+              <p className={`font-semibold mt-1 ${pkg.remaining === '₦0' ? 'text-emerald-600' : 'text-red-600'}`}>
                 {pkg.remaining}
               </p>
             </div>
@@ -161,7 +153,6 @@ const MyPackages = () => {
             </div>
           </div>
 
-          {/* Progress Bar */}
           <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden mb-4">
             <div
               className="h-full bg-emerald-600 rounded-full transition-all duration-300"

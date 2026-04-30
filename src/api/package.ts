@@ -1,10 +1,11 @@
 // src/api/package.ts
 import { apiCall } from './client';
-import type { Category } from './categories'; // ← type-only, never re-exported here
+import type { Category } from './categories';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export interface PackageItem {
+	id?: string;
 	itemName: string;
 	quantity: string;
 }
@@ -13,7 +14,7 @@ export interface CreatePackageRequest {
 	name: string;
 	categoryId: string;
 	totalPrice: number;
-	duration: number; // in months
+	duration: number;           // in months
 	paymentFrequency: 'daily' | 'weekly' | 'monthly';
 	description: string;
 	items: PackageItem[];
@@ -22,8 +23,8 @@ export interface CreatePackageRequest {
 export interface Package {
 	id: string;
 	name: string;
-	categoryId: string;
-	category?: Category;
+	categoryId: string | null;
+	category?: Category | null;
 	totalPrice: number | string;
 	duration: number;
 	paymentFrequency: 'daily' | 'weekly' | 'monthly';
@@ -47,7 +48,7 @@ export interface UserPackage {
 	startDate: string;
 	createdAt: string;
 	updatedAt: string;
-	package: Package & { category: Category };
+	package: Package & { category: Category | null };
 	remainingBalance: number;
 	progress: number;
 	progressLabel: string;
@@ -71,6 +72,7 @@ export const createPackage = async (data: CreatePackageRequest): Promise<Package
 			method: 'POST',
 			body: JSON.stringify(data),
 		});
+
 		if (!response.success) throw new Error(response.message || 'Failed to create package');
 		return response.data;
 	} catch (error) {
@@ -98,8 +100,7 @@ export const getUserPackages = async (): Promise<UserPackage[]> => {
 	try {
 		const response = await apiCall<ApiResponse<UserPackage[]>>('/api/package/user-packages');
 		if (!response.success) throw new Error(response.message || 'Failed to fetch user packages');
-		if (!Array.isArray(response.data)) throw new Error('Invalid response format: expected array');
-		return response.data;
+		return Array.isArray(response.data) ? response.data : [];
 	} catch (error) {
 		console.error('[Get User Packages Error]', error);
 		throw error;
@@ -111,22 +112,21 @@ export const getAvailablePackages = async (): Promise<Package[]> => {
 	try {
 		const response = await apiCall<ApiResponse<Package[]>>('/api/package/packages');
 		if (!response.success) throw new Error(response.message || 'Failed to fetch packages');
-		if (!Array.isArray(response.data)) throw new Error('Invalid response format: expected array');
-		return response.data;
+		return Array.isArray(response.data) ? response.data : [];
 	} catch (error) {
 		console.error('[Get Available Packages Error]', error);
 		throw error;
 	}
 };
 
-/** Get a specific package by ID */
+/** Get a specific package by ID - FIXED to match real API response */
 export const getPackageById = async (packageId: string): Promise<Package> => {
 	try {
 		const response = await apiCall<ApiResponse<Package>>(`/api/package/packages/${packageId}`);
 		if (!response.success) throw new Error(response.message || 'Failed to fetch package');
 		return response.data;
 	} catch (error) {
-		console.error('[Get Package Error]', error);
+		console.error('[Get Package By ID Error]', error);
 		throw error;
 	}
 };
@@ -152,9 +152,10 @@ export const updatePackage = async (
 /** Delete a package (Admin) */
 export const deletePackage = async (packageId: string): Promise<void> => {
 	try {
-		await apiCall<{ success: boolean }>(`/api/package/packages/${packageId}`, {
+		const response = await apiCall<ApiResponse<null>>(`/api/package/packages/${packageId}`, {
 			method: 'DELETE',
 		});
+		if (!response.success) throw new Error(response.message || 'Failed to delete package');
 	} catch (error) {
 		console.error('[Delete Package Error]', error);
 		throw error;

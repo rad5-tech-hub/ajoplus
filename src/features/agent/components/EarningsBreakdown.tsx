@@ -25,7 +25,7 @@ const EmptyEarnings = () => (
       <TrendingUp className="w-7 h-7 text-emerald-400" />
     </div>
     <p className="font-semibold text-slate-800 text-sm mb-1">No earnings yet</p>
-    <p className="text-xs text-slate-400 max-w-[220px] leading-relaxed">
+    <p className="text-xs text-slate-400 max-w-55 leading-relaxed">
       Start referring customers and your earnings will appear here.
     </p>
   </div>
