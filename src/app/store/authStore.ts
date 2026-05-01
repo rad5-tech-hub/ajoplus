@@ -43,13 +43,17 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       logout: async () => {
-        try {
-          await authAPI.logoutUser();
-        } catch (err) {
+        // Clear state instantly for immediate logout
+        localStorage.removeItem('ajoplus-auth-storage');
+        localStorage.removeItem('ajoplus-cart-storage');
+        localStorage.removeItem('ajoplus-daily-ajo-storage');
+        localStorage.removeItem('ajoplus-admin-auth-storage');
+        set({ user: null, token: null, refreshToken: null, isAuthenticated: false, error: null });
+
+        // Call API in background (don't await)
+        authAPI.logoutUser().catch((err) => {
           console.warn('[authStore.logout] logout API failed', err);
-        } finally {
-          set({ user: null, token: null, refreshToken: null, isAuthenticated: false, error: null });
-        }
+        });
       },
 
       clearError: () => set({ error: null }),

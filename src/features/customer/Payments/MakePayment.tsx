@@ -6,7 +6,7 @@ import { formatCurrency, convertToUSD } from '@/lib/currency';
 import { usePackageById } from '@/app/store/PackageStore';
 import PaymentBankDetails from './components/PaymentBankDetails';
 import PaymentUploadReceipt from './components/PaymentUploadReceipt';
-
+import { useCartId } from '@/app/store/CartStore';
 interface CartItem {
   id: string;
   title: string;
@@ -19,27 +19,42 @@ const MakePayment = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { packageId } = useParams<{ packageId: string }>();
-  const [step, setStep] = useState<1 | 2>(1);
-  const [amountPaid, setAmountPaid] = useState<string>("");
-
-  // Determine if this is a cart payment or package payment
-  const isCartPayment = location.state?.isCartPayment || packageId === 'cart';
+  const cartId = useCartId();
+  // ── Detect payment mode ────────────────────────────────────────────────
+  const isSavingPayment = location.state?.isSavingPayment === true || packageId === 'saving';
+  const isCartPayment = location.state?.isCartPayment === true || packageId === 'cart';
+  const userPackageId = location.state?.userPackageId as string | undefined;
   const cartItems: CartItem[] = location.state?.items || [];
   const cartTotal = location.state?.total || 0;
-
-  // Fetch package details dynamically if not a cart payment
-  // Only fetch if it's not a cart payment and we have a valid packageId
-  const shouldFetchPackage = !isCartPayment && packageId && packageId !== 'cart';
-  const { data: packageData, isLoading: packageLoading, error: packageError } = usePackageById(
-    shouldFetchPackage ? packageId : ''
+  const savingTotal = location.state?.total || 0;
+  const expectedFromState = location.state?.expectedAmount as number | undefined;
+  // Pre-fill amount for savings so the user sees their daily amount immediately
+  const [amountPaid, setAmountPaid] = useState<string>(
+    isSavingPayment ? String(savingTotal) : ''
   );
+  const [step, setStep] = useState<1 | 2>(1);
 
-  // Memoize package name and amount to prevent unnecessary re-renders
+  // Only fetch package data for real package payments
+  const shouldFetchPackage =
+    !isCartPayment && !isSavingPayment && !!packageId && packageId !== 'cart' && packageId !== 'saving';
+
+  const {
+    data: packageData,
+    isLoading: packageLoading,
+    error: packageError,
+  } = usePackageById(shouldFetchPackage ? packageId! : '');
+
   const { packageName, expectedAmount } = useMemo(() => {
-    if (isCartPayment || !shouldFetchPackage) {
+    if (isCartPayment || isSavingPayment || !shouldFetchPackage) {
       return { packageName: '', expectedAmount: 0 };
     }
-
+    // Prefer state-passed installment amount over package total price
+    if (expectedFromState) {
+      return {
+        packageName: packageData?.name ?? '',
+        expectedAmount: expectedFromState,
+      };
+    }
     if (packageData) {
       return {
         packageName: packageData.name,
@@ -48,22 +63,13 @@ const MakePayment = () => {
           : packageData.totalPrice,
       };
     }
-
     return { packageName: '', expectedAmount: 0 };
-  }, [isCartPayment, shouldFetchPackage, packageData]);
+  }, [isCartPayment, isSavingPayment, shouldFetchPackage, packageData, expectedFromState]);
 
-  // Determine the page title and total amount
-  const pageTitle = isCartPayment ? 'Checkout' : 'Make Payment';
-  const totalAmount = isCartPayment ? cartTotal : expectedAmount;
+  const pageTitle = isCartPayment ? 'Checkout' : isSavingPayment ? 'Add to Savings' : 'Make Payment';
+  const totalAmount = isCartPayment ? cartTotal : isSavingPayment ? savingTotal : expectedAmount;
 
-  const handleBack = () => {
-    if (step === 2) {
-      setStep(1);
-    } else {
-      navigate(-1);
-    }
-  };
-
+  const handleBack = () => (step === 2 ? setStep(1) : navigate(-1));
   const handleNext = () => setStep(2);
 
   // Show loading state while fetching package details
@@ -147,19 +153,21 @@ const MakePayment = () => {
 
       <div className="max-w-2xl mx-auto px-6 pt-8">
         {step === 1 ? (
-          <PaymentBankDetails
-            onNext={handleNext}
-            totalAmount={totalAmount}
-          />
+          <PaymentBankDetails onNext={handleNext} totalAmount={totalAmount} />
         ) : (
           <PaymentUploadReceipt
             onBack={handleBack}
             amountPaid={amountPaid}
             setAmountPaid={setAmountPaid}
-            packageId={packageId!}
-            packageName={isCartPayment ? 'Cart Checkout' : packageName}
+            packageId={packageId ?? ''}
+            userPackageId={userPackageId}
+            packageName={
+              isCartPayment ? 'Cart Checkout' : isSavingPayment ? 'Daily Savings' : packageName
+            }
             expectedAmount={totalAmount}
             isCartPayment={isCartPayment}
+            isSavingPayment={isSavingPayment}
+            cartId={isCartPayment ? cartId : undefined}
             cartItems={cartItems}
           />
         )}

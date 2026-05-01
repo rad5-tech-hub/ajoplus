@@ -13,7 +13,14 @@ interface AdminProtectedRouteProps {
  */
 const AdminProtectedRoute = ({ children }: AdminProtectedRouteProps) => {
 	const { isAuthenticated, admin } = useAdminAuthStore();
-	const location = useLocation();
+
+	let location;
+	try {
+		location = useLocation();
+	} catch (error) {
+		// If useLocation fails (Router context not available), redirect to admin login
+		return <Navigate to="/admin/login" replace />;
+	}
 
 	// Not authenticated as admin - redirect to admin login
 	if (!isAuthenticated || !admin) {

@@ -21,13 +21,13 @@ const smartRetry = (failureCount: number, error: unknown): boolean => {
 };
 
 // ─── Queries ──────────────────────────────────────────────────────────────────
-
 export const useUserPackages = () =>
   useQuery({
     queryKey: ['userPackages'],
     queryFn: packageAPI.getUserPackages,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 60 * 1000,          // 1 min — was 5 min, approvals need to show faster
     gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: true,    // refetch when user returns to tab after admin approves
     retry: smartRetry,
   });
 

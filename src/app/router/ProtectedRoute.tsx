@@ -15,7 +15,14 @@ interface ProtectedRouteProps {
  */
 const ProtectedRoute = ({ requiredRoles, children }: ProtectedRouteProps) => {
   const { isAuthenticated, user } = useAuthStore();
-  const location = useLocation();
+
+  let location;
+  try {
+    location = useLocation();
+  } catch (error) {
+    // If useLocation fails (Router context not available), redirect to login
+    return <Navigate to="/login" replace />;
+  }
 
   // Not authenticated - redirect to login
   if (!isAuthenticated || !user) {

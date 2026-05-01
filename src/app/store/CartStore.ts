@@ -19,14 +19,17 @@ interface CartItem {
 
 interface CartStore {
   items: CartItem[];
+  cartId?: string;
   addToCart: (item: Omit<CartItem, 'quantity'>) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   getCount: () => number;
   getTotal: () => number;
-  syncCart: (items: CartItem[]) => void;
+  syncCart: (items: CartItem[], cartId?: string) => void; // ← accept cartId
+  setCartId: (cartId: string) => void;                   // ← new action
 }
+
 
 export const useCartStore = create<CartStore>()(
   persist(
@@ -60,11 +63,14 @@ export const useCartStore = create<CartStore>()(
             quantity < 1
               ? state.items.filter((item) => item.id !== id)
               : state.items.map((item) =>
-                  item.id === id ? { ...item, quantity } : item
-                ),
+                item.id === id ? { ...item, quantity } : item
+              ),
         })),
       clearCart: () => set({ items: [] }),
-      syncCart: (items: CartItem[]) => set({ items }),
+      syncCart: (items: CartItem[], cartId?: string) =>
+        set({ items, ...(cartId && { cartId }) }),
+
+      setCartId: (cartId: string) => set({ cartId }),
       getCount: () => get().items.reduce((sum, item) => sum + item.quantity, 0),
       getTotal: () =>
         get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),
@@ -77,23 +83,52 @@ export const useCartStore = create<CartStore>()(
  * React Query hook to fetch user's cart from server
  */
 export const useGetCart = () => {
+  const syncCart = useCartStore((state) => state.syncCart);
+
   return useQuery({
     queryKey: ['cart'],
-    queryFn: cartAPI.getCart,
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    queryFn: async () => {
+      const response = await cartAPI.getCart();
+      const items = response.data.items ?? [];
+      const cartId = items[0]?.cartId;
+
+      syncCart(
+        items.map((item) => ({
+          id: item.id,          // ✅ cart row id — used for PATCH/DELETE
+          itemId: item.itemId,  // product/package id — for display/reference
+          cartId: item.cartId,
+          type: item.type,
+          quantity: item.quantity,
+          price: parseFloat(item.price),
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
+        })),
+        cartId
+      );
+      return response;
+    },
+    staleTime: 2 * 60 * 1000,
     retry: 1,
   });
 };
+
+
+export const useCartId = () => useCartStore((state) => state.cartId);
+
 
 /**
  * React Query hook to add item to cart
  */
 export const useAddToCart = () => {
   const queryClient = useQueryClient();
+  const setCartId = useCartStore((state) => state.setCartId);
 
   return useMutation({
     mutationFn: (payload: cartAPI.AddToCartRequest) => cartAPI.addToCart(payload),
-    onSuccess: () => {
+    onSuccess: (response) => {
+      if (response.data.cartId) {
+        setCartId(response.data.cartId);
+      }
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
     onError: (error) => {
@@ -142,9 +177,13 @@ export const useRemoveFromCart = () => {
  */
 export const useClearCart = () => {
   const queryClient = useQueryClient();
+  const cartId = useCartStore((state) => state.cartId);
 
   return useMutation({
-    mutationFn: () => cartAPI.clearCart(),
+    mutationFn: () => {
+      if (!cartId) throw new Error('No cart ID available');
+      return cartAPI.clearCart(cartId);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },

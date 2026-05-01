@@ -12,6 +12,8 @@ import UploadReceiptModal from '@/components/ui/UploadReceiptModal';
 import { useUserPackages, usePackageById } from '@/app/store/PackageStore';
 import { useState } from 'react';
 import type { PackageItem } from '@/api/package';
+import { useQueryClient } from '@tanstack/react-query';
+import { RefreshCw } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -37,6 +39,7 @@ const formatNaira = (value: string | number, fractionDigits = 0): string => {
   return `₦${isNaN(num) ? '0' : num.toLocaleString('en-NG', { minimumFractionDigits: fractionDigits })}`;
 };
 
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const PackageDetail = () => {
@@ -44,10 +47,10 @@ const PackageDetail = () => {
   const navigate = useNavigate();
   const [showUploadModal, setShowUploadModal] = useState(false);
 
+  const queryClient = useQueryClient();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   // ── Data fetching ─────────────────────────────────────────────────────────
-  // Two parallel queries:
-  //   1. usePackageById  → real package data including items array
-  //   2. useUserPackages → subscription/financial data (totalPaid, progress, etc.)
 
   const {
     data: packageDetails,
@@ -59,6 +62,13 @@ const PackageDetail = () => {
     data: userPackages,
     isLoading: userPkgLoading,
   } = useUserPackages();
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await queryClient.invalidateQueries({ queryKey: ['userPackages'] });
+    await queryClient.invalidateQueries({ queryKey: ['package', packageId] });
+    setTimeout(() => setIsRefreshing(false), 800);
+  };
 
   const isLoading = pkgLoading || userPkgLoading;
 
@@ -362,7 +372,15 @@ const PackageDetail = () => {
 
               <div className="flex flex-row gap-3">
                 <button
-                  onClick={() => navigate(`/dashboard/customer/payment/${packageId}`)}
+                  onClick={() =>
+                    navigate(`/dashboard/customer/payment/${packageId}`, {
+                      state: {
+                        expectedAmount: parseFloat(userPackageData?.installmentAmount ?? '0'),
+                        packageName: displayData.title,
+                        userPackageId: userPackageData?.id,
+                      },
+                    })
+                  }
                   className="bg-emerald-600 hover:bg-emerald-700 w-[50%] cursor-pointer transition-colors
                              text-white font-semibold py-3 sm:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl
                              flex items-center justify-center gap-2 text-sm sm:text-base active:scale-[0.985]"
@@ -382,10 +400,19 @@ const PackageDetail = () => {
 
             {/* Contribution History */}
             <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-slate-200">
-              <h2 className="text-base sm:text-lg lg:text-xl font-semibold mb-4 sm:mb-5 lg:mb-6">
-                Contribution History
-              </h2>
-              {/* TODO: wire up GET /api/package/contributions/:packageId when endpoint is available */}
+              <div className="flex items-center justify-between mb-4 sm:mb-5 lg:mb-6">
+                <h2 className="text-base sm:text-lg lg:text-xl font-semibold">
+                  Contribution History
+                </h2>
+                <button
+                  onClick={handleRefresh}
+                  disabled={isRefreshing}
+                  className="flex items-center gap-1.5 text-sm text-emerald-600 hover:text-emerald-700 disabled:opacity-50 transition-colors"
+                >
+                  <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                  Refresh
+                </button>
+              </div>
               <div className="flex flex-col items-center justify-center py-8 gap-3">
                 <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center">
                   <CheckCircle className="w-6 h-6 text-slate-300" />

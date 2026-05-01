@@ -2,7 +2,7 @@ import { apiCall } from './client';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-export type PaymentType = 'package' | 'cart' | 'saving';
+export type PaymentType = 'package' | 'product' | 'saving';
 export type PaymentStatus = 'pending' | 'pending_approval' | 'approved' | 'rejected';
 
 export interface CartItemPayload {
@@ -13,17 +13,21 @@ export interface CartItemPayload {
   quantity: number;
 }
 
+export interface RejectPaymentRequest {
+  rejectionReason: string;
+}
+
 export interface SubmitPaymentRequest {
   receipt: File;
   amountPaid: string;
-  userPackageId: string;           // Required per new endpoint
-  cardId?: string;                 // Optional (from Postman)
+  userPackageId?: string;           // Optional for cart payments
+  cartId?: string;                 // Optional (from Postman)
   paymentType?: PaymentType;       // Optional
   product?: string;                // Optional
   // Legacy fields (kept for compatibility if used elsewhere)
-  expectedAmount?: string;
-  packageId?: string;
-  cartItems?: string;
+  // expectedAmount?: string;
+  // packageId?: string;
+  // cartItems?: string;
 }
 export interface Payment {
   id: string;
@@ -41,8 +45,16 @@ export interface Payment {
   approvedAt?: string;
 }
 
-export interface RejectPaymentRequest {
-  rejectionReason: string;
+
+export interface PendingPayment extends Payment {
+  user: { id: string; fullName: string; email: string; phoneNumber: string };
+  userPackage?: unknown;
+}
+
+
+export interface PendingPaymentsResponse {
+  summary: { total: number; byType: { package: number; product: number; saving: number } };
+  payments: PendingPayment[];
 }
 
 // ─── Shared response wrapper ──────────────────────────────────────────────────
@@ -63,17 +75,17 @@ export const submitPayment = async (payload: SubmitPaymentRequest): Promise<Paym
   try {
     const formData = new FormData();
     formData.append('amountPaid', payload.amountPaid);
-    formData.append('userPackageId', payload.userPackageId);
+    if (payload.userPackageId) formData.append('userPackageId', payload.userPackageId);
     formData.append('receipt', payload.receipt);
 
-    if (payload.cardId) formData.append('cardId', payload.cardId);
+    if (payload.cartId) formData.append('cartId', payload.cartId);
     if (payload.paymentType) formData.append('paymentType', payload.paymentType);
     if (payload.product) formData.append('product', payload.product);
 
     // Legacy support if needed by other flows
-    if (payload.expectedAmount) formData.append('expectedAmount', payload.expectedAmount);
-    if (payload.packageId) formData.append('packageId', payload.packageId);
-    if (payload.cartItems) formData.append('cartItems', payload.cartItems);
+    // if (payload.expectedAmount) formData.append('expectedAmount', payload.expectedAmount);
+    // if (payload.packageId) formData.append('packageId', payload.packageId);
+    // if (payload.cartId) formData.append('cartId', payload.cartId);
 
     const response = await apiCall<ApiResponse<Payment>>('/api/payment/manual-payment', {
       method: 'POST',
@@ -106,11 +118,13 @@ export const getPayments = async (): Promise<Payment[]> => {
 };
 
 /** Get all pending payments (admin) */
-export const getPendingPayments = async (): Promise<Payment[]> => {
+export const getPendingPayments = async (paymentType?: string): Promise<PendingPaymentsResponse> => {
   try {
-    const response = await apiCall<ApiResponse<Payment[]>>('/api/payment/payments/pending');
+    const url = paymentType
+      ? `/api/payment/payments/pending?paymentType=${paymentType}`
+      : '/api/payment/payments/pending';
+    const response = await apiCall<ApiResponse<PendingPaymentsResponse>>(url);
     if (!response.success) throw new Error(response.message || 'Failed to fetch pending payments');
-    if (!Array.isArray(response.data)) throw new Error('Invalid response format: expected array');
     return response.data;
   } catch (error) {
     console.error('[Get Pending Payments Error]', error);

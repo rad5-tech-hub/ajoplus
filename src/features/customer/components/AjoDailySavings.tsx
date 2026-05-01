@@ -130,7 +130,12 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
             Withdraw Balance
           </button>
           <button
-            onClick={() => navigate('/dashboard/customer/payment/')}
+            onClick={() => navigate('/dashboard/customer/payment/saving', {
+              state: {
+                isSavingPayment: true,
+                total: wallet?.dailyAmount ?? dailyAmount,
+              },
+            })}
             className="w-full cursor-pointer bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold py-3 rounded-2xl transition-all text-sm"
           >
             Add to Savings

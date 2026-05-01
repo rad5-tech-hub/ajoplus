@@ -145,18 +145,13 @@ export const removeFromCart = async (itemId: string): Promise<RemoveFromCartResp
 
 /**
  * Clear the entire cart
- */
-export const clearCart = async (): Promise<{ success: boolean; message: string }> => {
+ */export const clearCart = async (cartId: string): Promise<{ success: boolean; message: string }> => {
   try {
     const response = await apiCall<{ success: boolean; message: string }>(
-      '/api/cart/cart',
+      `/api/cart/cart/${cartId}`,   // ← cart-level delete, not item-level
       { method: 'DELETE' }
     );
-
-    if (!response.success) {
-      throw new Error(response.message || 'Failed to clear cart');
-    }
-
+    if (!response.success) throw new Error(response.message || 'Failed to clear cart');
     return response;
   } catch (error) {
     console.error('[Clear Cart Error]', error);

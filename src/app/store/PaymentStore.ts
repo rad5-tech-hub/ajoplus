@@ -26,8 +26,8 @@ export const useGetPayments = () =>
 export const useGetPendingPayments = () =>
   useQuery({
     queryKey: ['payments', 'pending'],
-    queryFn: paymentAPI.getPendingPayments,
-    staleTime: 60 * 1000, // 1 min — approvals change frequently
+    queryFn: () => paymentAPI.getPendingPayments(),  // called with no args → works correctly
+    staleTime: 60 * 1000,
     gcTime: 2 * 60 * 1000,
     retry: smartRetry,
   });
@@ -45,8 +45,7 @@ export const useGetPaymentDetail = (paymentId?: string) =>
 
 // ─── Mutations ────────────────────────────────────────────────────────────────
 
-/** Submit a payment receipt for review */
-export const useSubmitPayment = () => {
+/** Submit a payment receipt for review */export const useSubmitPayment = () => {
   const queryClient = useQueryClient();
   const { openModal, closeModal } = useModalStore();
 
@@ -54,7 +53,9 @@ export const useSubmitPayment = () => {
     mutationFn: (payload: paymentAPI.SubmitPaymentRequest) =>
       paymentAPI.submitPayment(payload),
     onSuccess: () => {
+      // Invalidate both so payment list AND package progress reflect new submission
       queryClient.invalidateQueries({ queryKey: ['payments'] });
+      queryClient.invalidateQueries({ queryKey: ['userPackages'] });
       openModal({
         type: 'success',
         title: 'Payment Submitted',
@@ -74,7 +75,6 @@ export const useSubmitPayment = () => {
   });
 };
 
-/** Approve a payment — admin only */
 export const useApprovePayment = () => {
   const queryClient = useQueryClient();
   const { openModal, closeModal } = useModalStore();
@@ -82,7 +82,10 @@ export const useApprovePayment = () => {
   return useMutation({
     mutationFn: (paymentId: string) => paymentAPI.approvePayment(paymentId),
     onSuccess: () => {
+      // Invalidate everything that depends on payment status
       queryClient.invalidateQueries({ queryKey: ['payments'] });
+      queryClient.invalidateQueries({ queryKey: ['userPackages'] });
+      queryClient.invalidateQueries({ queryKey: ['payment'] });
       openModal({
         type: 'success',
         title: 'Payment Approved',
