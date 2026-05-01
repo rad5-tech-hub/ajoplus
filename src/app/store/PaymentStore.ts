@@ -79,6 +79,7 @@ export const useApprovePayment = () => {
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
       queryClient.invalidateQueries({ queryKey: ['wallet'] });
       queryClient.invalidateQueries({ queryKey: ['customerWallet'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'overview'] });
       openModal({
         type: 'success',
         title: 'Payment Approved',
@@ -112,6 +113,7 @@ export const useRejectPayment = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'overview'] });
     },
     onError: (error: Error) => {
       console.error('[Reject Payment Mutation Error]', error);

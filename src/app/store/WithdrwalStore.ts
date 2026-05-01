@@ -30,6 +30,7 @@ export const useApproveWithdrawal = () => {
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: ['admin', 'withdrawals'] });
 			qc.invalidateQueries({ queryKey: ['transactions'] });
+			qc.invalidateQueries({ queryKey: ['admin', 'overview'] });
 		},
 	});
 };
@@ -44,6 +45,7 @@ export const useRejectWithdrawal = () => {
 			qc.invalidateQueries({ queryKey: ['wallet'] });
 			qc.invalidateQueries({ queryKey: ['customerWallet'] });
 			qc.invalidateQueries({ queryKey: ['transactions'] });
+			qc.invalidateQueries({ queryKey: ['admin', 'overview'] });
 		},
 	});
 };
