@@ -23,9 +23,9 @@ const PUBLIC_ENDPOINTS = [
 const PERMANENT_ERROR_STATUSES = new Set([400, 401, 403, 404, 422]);
 
 /**
- * Base API client with auth, retry, and consistent response handling
- * Optimized for AjoPlus (3G networks + reliability)
- */
+* Base API client with auth, retry, and consistent response handling
+* Optimized for AjoPlus (3G networks + reliability)
+*/
 export async function apiCall<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -90,9 +90,9 @@ export async function apiCall<T>(
 }
 
 /**
- * Get authorization token from Zustand persisted storage
- * Checks both customer/agent auth and admin auth
- */
+* Get authorization token from Zustand persisted storage
+* Checks both customer/agent auth and admin auth
+*/
 export function getAuthToken(): string | null {
   try {
     const auth = localStorage.getItem('ajoplus-auth-storage');
@@ -115,10 +115,10 @@ export function getAuthToken(): string | null {
 }
 
 /**
- * Retry logic with exponential backoff — critical for low-end devices & 3G
- * Skips retry entirely for permanent errors (401, 403, 404 etc.) since
- * these will never resolve on their own and only spam the console
- */
+* Retry logic with exponential backoff — critical for low-end devices & 3G
+* Skips retry entirely for permanent errors (401, 403, 404 etc.) since
+* these will never resolve on their own and only spam the console
+*/
 export async function retryApiCall<T>(
   fn: () => Promise<T>,
   maxRetries = 3

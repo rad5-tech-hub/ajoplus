@@ -3,16 +3,11 @@ import * as paymentAPI from '@/api/payments';
 import { APIError } from '@/api/client';
 import { useModalStore } from './ModalStore';
 
-// ─── Shared retry predicate (mirrors PackageStore) ────────────────────────────
-// Never retry 4xx errors — they are permanent. Only retry network failures.
 const smartRetry = (failureCount: number, error: unknown): boolean => {
   if (error instanceof APIError) return false;
   return failureCount < 2;
 };
 
-// ─── Queries ──────────────────────────────────────────────────────────────────
-
-/** Payment history for the current user */
 export const useGetPayments = () =>
   useQuery({
     queryKey: ['payments'],
@@ -22,17 +17,15 @@ export const useGetPayments = () =>
     retry: smartRetry,
   });
 
-/** All pending payments — admin use */
 export const useGetPendingPayments = () =>
   useQuery({
     queryKey: ['payments', 'pending'],
-    queryFn: () => paymentAPI.getPendingPayments(),  // called with no args → works correctly
+    queryFn: () => paymentAPI.getPendingPayments(),
     staleTime: 60 * 1000,
     gcTime: 2 * 60 * 1000,
     retry: smartRetry,
   });
 
-/** Single payment detail */
 export const useGetPaymentDetail = (paymentId?: string) =>
   useQuery({
     queryKey: ['payment', paymentId],
@@ -43,9 +36,7 @@ export const useGetPaymentDetail = (paymentId?: string) =>
     retry: smartRetry,
   });
 
-// ─── Mutations ────────────────────────────────────────────────────────────────
-
-/** Submit a payment receipt for review */export const useSubmitPayment = () => {
+export const useSubmitPayment = () => {
   const queryClient = useQueryClient();
   const { openModal, closeModal } = useModalStore();
 
@@ -53,13 +44,13 @@ export const useGetPaymentDetail = (paymentId?: string) =>
     mutationFn: (payload: paymentAPI.SubmitPaymentRequest) =>
       paymentAPI.submitPayment(payload),
     onSuccess: () => {
-      // Invalidate both so payment list AND package progress reflect new submission
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       queryClient.invalidateQueries({ queryKey: ['userPackages'] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
       openModal({
         type: 'success',
         title: 'Payment Submitted',
-        message: "Your receipt has been submitted for review. You'll receive an approval notification within 24 hours.",
+        message: 'Your receipt is pending admin review. Your balance will update once approved.',
       });
       setTimeout(() => closeModal(), 2500);
     },
@@ -82,10 +73,12 @@ export const useApprovePayment = () => {
   return useMutation({
     mutationFn: (paymentId: string) => paymentAPI.approvePayment(paymentId),
     onSuccess: () => {
-      // Invalidate everything that depends on payment status
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       queryClient.invalidateQueries({ queryKey: ['userPackages'] });
       queryClient.invalidateQueries({ queryKey: ['payment'] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      queryClient.invalidateQueries({ queryKey: ['wallet'] });
+      queryClient.invalidateQueries({ queryKey: ['customerWallet'] });
       openModal({
         type: 'success',
         title: 'Payment Approved',
@@ -105,7 +98,6 @@ export const useApprovePayment = () => {
   });
 };
 
-/** Reject a payment with a reason — admin only */
 export const useRejectPayment = () => {
   const queryClient = useQueryClient();
 
@@ -118,8 +110,8 @@ export const useRejectPayment = () => {
       rejectionReason: string;
     }) => paymentAPI.rejectPayment(paymentId, { rejectionReason }),
     onSuccess: () => {
-      // Invalidate both lists so any view reflects the new status immediately
       queryClient.invalidateQueries({ queryKey: ['payments'] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
     },
     onError: (error: Error) => {
       console.error('[Reject Payment Mutation Error]', error);

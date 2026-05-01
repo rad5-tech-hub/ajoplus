@@ -1,4 +1,3 @@
-// src/app/store/dailyAjoStore.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { walletApi, type WithdrawalRequest } from '@/api/wallet';
@@ -15,7 +14,6 @@ interface DailyAjoState {
 	isLoading: boolean;
 	error: string | null;
 
-	// Actions
 	startDailyAjo: (dailyAmount: number) => void;
 	addToSavings: (amount: number) => void;
 	withdraw: (payload: WithdrawalRequest) => Promise<{ success: boolean; message?: string }>;
@@ -33,14 +31,11 @@ export const useDailyAjoStore = create<DailyAjoState>()(
 			availableBalance: 0,
 			daysSaved: 0,
 			startDate: null,
-
 			isLoading: false,
 			error: null,
 
 			startDailyAjo: (amount: number) => {
 				if (amount <= 0) return;
-
-				const today = new Date().toISOString();
 				set({
 					isActive: true,
 					dailyAmount: amount,
@@ -48,7 +43,7 @@ export const useDailyAjoStore = create<DailyAjoState>()(
 					commissionPaid: 0,
 					availableBalance: 0,
 					daysSaved: 0,
-					startDate: today,
+					startDate: new Date().toISOString(),
 					error: null,
 				});
 			},
@@ -56,11 +51,9 @@ export const useDailyAjoStore = create<DailyAjoState>()(
 			addToSavings: (amount: number) => {
 				const state = get();
 				if (!state.isActive || amount <= 0) return;
-
 				const newTotal = state.totalSaved + amount;
-				const newCommission = Math.round(newTotal * 0.05); // 5% commission (can be made dynamic later)
+				const newCommission = Math.round(newTotal * 0.05);
 				const newBalance = newTotal - newCommission;
-
 				set({
 					totalSaved: newTotal,
 					commissionPaid: newCommission,
@@ -73,17 +66,14 @@ export const useDailyAjoStore = create<DailyAjoState>()(
 				const { amount } = payload;
 				const state = get();
 
-				// Client-side validations
 				if (amount < 100) {
 					set({ error: 'Minimum withdrawal amount is ₦100' });
 					return { success: false, message: 'Minimum withdrawal amount is ₦100' };
 				}
-
 				if (amount > state.availableBalance) {
 					set({ error: 'Insufficient available balance' });
 					return { success: false, message: 'Insufficient available balance' };
 				}
-
 				if (!state.isActive) {
 					set({ error: 'No active Daily Ajo savings plan' });
 					return { success: false, message: 'No active Daily Ajo savings plan' };
@@ -94,33 +84,26 @@ export const useDailyAjoStore = create<DailyAjoState>()(
 				try {
 					const response = await walletApi.createWithdrawal(payload);
 
-					// Update local balance from server response
-					const newAvailableBalance = response.data.wallet.availableBalance;
-
-					set({
-						availableBalance: newAvailableBalance,
-						isLoading: false,
-					});
+					// Do NOT update availableBalance here — request is pending admin approval.
+					// The customerWallet query refetch will reflect the accurate server balance.
+					set({ isLoading: false });
 
 					return {
 						success: true,
 						message: response.message || 'Withdrawal request submitted successfully',
 					};
 				} catch (err: unknown) {
-					const errorMessage = (err as { message?: string })?.message || 'Failed to process withdrawal. Please try again.';
-
-					set({
-						error: errorMessage,
-						isLoading: false,
-					});
-
+					const errorMessage =
+						(err as { message?: string })?.message ||
+						'Failed to process withdrawal. Please try again.';
+					set({ error: errorMessage, isLoading: false });
 					throw new Error(errorMessage);
 				}
 			},
 
 			clearError: () => set({ error: null }),
 
-			resetDailyAjo: () => {
+			resetDailyAjo: () =>
 				set({
 					isActive: false,
 					dailyAmount: 0,
@@ -131,12 +114,10 @@ export const useDailyAjoStore = create<DailyAjoState>()(
 					startDate: null,
 					isLoading: false,
 					error: null,
-				});
-			},
+				}),
 		}),
 		{
 			name: 'daily-ajo-storage',
-			// Only persist these fields (avoid persisting loading/error states)
 			partialize: (state) => ({
 				isActive: state.isActive,
 				dailyAmount: state.dailyAmount,

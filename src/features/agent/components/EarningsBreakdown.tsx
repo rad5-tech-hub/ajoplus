@@ -96,6 +96,7 @@ const EarningsBreakdown = () => {
       <DailyAjoWithdrawModal
         isOpen={isWithdrawOpen}
         onClose={() => setIsWithdrawOpen(false)}
+        availableBalance={totalEarnings}
       />
     </div>
   );
