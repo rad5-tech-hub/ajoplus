@@ -35,7 +35,6 @@ export async function loginUser(
     refreshToken: json.data.refreshToken,
   };
 }
-
 export async function signupUser(
   data: SignupData
 ): Promise<{ user: User; token: string; refreshToken: string }> {
@@ -50,20 +49,17 @@ export async function signupUser(
       role: data.accountType,
       password: data.password,
       confirmPassword: data.password,
-      referralCode: data.referralCode,
+      ...(data.referralCode ? { referredByAgentCode: data.referralCode } : {}),
     }),
     headers: { 'Content-Type': 'application/json' },
   });
 
   if (!json?.success) throw new Error(json?.message || 'Signup failed');
 
-  return {
-    user: json.data.user,
-    token: json.data.accessToken,
-    refreshToken: json.data.refreshToken,
-  };
+  // Register returns the user only — immediately login to get tokens
+  const loginResult = await loginUser({ email: data.email, password: data.password });
+  return loginResult;
 }
-
 export async function logoutUser(): Promise<void> {
   try {
     const resp = await apiCall<{ success: boolean; message?: string; data: null }>(

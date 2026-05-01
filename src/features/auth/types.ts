@@ -26,8 +26,6 @@ export interface SignupData {
   password: string;
   referralCode?: string;
 }
-
-// Mirrors the `data` envelope from the API
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
