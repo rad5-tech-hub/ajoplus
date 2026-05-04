@@ -179,7 +179,7 @@ const PaymentApprovals = () => {
                   </div>
                   <div>
                     <p className="font-semibold text-lg sm:text-xl text-slate-900">
-                      {payment.userId}
+                      {payment.user.fullName}
                     </p>
                     <span
                       className={`inline-block mt-1.5 px-4 py-1 text-xs font-medium rounded-full capitalize
@@ -347,7 +347,7 @@ const PaymentApprovals = () => {
         isOpen={showRejectModal}
         onClose={() => setShowRejectModal(false)}
         onConfirm={handleRejectConfirm}
-        customerName={selectedPayment?.userId ?? ''}
+        customerName={selectedPayment?.user.fullName ?? ''}
         amount={selectedPayment?.amountPaid ?? ''}
       />
 

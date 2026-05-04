@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as paymentAPI from '@/api/payments';
 import { APIError } from '@/api/client';
 import { useModalStore } from './ModalStore';
+import { usePendingPaymentStore } from './PendingPaymentStore';
 
 const smartRetry = (failureCount: number, error: unknown): boolean => {
   if (error instanceof APIError) return false;
@@ -43,10 +44,18 @@ export const useSubmitPayment = () => {
   return useMutation({
     mutationFn: (payload: paymentAPI.SubmitPaymentRequest) =>
       paymentAPI.submitPayment(payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['payments'] });
-      queryClient.invalidateQueries({ queryKey: ['userPackages'] });
+    onSuccess: (payment) => {
+      // Track locally for pending banner (never call GET /api/payment/payments for customers)
+      usePendingPaymentStore.getState().addPending({
+        id: payment.id,
+        paymentType: payment.paymentType,
+        amountPaid: payment.amountPaid,
+        submittedAt: new Date().toISOString(),
+      });
+
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      queryClient.invalidateQueries({ queryKey: ['userPackages'] });
+      queryClient.invalidateQueries({ queryKey: ['customerDashboard'] });
       openModal({
         type: 'success',
         title: 'Payment Submitted',
@@ -76,9 +85,9 @@ export const useApprovePayment = () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       queryClient.invalidateQueries({ queryKey: ['userPackages'] });
       queryClient.invalidateQueries({ queryKey: ['payment'] });
-      queryClient.invalidateQueries({ queryKey: ['transactions'] });
       queryClient.invalidateQueries({ queryKey: ['wallet'] });
-      queryClient.invalidateQueries({ queryKey: ['customerWallet'] });
+      queryClient.invalidateQueries({ queryKey: ['customerDashboard'] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
       queryClient.invalidateQueries({ queryKey: ['admin', 'overview'] });
       openModal({
         type: 'success',
@@ -112,6 +121,9 @@ export const useRejectPayment = () => {
     }) => paymentAPI.rejectPayment(paymentId, { rejectionReason }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] });
+      queryClient.invalidateQueries({ queryKey: ['userPackages'] });
+      queryClient.invalidateQueries({ queryKey: ['wallet'] });
+      queryClient.invalidateQueries({ queryKey: ['customerDashboard'] });
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
       queryClient.invalidateQueries({ queryKey: ['admin', 'overview'] });
     },

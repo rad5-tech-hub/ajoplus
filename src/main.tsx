@@ -9,6 +9,14 @@ import { initializeErrorMonitoring } from './lib/errorMonitoring';
 // Initialize error monitoring before app starts
 initializeErrorMonitoring();
 
+// One-time migration: clear stale localStorage from old builds
+const MIGRATION_KEY = 'ajoplus-migration-v3';
+if (!localStorage.getItem(MIGRATION_KEY)) {
+  ['daily-ajo-storage', 'ajoplus-withdrawals', 'ajoplus-pending-payments', 'ajoplus-cart']
+    .forEach((key) => localStorage.removeItem(key));
+  localStorage.setItem(MIGRATION_KEY, '1');
+}
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

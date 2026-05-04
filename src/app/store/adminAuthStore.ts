@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware';
 import * as adminAPI from '@/api/admin';
 
 export interface AdminAuthStore {
-	admin: { id: string; email: string; role: 'admin' } | null;
+	admin: { id: string; fullName: string; email: string; role: 'admin' } | null;
 	token: string | null;
 	isAuthenticated: boolean;
 	isLoading: boolean;
@@ -36,7 +36,12 @@ export const useAdminAuthStore = create<AdminAuthStore>()(
 				try {
 					const { admin, token } = await adminAPI.loginAdmin({ email, password });
 					set({
-						admin,
+						admin: {
+							id: admin.id,
+							fullName: admin.fullName ?? email.split('@')[0], // fallback to email prefix
+							email: admin.email,
+							role: admin.role,
+						},
 						token,
 						isAuthenticated: true,
 						isLoading: false,
@@ -60,8 +65,18 @@ export const useAdminAuthStore = create<AdminAuthStore>()(
 						role: 'admin',
 					});
 					// After successful registration, auto-login
-					await adminAPI.loginAdmin({ email, password });
-					set({ isLoading: false });
+					const { admin, token } = await adminAPI.loginAdmin({ email, password });
+					set({
+						admin: {
+							id: admin.id,
+							fullName, // preserve fullName from registration
+							email: admin.email,
+							role: admin.role,
+						},
+						token,
+						isAuthenticated: true,
+						isLoading: false,
+					});
 				} catch (err: unknown) {
 					set({
 						error: getErrorMessage(err, 'Failed to create admin account'),
@@ -72,11 +87,18 @@ export const useAdminAuthStore = create<AdminAuthStore>()(
 			},
 
 			logout: async () => {
-				// Clear state instantly for immediate logout
-				localStorage.removeItem('ajoplus-auth-storage');
-				localStorage.removeItem('ajoplus-cart-storage');
-				localStorage.removeItem('ajoplus-daily-ajo-storage');
-				localStorage.removeItem('ajoplus-admin-auth-storage');
+				// Clear all persisted stores with correct keys
+				const STORAGE_KEYS = [
+					'ajoplus-admin-auth-storage',
+					'ajoplus-auth-storage',
+					'ajoplus-cart',
+					'daily-ajo-storage',
+					'ajoplus-withdrawals',
+					'ajoplus-pending-payments',
+					'ajoplus-migration-v3',
+				];
+				STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
+
 				set({
 					admin: null,
 					token: null,

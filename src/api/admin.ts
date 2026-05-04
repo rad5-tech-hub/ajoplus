@@ -30,6 +30,7 @@ interface AdminLoginResponse {
 		token: string;
 		admin: {
 			id: string;
+			fullName?: string; // server may not return this on login
 			email: string;
 			role: 'admin';
 		};
@@ -69,7 +70,7 @@ export const registerAdmin = async (data: AdminRegisterData): Promise<AdminUser>
 
 export const loginAdmin = async (
 	credentials: AdminLoginCredentials
-): Promise<{ admin: { id: string; email: string; role: 'admin' }; token: string }> => {
+): Promise<{ admin: { id: string; fullName?: string; email: string; role: 'admin' }; token: string }> => {
 	try {
 		const response = await apiCall<AdminLoginResponse>('/api/admin/login-admin', {
 			method: 'POST',

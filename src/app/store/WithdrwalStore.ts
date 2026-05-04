@@ -43,7 +43,6 @@ export const useRejectWithdrawal = () => {
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: ['admin', 'withdrawals'] });
 			qc.invalidateQueries({ queryKey: ['wallet'] });
-			qc.invalidateQueries({ queryKey: ['customerWallet'] });
 			qc.invalidateQueries({ queryKey: ['transactions'] });
 			qc.invalidateQueries({ queryKey: ['admin', 'overview'] });
 		},

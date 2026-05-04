@@ -103,6 +103,43 @@ export const useDailyAjoStore = create<DailyAjoState>()(
 
 			clearError: () => set({ error: null }),
 
+			syncFromWallet: (wallet: {
+				dailyAmount: number;
+				totalSaved: number;
+				commissionPaid: number;
+				availableBalance: number;
+				daysSaved: number;
+			}) =>
+				set({
+					isActive: wallet.dailyAmount > 0,
+					dailyAmount: wallet.dailyAmount,
+					totalSaved: wallet.totalSaved,
+					commissionPaid: wallet.commissionPaid,
+					availableBalance: wallet.availableBalance,
+					daysSaved: wallet.daysSaved,
+				}),
+
+			clearForLogout: async () => {
+				set({
+					isActive: false,
+					dailyAmount: 0,
+					totalSaved: 0,
+					commissionPaid: 0,
+					availableBalance: 0,
+					daysSaved: 0,
+					startDate: null,
+					isLoading: false,
+					error: null,
+				});
+
+				// Lazy imports to avoid circular dependencies
+				const { useWithdrawalStore } = await import('./WithdrawalStore');
+				const { usePendingPaymentStore } = await import('./PendingPaymentStore');
+
+				useWithdrawalStore.getState().clearAll();
+				usePendingPaymentStore.getState().clearAll();
+			},
+
 			resetDailyAjo: () =>
 				set({
 					isActive: false,
@@ -118,15 +155,7 @@ export const useDailyAjoStore = create<DailyAjoState>()(
 		}),
 		{
 			name: 'daily-ajo-storage',
-			partialize: (state) => ({
-				isActive: state.isActive,
-				dailyAmount: state.dailyAmount,
-				totalSaved: state.totalSaved,
-				commissionPaid: state.commissionPaid,
-				availableBalance: state.availableBalance,
-				daysSaved: state.daysSaved,
-				startDate: state.startDate,
-			}),
+			partialize: () => ({}), // persist nothing — all values from server on login
 		}
 	)
 );
