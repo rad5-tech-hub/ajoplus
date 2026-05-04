@@ -3,22 +3,31 @@ import { persist } from 'zustand/middleware';
 import { walletApi, type WithdrawalRequest } from '@/api/wallet';
 
 interface DailyAjoState {
-	isActive: boolean;
-	dailyAmount: number;
-	totalSaved: number;
-	commissionPaid: number;
-	availableBalance: number;
-	daysSaved: number;
-	startDate: string | null;
+  isActive: boolean;
+  dailyAmount: number;
+  totalSaved: number;
+  commissionPaid: number;
+  availableBalance: number;
+  daysSaved: number;
+  startDate: string | null;
+  isLoading: boolean;
+  error: string | null;
 
-	isLoading: boolean;
-	error: string | null;
+  startDailyAjo: (dailyAmount: number) => void;
+  addToSavings: (amount: number) => void;
+  withdraw: (payload: WithdrawalRequest) => Promise<{ success: boolean; message?: string }>;
+  clearError: () => void;
+  resetDailyAjo: () => void;
 
-	startDailyAjo: (dailyAmount: number) => void;
-	addToSavings: (amount: number) => void;
-	withdraw: (payload: WithdrawalRequest) => Promise<{ success: boolean; message?: string }>;
-	clearError: () => void;
-	resetDailyAjo: () => void;
+  // ✅ Add these two — they exist in the implementation but were missing from the interface
+  syncFromWallet: (wallet: {
+    dailyAmount: number;
+    totalSaved: number;
+    commissionPaid: number;
+    availableBalance: number;
+    daysSaved: number;
+  }) => void;
+  clearForLogout: () => Promise<void>;
 }
 
 export const useDailyAjoStore = create<DailyAjoState>()(

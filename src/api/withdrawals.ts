@@ -1,4 +1,3 @@
-// src/api/withdrawals.ts
 import { apiCall } from './client';
 
 // ── Shared ──────────────────────────────────────────────────────────────────
@@ -29,11 +28,25 @@ export interface SubmitWithdrawalRequest {
 	description?: string;
 }
 
+// Alias so WithdrawalStore can import WithdrawalRequest without any changes outside this file
+export type WithdrawalRequest = SubmitWithdrawalRequest;
+
 export interface SubmitWithdrawalResponse {
 	withdrawal: Withdrawal;
 	wallet: WalletSnapshot;
 }
 
+export const requestWithdrawal = async (
+	body: WithdrawalRequest
+): Promise<SubmitWithdrawalResponse> => {
+	const res = await apiCall<{ data: SubmitWithdrawalResponse }>('/api/customer/wallet/withdrawals', {
+		method: 'POST',
+		body: JSON.stringify(body),
+	});
+	return res.data;
+};
+
+// Kept for backward compatibility in case it is used elsewhere
 export const submitWithdrawal = async (
 	body: SubmitWithdrawalRequest
 ): Promise<SubmitWithdrawalResponse> => {
@@ -45,7 +58,6 @@ export const submitWithdrawal = async (
 };
 
 // ── Admin ─────────────────────────────────────────────────────────────────────
-// src/api/withdrawals.ts — updated interfaces + function
 
 export interface AdminWithdrawalUser {
 	id: string;
@@ -59,22 +71,22 @@ export interface AdminWithdrawalWallet {
 	availableBalance: string;
 	commissionPaid: string;
 }
+
 export interface AdminWithdrawal extends Omit<Withdrawal, 'amount'> {
-	amount: string;   // admin endpoint returns string
+	amount: string; // admin endpoint returns string
 	user: AdminWithdrawalUser;
 	wallet: AdminWithdrawalWallet;
 }
-
-
-export const getAdminWithdrawals = async (): Promise<AdminWithdrawalsResponse> => {
-	const res = await apiCall<{ data: AdminWithdrawalsResponse }>('/api/admin/withdrawals/pending');
-	return res.data;
-};
 
 export interface AdminWithdrawalsResponse {
 	withdrawals: AdminWithdrawal[];
 	count: number;
 }
+
+export const getAdminWithdrawals = async (): Promise<AdminWithdrawalsResponse> => {
+	const res = await apiCall<{ data: AdminWithdrawalsResponse }>('/api/admin/withdrawals/pending');
+	return res.data;
+};
 
 export interface ApproveWithdrawalResponse {
 	withdrawal: Withdrawal;

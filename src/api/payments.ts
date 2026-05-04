@@ -43,6 +43,11 @@ export interface Payment {
   createdAt?: string;
   updatedAt?: string;
   approvedAt?: string;
+   user: {
+    id: string;
+    fullName: string;
+    email?: string;
+  };
 }
 
 
