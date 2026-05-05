@@ -49,7 +49,11 @@ const PaymentApprovals = () => {
   const historyPayments = [
     ...(approvedData?.payments ?? []),
     ...(rejectedData?.payments ?? []),
-  ].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+  ].sort((a, b) => {
+    const aDate = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+    const bDate = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+    return bDate - aDate;
+  });
 
   // Determine which payments to display based on active tab
   const displayPayments = activeTab === 'pending' ? payments : historyPayments;

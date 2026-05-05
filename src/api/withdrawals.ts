@@ -120,3 +120,52 @@ export const rejectWithdrawal = async (
 	);
 	return res.data;
 };
+
+// ── Customer Withdrawal History ─────────────────────────────────────────────
+
+export interface CustomerWithdrawalsResponse {
+	count: number;
+	withdrawals: Withdrawal[];
+}
+
+/** Customer: their own rejected withdrawals */
+export const getMyRejectedWithdrawals = async (): Promise<CustomerWithdrawalsResponse> => {
+	try {
+		const res = await apiCall<{ data: CustomerWithdrawalsResponse }>(
+			'/api/customer/wallet/withdrawals/rejected'
+		);
+		return res.data;
+	} catch (error) {
+		console.error('[Get My Rejected Withdrawals Error]', error);
+		throw error;
+	}
+};
+
+/** Customer: their own approved withdrawals */
+export const getMyApprovedWithdrawals = async (): Promise<CustomerWithdrawalsResponse> => {
+	try {
+		const res = await apiCall<{ data: CustomerWithdrawalsResponse }>(
+			'/api/customer/wallet/withdrawals/approved'
+		);
+		return res.data;
+	} catch (error) {
+		console.error('[Get My Approved Withdrawals Error]', error);
+		throw error;
+	}
+};
+
+// ── Admin Withdrawal History ────────────────────────────────────────────────
+
+export const getAdminApprovedWithdrawals = async (): Promise<AdminWithdrawalsResponse> => {
+	const res = await apiCall<{ data: AdminWithdrawalsResponse }>(
+		'/api/admin/withdrawals/approved'
+	);
+	return res.data;
+};
+
+export const getAdminRejectedWithdrawals = async (): Promise<AdminWithdrawalsResponse> => {
+	const res = await apiCall<{ data: AdminWithdrawalsResponse }>(
+		'/api/admin/withdrawals/rejected'
+	);
+	return res.data;
+};

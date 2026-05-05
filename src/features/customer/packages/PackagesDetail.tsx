@@ -440,7 +440,6 @@ const PackageDetail = () => {
       <UploadReceiptModal
         isOpen={showUploadModal}
         onClose={() => setShowUploadModal(false)}
-        packageName={displayData.title}
         recommendedAmount={displayData.perPayment}
         onSuccess={(amount) =>
           navigate('/payment/success', {
