@@ -43,7 +43,7 @@ export interface Payment {
   createdAt?: string;
   updatedAt?: string;
   approvedAt?: string;
-   user: {
+  user: {
     id: string;
     fullName: string;
     email?: string;
@@ -181,6 +181,62 @@ export const rejectPayment = async (
     return response.data.payment;
   } catch (error) {
     console.error('[Reject Payment Error]', error);
+    throw error;
+  }
+};
+
+/** Customer: get their own rejected payments */
+export const getMyRejectedPayments = async (): Promise<PendingPaymentsResponse> => {
+  try {
+    const response = await apiCall<ApiResponse<PendingPaymentsResponse>>(
+      '/api/payment/payments/me/rejected'
+    );
+    if (!response.success) throw new Error(response.message || 'Failed to fetch rejected payments');
+    return response.data;
+  } catch (error) {
+    console.error('[Get My Rejected Payments Error]', error);
+    throw error;
+  }
+};
+
+/** Customer: get their own approved payments */
+export const getMyApprovedPayments = async (): Promise<PendingPaymentsResponse> => {
+  try {
+    const response = await apiCall<ApiResponse<PendingPaymentsResponse>>(
+      '/api/payment/payments/me/approved'
+    );
+    if (!response.success) throw new Error(response.message || 'Failed to fetch approved payments');
+    return response.data;
+  } catch (error) {
+    console.error('[Get My Approved Payments Error]', error);
+    throw error;
+  }
+};
+
+/** Admin: all approved payments */
+export const getApprovedPayments = async (): Promise<PendingPaymentsResponse> => {
+  try {
+    const response = await apiCall<ApiResponse<PendingPaymentsResponse>>(
+      '/api/payment/payments/approved'
+    );
+    if (!response.success) throw new Error(response.message || 'Failed to fetch approved payments');
+    return response.data;
+  } catch (error) {
+    console.error('[Get Approved Payments Error]', error);
+    throw error;
+  }
+};
+
+/** Admin: all rejected payments */
+export const getRejectedPayments = async (): Promise<PendingPaymentsResponse> => {
+  try {
+    const response = await apiCall<ApiResponse<PendingPaymentsResponse>>(
+      '/api/payment/payments/rejected'
+    );
+    if (!response.success) throw new Error(response.message || 'Failed to fetch rejected payments');
+    return response.data;
+  } catch (error) {
+    console.error('[Get Rejected Payments Error]', error);
     throw error;
   }
 };

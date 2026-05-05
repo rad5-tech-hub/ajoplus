@@ -7,11 +7,18 @@ import PaymentApprovedModal from '@/components/ui/PaymentApprovalModal';
 import PaymentRejectedModal from '@/components/ui/PaymentRejectedModal';
 
 import { formatDualCurrency } from '@/lib/currency';
-import { useApprovePayment, useRejectPayment, useGetPendingPayments } from '@/app/store/PaymentStore';
+import {
+  useApprovePayment,
+  useRejectPayment,
+  useGetPendingPayments,
+  useGetApprovedPayments,
+  useGetRejectedPayments,
+} from '@/app/store/PaymentStore';
 
 import type { Payment } from '@/api/payments';
 
 type FilterValue = 'all' | 'package' | 'product' | 'saving';
+type TabValue = 'pending' | 'history';
 
 const filterOptions: { value: FilterValue; label: string }[] = [
   { value: 'all', label: 'All Payments' },
@@ -22,8 +29,9 @@ const filterOptions: { value: FilterValue; label: string }[] = [
 
 const PaymentApprovals = () => {
   const { data, isLoading, error } = useGetPendingPayments();
+  const { data: approvedData, isLoading: approvedLoading } = useGetApprovedPayments();
+  const { data: rejectedData, isLoading: rejectedLoading } = useGetRejectedPayments();
   const payments = data?.payments || [];
-  // const summary = data?.summary;
   const approveMutation = useApprovePayment();
   const rejectMutation = useRejectPayment();
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
@@ -32,11 +40,21 @@ const PaymentApprovals = () => {
   const [showApprovedModal, setShowApprovedModal] = useState(false);
   const [showRejectedModal, setShowRejectedModal] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<FilterValue>('all');
+  const [activeTab, setActiveTab] = useState<TabValue>('pending');
 
   // Optimistic local status updates
   const [localStatus, setLocalStatus] = useState<Record<string, 'approved' | 'rejected'>>({});
 
-  const filteredPayments = payments.filter((p) => {
+  // Merge history payments (approved + rejected, sorted newest first)
+  const historyPayments = [
+    ...(approvedData?.payments ?? []),
+    ...(rejectedData?.payments ?? []),
+  ].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+
+  // Determine which payments to display based on active tab
+  const displayPayments = activeTab === 'pending' ? payments : historyPayments;
+
+  const filteredPayments = displayPayments.filter((p) => {
     if (selectedFilter === 'all') return true;
     return p.paymentType === selectedFilter;
   });
@@ -86,7 +104,8 @@ const PaymentApprovals = () => {
   };
 
   // Loading State
-  if (isLoading) {
+  const isLoadingData = activeTab === 'pending' ? isLoading : (approvedLoading || rejectedLoading);
+  if (isLoadingData) {
     return (
       <div className="px-4 sm:px-6 lg:px-8 space-y-6">
         <div className="h-9 bg-slate-200 rounded-full w-1/3 animate-pulse" />
@@ -101,7 +120,8 @@ const PaymentApprovals = () => {
   }
 
   // Error State
-  if (error) {
+  const errorState = activeTab === 'pending' ? error : null;
+  if (errorState) {
     return (
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="bg-white border border-red-200 rounded-3xl p-8 text-center">
@@ -125,6 +145,25 @@ const PaymentApprovals = () => {
         <p className="text-slate-600 mt-1 text-sm sm:text-base">
           Review and approve customer payment receipts
         </p>
+      </div>
+
+      {/* Tab Switcher */}
+      <div className="flex gap-2 mb-8">
+        {(['pending', 'history'] as TabValue[]).map((tab) => (
+          <button
+            key={tab}
+            onClick={() => {
+              setActiveTab(tab);
+              setSelectedFilter('all');
+            }}
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-all capitalize ${activeTab === tab
+              ? 'bg-emerald-600 text-white'
+              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
+          >
+            {tab === 'pending' ? 'Pending Approvals' : 'Payment History'}
+          </button>
+        ))}
       </div>
 
       {/* Filters */}
@@ -158,7 +197,7 @@ const PaymentApprovals = () => {
       <div className="space-y-6">
         {filteredPayments.map((payment) => {
           const status = getStatus(payment);
-          const isPending = status === 'pending' || status === 'pending_approval';
+          const isPending = (status === 'pending' || status === 'pending_approval') && activeTab === 'pending';
 
           // Per-item loading states
           const isApprovingThis = approveMutation.isPending && approveMutation.variables === payment.id;

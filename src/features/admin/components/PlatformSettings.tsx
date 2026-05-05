@@ -29,7 +29,8 @@ const PlatformSettings = () => {
           This is the commission deducted from Ajo savings. Current rate applies to all new and existing users.
         </p>
 
-        <button className="mt-6 sm:mt-8 cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white px-6 sm:px-10 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base w-full sm:w-auto">
+        <button className="mt-6 sm:mt-8 cursor-pointer
+ bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white px-6 sm:px-10 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base w-full sm:w-auto">
           Save Changes
         </button>
       </div>

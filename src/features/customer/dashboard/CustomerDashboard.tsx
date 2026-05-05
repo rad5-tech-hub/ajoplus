@@ -8,6 +8,7 @@ import MyPackages from '../packages/MyPackages';
 import AjoDailySavings from '../components/AjoDailySavings';
 import RecentTransactions from '../components/RecentTransactions';
 import NeedHelp from '../components/NeedHelp';
+import PaymentStatusBanner from '@/components/ui/PaymentStatusBanner';
 import DailyAjoSetupModal from '@/components/ui/DailyAjoSetupModal';
 // ✂️ Removed: import Modal from '@/components/ui/GeneralModal';
 
@@ -76,6 +77,7 @@ const CustomerDashboard = () => {
               View All
             </button>
           </div>
+          <PaymentStatusBanner />
           <RecentTransactions />
         </div>
       </div>

@@ -75,6 +75,42 @@ export const useSubmitPayment = () => {
   });
 };
 
+export const useGetMyRejectedPayments = () =>
+  useQuery({
+    queryKey: ['payments', 'me', 'rejected'],
+    queryFn: paymentAPI.getMyRejectedPayments,
+    staleTime: 60 * 1000,
+    refetchOnWindowFocus: true,
+    retry: smartRetry,
+  });
+
+export const useGetMyApprovedPayments = () =>
+  useQuery({
+    queryKey: ['payments', 'me', 'approved'],
+    queryFn: paymentAPI.getMyApprovedPayments,
+    staleTime: 60 * 1000,
+    refetchOnWindowFocus: true,
+    retry: smartRetry,
+  });
+
+export const useGetApprovedPayments = () =>
+  useQuery({
+    queryKey: ['payments', 'approved'],
+    queryFn: paymentAPI.getApprovedPayments,
+    staleTime: 60 * 1000,
+    refetchOnWindowFocus: true,
+    retry: smartRetry,
+  });
+
+export const useGetRejectedPayments = () =>
+  useQuery({
+    queryKey: ['payments', 'rejected'],
+    queryFn: paymentAPI.getRejectedPayments,
+    staleTime: 60 * 1000,
+    refetchOnWindowFocus: true,
+    retry: smartRetry,
+  });
+
 export const useApprovePayment = () => {
   const queryClient = useQueryClient();
   const { openModal, closeModal } = useModalStore();
@@ -89,6 +125,10 @@ export const useApprovePayment = () => {
       queryClient.invalidateQueries({ queryKey: ['customerDashboard'] });
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
       queryClient.invalidateQueries({ queryKey: ['admin', 'overview'] });
+      queryClient.invalidateQueries({ queryKey: ['payments', 'me', 'rejected'] });
+      queryClient.invalidateQueries({ queryKey: ['payments', 'me', 'approved'] });
+      queryClient.invalidateQueries({ queryKey: ['payments', 'approved'] });
+      queryClient.invalidateQueries({ queryKey: ['payments', 'rejected'] });
       openModal({
         type: 'success',
         title: 'Payment Approved',
@@ -126,6 +166,10 @@ export const useRejectPayment = () => {
       queryClient.invalidateQueries({ queryKey: ['customerDashboard'] });
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
       queryClient.invalidateQueries({ queryKey: ['admin', 'overview'] });
+      queryClient.invalidateQueries({ queryKey: ['payments', 'me', 'rejected'] });
+      queryClient.invalidateQueries({ queryKey: ['payments', 'me', 'approved'] });
+      queryClient.invalidateQueries({ queryKey: ['payments', 'approved'] });
+      queryClient.invalidateQueries({ queryKey: ['payments', 'rejected'] });
     },
     onError: (error: Error) => {
       console.error('[Reject Payment Mutation Error]', error);
