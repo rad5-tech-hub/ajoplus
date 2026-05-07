@@ -441,6 +441,8 @@ const PackageDetail = () => {
         isOpen={showUploadModal}
         onClose={() => setShowUploadModal(false)}
         recommendedAmount={displayData.perPayment}
+        userPackageId={userPackageData?.id}
+        paymentType="package"
         onSuccess={(amount) =>
           navigate('/payment/success', {
             state: { packageName: displayData.title, amount: `₦${amount}` },
