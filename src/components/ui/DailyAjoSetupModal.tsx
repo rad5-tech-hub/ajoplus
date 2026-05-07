@@ -1,8 +1,6 @@
-// src/features/customer/dashboard/components/DailyAjoSetupModal.tsx
-import { useState, useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
-import { useDailyAjoStore } from '@/app/store/DailyAjoStore';
-import { useModalStore } from '@/app/store/ModalStore';
+import { useState, useEffect, useRef, type FormEvent } from 'react';
+import { X, Loader2 } from 'lucide-react';
+import { useSetupSavingPlan } from '@/app/store/SavingPlanStore';
 
 interface DailyAjoSetupModalProps {
   isOpen: boolean;
@@ -12,63 +10,56 @@ interface DailyAjoSetupModalProps {
 const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
   const [dailyAmount, setDailyAmount] = useState<string>('');
   const [description, setDescription] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
-  const startDailyAjo = useDailyAjoStore((state) => state.startDailyAjo);
-  const { openModal, closeModal } = useModalStore();
+  const { mutate: setupPlan, isPending } = useSetupSavingPlan();
 
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-        onClose();
+        if (!isPending) onClose();
       }
     };
     if (isOpen) document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, isPending]);
 
   useEffect(() => {
     if (isOpen) {
       setDailyAmount('');
       setDescription('');
+      setError(null);
+      setSuccess(false);
     }
   }, [isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const amount = parseInt(dailyAmount);
+    const amount = parseInt(dailyAmount, 10);
 
     if (!amount || amount < 100) {
-      openModal({
-        type: 'error',
-        title: 'Invalid Amount',
-        message: 'Please enter a valid amount of at least ₦100.',
-      });
+      setError('Please enter a valid amount of at least ₦100.');
       return;
     }
 
-    try {
-      startDailyAjo(amount);
-
-      openModal({
-        type: 'success',
-        title: 'Daily Ajo Activated!',
-        message: `You are now saving ₦${amount.toLocaleString()} daily. 5% monthly commission applies.`,
-      });
-
-      setTimeout(() => {
-        closeModal();
-        onClose();
-      }, 1200);
-
-    } catch {
-      openModal({
-        type: 'error',
-        title: 'Something went wrong',
-        message: 'Could not start your Daily Ajo. Please try again.',
-      });
-    }
+    setupPlan(
+      { amount, description: description.trim() || undefined },
+      {
+        onSuccess: () => {
+          setSuccess(true);
+          setTimeout(() => { onClose(); }, 1500);
+        },
+        onError: (err: unknown) => {
+          const message = err instanceof Error
+            ? err.message
+            : 'Could not start your Daily Ajo. Please try again.';
+          setError(message);
+        },
+      }
+    );
   };
 
   if (!isOpen) return null;
@@ -110,9 +101,10 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
                 <input
                   type="number"
                   value={dailyAmount}
-                  onChange={(e) => setDailyAmount(e.target.value)}
+                  onChange={(e) => { setDailyAmount(e.target.value); setError(null); }}
                   placeholder="500"
-                  className="w-full pl-9 pr-5 py-3 border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 text-base font-medium placeholder:text-slate-400"
+                  disabled={isPending}
+                  className="w-full pl-9 pr-5 py-3 border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 text-base font-medium placeholder:text-slate-400 disabled:opacity-50"
                   min="100"
                   required
                 />
@@ -128,8 +120,9 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                disabled={isPending}
                 placeholder="e.g. School fees, business capital, emergency fund..."
-                className="w-full px-4 py-3 border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 h-20 resize-none text-sm leading-relaxed"
+                className="w-full px-4 py-3 border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 h-20 resize-none text-sm leading-relaxed disabled:opacity-50"
               />
             </div>
 
@@ -139,11 +132,29 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
               <span className="text-slate-600">₦500/day = ₦15,000/month → ₦750 fee → You keep ₦14,250</span>
             </div>
 
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-2xl px-4 py-3">
+                {error}
+              </div>
+            )}
+
+            {success && (
+              <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm rounded-2xl px-4 py-3 font-medium">
+                🎉 Daily Ajo activated! Redirecting...
+              </div>
+            )}
+
             <button
               type="submit"
-              className="cursor-pointer w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] text-white font-semibold py-3 rounded-2xl text-sm transition-all duration-200"
+              disabled={isPending || success}
+              className="cursor-pointer w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985]
+                disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-2xl
+                text-sm transition-all duration-200 flex items-center justify-center gap-2"
             >
-              Start Saving Daily
+              {isPending
+                ? <><Loader2 className="w-4 h-4 animate-spin" /> Setting up…</>
+                : success ? 'Activated!' : 'Start Saving Daily'
+              }
             </button>
           </form>
         </div>

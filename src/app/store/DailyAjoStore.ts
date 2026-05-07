@@ -1,34 +1,42 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { walletApi, type WithdrawalRequest } from '@/api/wallet';
+import { submitWithdrawal, type SubmitWithdrawalRequest } from '@/api/withdrawals';
 
 interface DailyAjoState {
-  isActive: boolean;
-  dailyAmount: number;
-  totalSaved: number;
-  commissionPaid: number;
-  availableBalance: number;
-  daysSaved: number;
-  startDate: string | null;
-  isLoading: boolean;
-  error: string | null;
+	isActive: boolean;
+	dailyAmount: number;
+	totalSaved: number;
+	commissionPaid: number;
+	availableBalance: number;
+	daysSaved: number;
+	isLoading: boolean;
+	error: string | null;
 
-  startDailyAjo: (dailyAmount: number) => void;
-  addToSavings: (amount: number) => void;
-  withdraw: (payload: WithdrawalRequest) => Promise<{ success: boolean; message?: string }>;
-  clearError: () => void;
-  resetDailyAjo: () => void;
+	withdraw: (payload: SubmitWithdrawalRequest) => Promise<{ success: boolean; message?: string }>;
+	clearError: () => void;
+	resetDailyAjo: () => void;
 
-  // ✅ Add these two — they exist in the implementation but were missing from the interface
-  syncFromWallet: (wallet: {
-    dailyAmount: number;
-    totalSaved: number;
-    commissionPaid: number;
-    availableBalance: number;
-    daysSaved: number;
-  }) => void;
-  clearForLogout: () => Promise<void>;
+	// ✅ Add these two — they exist in the implementation but were missing from the interface
+	syncFromWallet: (wallet: {
+		dailyAmount: number;
+		totalSaved: number;
+		commissionPaid: number;
+		availableBalance: number;
+		daysSaved: number;
+	}) => void;
+	clearForLogout: () => Promise<void>;
 }
+
+const INITIAL_STATE = {
+	isActive: false,
+	dailyAmount: 0,
+	totalSaved: 0,
+	commissionPaid: 0,
+	availableBalance: 0,
+	daysSaved: 0,
+	isLoading: false,
+	error: null,
+};
 
 export const useDailyAjoStore = create<DailyAjoState>()(
 	persist(
@@ -39,39 +47,10 @@ export const useDailyAjoStore = create<DailyAjoState>()(
 			commissionPaid: 0,
 			availableBalance: 0,
 			daysSaved: 0,
-			startDate: null,
 			isLoading: false,
 			error: null,
 
-			startDailyAjo: (amount: number) => {
-				if (amount <= 0) return;
-				set({
-					isActive: true,
-					dailyAmount: amount,
-					totalSaved: 0,
-					commissionPaid: 0,
-					availableBalance: 0,
-					daysSaved: 0,
-					startDate: new Date().toISOString(),
-					error: null,
-				});
-			},
-
-			addToSavings: (amount: number) => {
-				const state = get();
-				if (!state.isActive || amount <= 0) return;
-				const newTotal = state.totalSaved + amount;
-				const newCommission = Math.round(newTotal * 0.05);
-				const newBalance = newTotal - newCommission;
-				set({
-					totalSaved: newTotal,
-					commissionPaid: newCommission,
-					availableBalance: newBalance,
-					daysSaved: state.daysSaved + 1,
-				});
-			},
-
-			withdraw: async (payload: WithdrawalRequest) => {
+			withdraw: async (payload: SubmitWithdrawalRequest) => {
 				const { amount } = payload;
 				const state = get();
 
@@ -91,22 +70,20 @@ export const useDailyAjoStore = create<DailyAjoState>()(
 				set({ isLoading: true, error: null });
 
 				try {
-					const response = await walletApi.createWithdrawal(payload);
+					await submitWithdrawal(payload);
 
-					// Do NOT update availableBalance here — request is pending admin approval.
-					// The customerWallet query refetch will reflect the accurate server balance.
 					set({ isLoading: false });
 
 					return {
 						success: true,
-						message: response.message || 'Withdrawal request submitted successfully',
+						message: 'Withdrawal request submitted successfully',
 					};
 				} catch (err: unknown) {
-					const errorMessage =
+					const message =
 						(err as { message?: string })?.message ||
 						'Failed to process withdrawal. Please try again.';
-					set({ error: errorMessage, isLoading: false });
-					throw new Error(errorMessage);
+					set({ error: message, isLoading: false });
+					throw new Error(message);
 				}
 			},
 
@@ -129,17 +106,7 @@ export const useDailyAjoStore = create<DailyAjoState>()(
 				}),
 
 			clearForLogout: async () => {
-				set({
-					isActive: false,
-					dailyAmount: 0,
-					totalSaved: 0,
-					commissionPaid: 0,
-					availableBalance: 0,
-					daysSaved: 0,
-					startDate: null,
-					isLoading: false,
-					error: null,
-				});
+				set(INITIAL_STATE);
 
 				// Lazy imports to avoid circular dependencies
 				const { useWithdrawalStore } = await import('./WithdrawalStore');
@@ -149,18 +116,7 @@ export const useDailyAjoStore = create<DailyAjoState>()(
 				usePendingPaymentStore.getState().clearAll();
 			},
 
-			resetDailyAjo: () =>
-				set({
-					isActive: false,
-					dailyAmount: 0,
-					totalSaved: 0,
-					commissionPaid: 0,
-					availableBalance: 0,
-					daysSaved: 0,
-					startDate: null,
-					isLoading: false,
-					error: null,
-				}),
+			resetDailyAjo: () => set(INITIAL_STATE),
 		}),
 		{
 			name: 'daily-ajo-storage',

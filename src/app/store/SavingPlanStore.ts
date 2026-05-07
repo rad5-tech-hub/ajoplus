@@ -34,7 +34,7 @@ export const useSetupSavingPlan = () => {
       });
 
       qc.invalidateQueries({ queryKey: ['savingPlan'] });
-      qc.invalidateQueries({ queryKey: ['wallet'] });
+      qc.refetchQueries({ queryKey: ['wallet'] });
       qc.invalidateQueries({ queryKey: ['customerDashboard'] });
     },
   });
