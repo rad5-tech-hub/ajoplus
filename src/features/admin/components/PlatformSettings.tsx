@@ -17,7 +17,8 @@ const PlatformSettings = () => {
 	// Populate form when settings load
 	useEffect(() => {
 		if (settings) {
-			setCommissionRate(settings.commissionRate ?? 5);
+			const numericCommissionRate = Number(settings.commissionRate ?? 5);
+			setCommissionRate(Number.isFinite(numericCommissionRate) ? numericCommissionRate : 5);
 			setBankName(settings.bankName ?? '');
 			setAccountNumber(settings.accountNumber ?? '');
 			setAccountName(settings.accountName ?? '');
