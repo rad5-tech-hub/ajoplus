@@ -1,12 +1,14 @@
 // src/features/landing/components/Footer.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
+import ABAGOLD from '@/assets/ABAGOLD LOGO.png';
 
 const FacebookIcon = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
   </svg>
 );
+
 const TwitterIcon = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
     <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
@@ -76,10 +78,13 @@ const Footer: React.FC = () => (
         {/* Brand col — spans 2 on lg */}
         <div className="lg:col-span-2">
           <div className="flex items-center gap-2.5 mb-4">
-            <div className="w-9 h-9 rounded-lg bg-[#16a34a] flex items-center justify-center shrink-0">
-              <span className="text-white font-extrabold text-[15px] leading-none select-none">A+</span>
-            </div>
-            <span className="text-white font-bold text-[18px]">AbaGold</span>
+            <Link to="/" className="flex items-center gap-2.5 shrink-0">
+              <img src={ABAGOLD} alt="ABAGOLD Logo" className="h-9 w-auto border border-gray-300 rounded-lg" />
+              <span className="font-bold text-[19px] tracking-tight text-white">
+                AbaGold
+              </span>
+            </Link>
+            {/* <span className="text-white font-bold text-[18px]">AbaGold</span> */}
           </div>
           <p className="text-[13.5px] text-blue-200/55 leading-relaxed max-w-65 mb-6">
             Save smart and contribute easily with Nigeria's leading digital Ajo and structured savings platform.

@@ -7,7 +7,7 @@ const config: Config = {
       colors: {
         primary: {
           50: '#f0f7ff',
-          500: '#0a84ff', 
+          500: '#0a84ff',
           600: '#0066cc',
         },
         success: '#22c55e', // Ajo green

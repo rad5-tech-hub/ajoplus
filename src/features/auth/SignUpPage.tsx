@@ -19,7 +19,7 @@ import {
   X,
 } from 'lucide-react';
 import { useAuthStore } from '@/app/store/authStore';
-
+// import abaGoldLogo from '@/assets/ABAGOLD LOGO.png';
 type Step = 1 | 2 | 3 | 4 | 5;
 
 const NIGERIAN_STATES = [
@@ -196,10 +196,13 @@ const SignupPage = () => {
 
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 text-white">
-            <div className="w-12 h-12 bg-white text-emerald-600 rounded-2xl flex items-center justify-center font-bold text-2xl shadow-lg">
-              A+
-            </div>
-            <span className="text-3xl font-semibold tracking-tight">AbaGold</span>
+            {/* <Link to="/" className="flex items-center gap-2.5 shrink-0">
+              <img src={abaGoldLogo} alt="ABAGOLD Logo" className="h-9 w-auto border border-gray-300 rounded-lg" />
+              <span className="font-semibold text-3xl tracking-tight text-white">
+                AbaGold
+              </span>
+            </Link> */}
+            {/* <span className="text-3xl font-semibold tracking-tight text-white">AbaGold</span> */}
           </div>
         </div>
 
@@ -523,14 +526,14 @@ const SignupPage = () => {
                       type="text"
                       placeholder={`Must match "${formData.fullName || 'your full name'}"`}
                       className={`${iconInputCls} ${formData.accountName &&
-                          formData.accountName.trim().toLowerCase() !==
+                        formData.accountName.trim().toLowerCase() !==
+                        formData.fullName.trim().toLowerCase()
+                        ? 'border-red-300 bg-red-50 focus:border-red-400 focus:ring-red-100'
+                        : formData.accountName &&
+                          formData.accountName.trim().toLowerCase() ===
                           formData.fullName.trim().toLowerCase()
-                          ? 'border-red-300 bg-red-50 focus:border-red-400 focus:ring-red-100'
-                          : formData.accountName &&
-                            formData.accountName.trim().toLowerCase() ===
-                            formData.fullName.trim().toLowerCase()
-                            ? 'border-emerald-300 bg-emerald-50 focus:border-emerald-500'
-                            : ''
+                          ? 'border-emerald-300 bg-emerald-50 focus:border-emerald-500'
+                          : ''
                         }`}
                       value={formData.accountName}
                       onChange={(e) => setFormData({ ...formData, accountName: e.target.value })}
@@ -589,8 +592,8 @@ const SignupPage = () => {
                         type="button"
                         onClick={() => setFormData({ ...formData, accountType: type })}
                         className={`py-4 px-3 rounded-2xl border-2 font-medium text-sm transition-all active:scale-95 ${formData.accountType === type
-                            ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
-                            : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                          ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
+                          : 'border-slate-200 text-slate-600 hover:border-slate-300'
                           }`}
                       >
                         {type === 'customer' ? (
@@ -675,12 +678,12 @@ const SignupPage = () => {
                         <div
                           key={i}
                           className={`flex-1 h-1 rounded-full transition-all ${formData.password.length >= i * 4
-                              ? i === 1
-                                ? 'bg-red-400'
-                                : i === 2
-                                  ? 'bg-amber-400'
-                                  : 'bg-emerald-500'
-                              : 'bg-slate-200'
+                            ? i === 1
+                              ? 'bg-red-400'
+                              : i === 2
+                                ? 'bg-amber-400'
+                                : 'bg-emerald-500'
+                            : 'bg-slate-200'
                             }`}
                         />
                       ))}
@@ -698,8 +701,8 @@ const SignupPage = () => {
                       type={showConfirmPassword ? 'text' : 'password'}
                       placeholder="Re-enter password"
                       className={`w-full pl-11 pr-12 py-4 bg-slate-50 border rounded-2xl focus:ring-2 outline-none transition-all ${formData.confirmPassword && formData.confirmPassword !== formData.password
-                          ? 'border-red-300 focus:border-red-400 focus:ring-red-100'
-                          : 'border-slate-200 focus:border-emerald-600 focus:ring-emerald-100'
+                        ? 'border-red-300 focus:border-red-400 focus:ring-red-100'
+                        : 'border-slate-200 focus:border-emerald-600 focus:ring-emerald-100'
                         }`}
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}

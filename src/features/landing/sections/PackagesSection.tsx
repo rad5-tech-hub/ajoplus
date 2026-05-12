@@ -122,8 +122,8 @@ const PackagesSection = () => {
 
               {/* Join Button - Pushed to bottom */}
               <div className="mt-auto">
-                <Link 
-                  to="/signup" 
+                <Link
+                  to="/signup"
                   className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-4 px-6 rounded-4xl flex items-center justify-center gap-2 transition-all active:scale-[0.985]"
                 >
                   <PackageIcon className="w-5 h-5" />
@@ -137,9 +137,9 @@ const PackagesSection = () => {
         {/* View All Packages Button - Fixed Navigation */}
         <div className="flex justify-center mt-16">
           <Link to="/browse">
-            <Button 
-              variant="outline" 
-              size="lg" 
+            <Button
+              variant="outline"
+              size="lg"
               showArrow
               className="font-medium text-base tracking-wide rounded-3xl cursor-pointer hover:bg-emerald-600 hover:text-white hover:border-emerald-700"
             >

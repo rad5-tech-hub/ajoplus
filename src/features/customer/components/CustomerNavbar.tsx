@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { LogOut, User, Menu, X, LayoutDashboard, ShoppingCart } from 'lucide-react';
 import { useAuthStore } from '@/app/store/authStore';
 import { useCartStore } from '@/app/store/CartStore';
-
+import abaGoldLogo from '@/assets/ABAGOLD LOGO.png';
 const NAV_LINKS = [
   { label: 'Dashboard', to: '/dashboard/customer', icon: LayoutDashboard },
   { label: 'Browse', to: '/browse', icon: null },
@@ -48,11 +48,9 @@ const CustomerNavbar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
 
           {/* Logo */}
-          <Link to="/dashboard/customer" className="flex items-center gap-2.5 shrink-0">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 bg-emerald-600 text-white rounded-xl sm:rounded-2xl flex items-center justify-center font-bold text-base sm:text-lg leading-none">
-              A+
-            </div>
-            <span className="font-bold text-[18px] sm:text-[20px] tracking-tight text-slate-900 hidden xs:block">
+          <Link to="/customer/dashboard" className="flex items-center gap-2.5 shrink-0">
+            <img src={abaGoldLogo} alt="ABAGOLD Logo" className="h-9 w-auto border border-gray-300 rounded-lg" />
+            <span className="font-bold text-[19px] tracking-tight text-[#0f2d3d]">
               AbaGold
             </span>
           </Link>

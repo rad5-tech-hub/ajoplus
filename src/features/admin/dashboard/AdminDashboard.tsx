@@ -65,8 +65,8 @@ const AdminDashboard = () => {
                 key={key}
                 onClick={() => setActiveTab(key)}
                 className={`pb-3 sm:pb-4 px-4 sm:px-8 font-medium whitespace-nowrap transition-colors border-b-2 text-sm sm:text-base shrink-0 ${activeTab === key
-                    ? 'border-emerald-600 text-emerald-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-700'
+                  ? 'border-emerald-600 text-emerald-600'
+                  : 'border-transparent text-slate-500 hover:text-slate-700'
                   }`}
               >
                 {/* Show short label on small screens, full label on sm+ */}

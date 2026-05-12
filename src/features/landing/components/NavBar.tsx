@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react';
 import { useCartStore } from '@/app/store/CartStore';
+import abaGoldLogo from '@/assets/ABAGOLD LOGO.png';
 
 const NAV_LINKS = [
   { label: 'How It Works', href: '#how-it-works' },
@@ -72,9 +73,7 @@ const Navbar = () => {
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="w-9 h-9 bg-[#16a34a] rounded-xl flex items-center justify-center text-white font-extrabold text-[15px] leading-none select-none">
-              A+
-            </div>
+            <img src={abaGoldLogo} alt="ABAGOLD Logo" className="h-9 w-auto border border-gray-300 rounded-lg" />
             <span className="font-bold text-[19px] tracking-tight text-[#0f2d3d]">
               AbaGold
             </span>

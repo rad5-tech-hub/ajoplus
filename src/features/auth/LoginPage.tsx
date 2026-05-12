@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useAuthStore } from '@/app/store/authStore';
+// import abaGoldLogo from '@/assets/ABAGOLD LOGO.png';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -67,12 +68,14 @@ const LoginPage = () => {
 
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 text-white">
-            <div className="w-12 h-12 bg-white text-emerald-600 rounded-2xl flex items-center justify-center font-bold text-2xl">
-              A+
-            </div>
-            <span className="text-3xl font-semibold tracking-tight">AbaGold</span>
+            {/* <Link to="/" className="flex items-center gap-2.5 shrink-0">
+              <img src={abaGoldLogo} alt="ABAGOLD Logo" className="h-9 w-auto border border-gray-300 rounded-lg" />
+              <span className="font-semibold text-3xl tracking-tight text-white">
+                AbaGold
+              </span>
+            </Link> */}
           </div>
-          <p className="text-white/90 mt-2 text-lg">Save Smart, Grow Together</p>
+          <p className="text-white/90 font-bold text-3xl tracking-tight text-center mb-2">Save Smart, Grow Together</p>
         </div>
 
         <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-10">
