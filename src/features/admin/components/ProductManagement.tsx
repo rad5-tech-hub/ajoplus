@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Trash2, Edit2, AlertTriangle, PackageSearch } from 'lucide-react';
 import CreateProductModal from '@/components/ui/CreateProductModal';
 import CategoryManagement from '@/components/ui/CategoryManagement';
@@ -79,6 +80,7 @@ const EmptyState = ({ onCreateClick }: { onCreateClick: () => void }) => (
 
 // ── Main component ───────────────────────────────────────────────────────────
 const ProductManagement = () => {
+  const navigate = useNavigate();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
@@ -97,6 +99,10 @@ const ProductManagement = () => {
     mutationFn: (id: string) => deleteProduct(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] }),
   });
+
+  const handleRowClick = (id: string) => {
+    navigate(`/dashboard/admin/products/${id}/transactions`);
+  };
 
   const handleDelete = (id: string) => {
     deleteMutation.mutate(id);
@@ -146,64 +152,73 @@ const ProductManagement = () => {
             {isLoading
               ? Array.from({ length: SKELETON_COUNT }).map((_, i) => <TableRowSkeleton key={i} />)
               : products.map((product: APIProduct) => (
-                  <tr
-                    key={product.id}
-                    className="border-b border-slate-100 last:border-b-0 hover:bg-slate-50 transition-colors"
-                  >
-                    <td className="py-5 px-6 lg:px-8">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={
-                            (product as unknown as { imageUrl: string }).imageUrl ||
-                            (product as unknown as { image: string }).image ||
-                            ''
-                          }
-                          alt={(product as unknown as { name: string }).name || ''}
-                          className="w-12 h-12 rounded-lg object-cover"
-                        />
-                        <div>
-                          <p className="font-semibold text-slate-900 text-sm lg:text-base">{product.name}</p>
-                          <p className="text-xs text-slate-500 mt-0.5 max-w-60 line-clamp-1">{product.description}</p>
-                        </div>
+                <tr
+                  key={product.id}
+                  onClick={() => handleRowClick(product.id)}
+                  className="cursor-pointer border-b border-slate-100 last:border-b-0 hover:bg-slate-50 transition-colors"
+                >
+                  <td className="py-5 px-6 lg:px-8">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={
+                          (product as unknown as { imageUrl: string }).imageUrl ||
+                          (product as unknown as { image: string }).image ||
+                          ''
+                        }
+                        alt={(product as unknown as { name: string }).name || ''}
+                        className="w-12 h-12 rounded-lg object-cover"
+                      />
+                      <div>
+                        <p className="font-semibold text-slate-900 text-sm lg:text-base">{product.name}</p>
+                        <p className="text-xs text-slate-500 mt-0.5 max-w-60 line-clamp-1">{product.description}</p>
                       </div>
-                    </td>
-                    <td className="py-5 px-4">
-                      <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs rounded-xl whitespace-nowrap">
-                        {product.category?.name ?? product.categoryId}
-                      </span>
-                    </td>
-                    <td className="py-5 px-4 font-semibold text-emerald-600 text-sm whitespace-nowrap">
-                      ₦{Number(product.price).toLocaleString()}
-                    </td>
-                    <td className="py-5 px-4 text-slate-600 text-sm whitespace-nowrap">
-                      {product.quantityInStock} units
-                    </td>
-                    <td className="py-5 px-4">
-                      <span
-                        className={`px-3 py-1 text-xs font-medium rounded-xl whitespace-nowrap ${
-                          product.quantityInStock > 10
-                            ? 'bg-emerald-100 text-emerald-700'
-                            : product.quantityInStock > 0
-                            ? 'bg-yellow-100 text-yellow-700'
-                            : 'bg-red-100 text-red-700'
+                    </div>
+                  </td>
+                  <td className="py-5 px-4">
+                    <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs rounded-xl whitespace-nowrap">
+                      {product.category?.name ?? product.categoryId}
+                    </span>
+                  </td>
+                  <td className="py-5 px-4 font-semibold text-emerald-600 text-sm whitespace-nowrap">
+                    ₦{Number(product.price).toLocaleString()}
+                  </td>
+                  <td className="py-5 px-4 text-slate-600 text-sm whitespace-nowrap">
+                    {product.quantityInStock} units
+                  </td>
+                  <td className="py-5 px-4">
+                    <span
+                      className={`px-3 py-1 text-xs font-medium rounded-xl whitespace-nowrap ${product.quantityInStock > 10
+                        ? 'bg-emerald-100 text-emerald-700'
+                        : product.quantityInStock > 0
+                          ? 'bg-yellow-100 text-yellow-700'
+                          : 'bg-red-100 text-red-700'
                         }`}
-                      >
-                        {product.stockStatus}
-                      </span>
-                    </td>
-                    <td className="py-5 px-6 lg:px-8 text-right whitespace-nowrap">
-                      <button className="text-emerald-600 hover:text-emerald-700 hover:underline cursor-pointer mr-4 text-sm font-medium transition-colors inline-flex items-center gap-1">
-                        <Edit2 className="w-3 h-3" /> Edit
-                      </button>
-                      <button
-                        onClick={() => setDeleteConfirmId(product.id)}
-                        className="text-red-500 hover:text-red-700 hover:underline cursor-pointer text-sm font-medium transition-colors inline-flex items-center gap-1"
-                      >
-                        <Trash2 className="w-3 h-3" /> Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                    >
+                      {product.stockStatus}
+                    </span>
+                  </td>
+                  <td className="py-5 px-6 lg:px-8 text-right whitespace-nowrap">
+                    <button
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        // TODO: open edit product flow
+                      }}
+                      className="text-emerald-600 hover:text-emerald-700 hover:underline cursor-pointer mr-4 text-sm font-medium transition-colors inline-flex items-center gap-1"
+                    >
+                      <Edit2 className="w-3 h-3" /> Edit
+                    </button>
+                    <button
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setDeleteConfirmId(product.id);
+                      }}
+                      className="text-red-500 hover:text-red-700 hover:underline cursor-pointer text-sm font-medium transition-colors inline-flex items-center gap-1"
+                    >
+                      <Trash2 className="w-3 h-3" /> Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
 
@@ -218,11 +233,12 @@ const ProductManagement = () => {
         {isLoading
           ? Array.from({ length: SKELETON_COUNT }).map((_, i) => <CardSkeleton key={i} />)
           : products.length === 0
-          ? <EmptyState onCreateClick={() => setIsCreateModalOpen(true)} />
-          : products.map((product: APIProduct) => (
+            ? <EmptyState onCreateClick={() => setIsCreateModalOpen(true)} />
+            : products.map((product: APIProduct) => (
               <div
                 key={product.id}
-                className="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:border-slate-300 transition-colors"
+                onClick={() => handleRowClick(product.id)}
+                className="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:border-slate-300 transition-colors cursor-pointer"
               >
                 <img
                   src={
@@ -244,13 +260,12 @@ const ProductManagement = () => {
                       {product.category?.name || product.categoryId}
                     </span>
                     <span
-                      className={`px-3 py-1 text-xs font-medium rounded-xl ${
-                        product.quantityInStock > 10
-                          ? 'bg-emerald-100 text-emerald-700'
-                          : product.quantityInStock > 0
+                      className={`px-3 py-1 text-xs font-medium rounded-xl ${product.quantityInStock > 10
+                        ? 'bg-emerald-100 text-emerald-700'
+                        : product.quantityInStock > 0
                           ? 'bg-yellow-100 text-yellow-700'
                           : 'bg-red-100 text-red-700'
-                      }`}
+                        }`}
                     >
                       {product.stockStatus}
                     </span>
@@ -264,11 +279,20 @@ const ProductManagement = () => {
                       <p className="text-xs text-slate-500 mt-1">{product.quantityInStock} units</p>
                     </div>
                     <div className="flex gap-2">
-                      <button className="px-3 py-2 text-emerald-600 hover:bg-emerald-50 rounded-xl text-sm font-medium transition-colors inline-flex items-center gap-1">
+                      <button
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setIsCreateModalOpen(true);
+                        }}
+                        className="px-3 py-2 text-emerald-600 hover:bg-emerald-50 rounded-xl text-sm font-medium transition-colors inline-flex items-center gap-1"
+                      >
                         <Edit2 className="w-4 h-4" /> Edit
                       </button>
                       <button
-                        onClick={() => setDeleteConfirmId(product.id)}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setDeleteConfirmId(product.id);
+                        }}
                         className="px-3 py-2 text-red-500 hover:bg-red-50 rounded-xl text-sm font-medium transition-colors inline-flex items-center gap-1"
                       >
                         <Trash2 className="w-4 h-4" /> Delete

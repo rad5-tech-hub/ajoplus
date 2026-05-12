@@ -2,7 +2,7 @@ import React from "react";
 
 // Avatar icon — dual-person outline in green, on mint background
 const AvatarIcon: React.FC = () => (
-  <div className="w-11 h-11 rounded-full bg-[#dcfce7] flex items-center justify-center flex-shrink-0">
+  <div className="w-11 h-11 rounded-full bg-[#dcfce7] flex items-center justify-center shrink-0">
     <svg
       width="26"
       height="22"
@@ -77,7 +77,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ quote, name, role }) 
 const testimonials: TestimonialCardProps[] = [
   {
     quote:
-      '"AjoPlus helped me save for my laptop without stress. The weekly contributions fit my budget perfectly!"',
+      '"AbaGold helped me save for my laptop without stress. The weekly contributions fit my budget perfectly!"',
     name: "Chioma Okafor",
     role: "Small Business Owner",
   },

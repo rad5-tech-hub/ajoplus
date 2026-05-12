@@ -7,9 +7,9 @@ interface FAQItem {
 
 const faqs: FAQItem[] = [
   {
-    question: "What is AjoPlus?",
+    question: "What is AbaGold?",
     answer:
-      "AjoPlus is a digital savings platform that combines traditional Ajo (contribution) savings with structured package savings to help you achieve your financial goals.",
+      "AbaGold is a digital savings platform that combines traditional Ajo (contribution) savings with structured package savings to help you achieve your financial goals.",
   },
   {
     question: "How does the Ajo savings work?",
@@ -24,7 +24,7 @@ const faqs: FAQItem[] = [
   {
     question: "How do I become an agent?",
     answer:
-      "Simply sign up and share your unique referral link. You earn ₦4,000 for every person who joins and buys a package through your link.",
+      "Simply sign up and share your unique referral link. You earn ₦2,000 for every person who joins and buys a package through your link.",
   },
   {
     question: "Is my money safe?",
@@ -49,9 +49,8 @@ const ChevronIcon: React.FC<{ open: boolean }> = ({ open }) => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className={`transition-transform duration-300 flex-shrink-0 text-gray-400 ${
-      open ? "rotate-180" : "rotate-0"
-    }`}
+    className={`transition-transform duration-300 shrink-0 text-gray-400 ${open ? "rotate-180" : "rotate-0"
+      }`}
     aria-hidden="true"
   >
     <polyline points="6 9 12 15 18 9" />
@@ -72,9 +71,8 @@ const FAQAccordionItem: React.FC<{
       aria-expanded={isOpen}
     >
       <span
-        className={`text-[15.5px] font-bold leading-snug transition-colors duration-200 ${
-          isOpen ? "text-[#16a34a]" : "text-[#0f2d3d]"
-        }`}
+        className={`text-[15.5px] font-bold leading-snug transition-colors duration-200 ${isOpen ? "text-[#16a34a]" : "text-[#0f2d3d]"
+          }`}
       >
         {item.question}
       </span>
@@ -83,9 +81,8 @@ const FAQAccordionItem: React.FC<{
 
     {/* Animated answer panel */}
     <div
-      className={`grid transition-all duration-300 ease-in-out ${
-        isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-      }`}
+      className={`grid transition-all duration-300 ease-in-out ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
     >
       <div className="overflow-hidden">
         <p className="px-7 pb-6 text-[14px] text-gray-400 leading-relaxed">
@@ -110,7 +107,7 @@ const FAQ: React.FC = () => {
             Frequently Asked Questions
           </h2>
           <p className="text-gray-400 text-[15px]">
-            Everything you need to know about AjoPlus
+            Everything you need to know about AbaGold
           </p>
         </div>
 

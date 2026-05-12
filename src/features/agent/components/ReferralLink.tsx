@@ -44,7 +44,7 @@
 //     try {
 //       if (navigator.share) {
 //         await navigator.share({
-//           title: 'Join AjoPlus with me!',
+//           title: 'Join AbaGold with me!',
 //           text: 'Sign up using my referral link and start saving today.',
 //           url: referralLink,
 //         });
@@ -80,7 +80,7 @@
 
 //       <p className="text-emerald-100 text-sm sm:text-[15px] leading-relaxed mb-4 sm:mb-5 lg:mb-6">
 //         Share this link with friends and family. You earn{' '}
-//         <span className="font-semibold text-white">₦4,000</span> for every person
+//         <span className="font-semibold text-white">₦2,000</span> for every person
 //         who signs up and buys a package!
 //       </p>
 
@@ -93,7 +93,7 @@
 //           <div className="h-4 w-3/4 bg-white/20 rounded-full animate-pulse mt-1" />
 //         ) : (
 //           <p className="font-mono text-xs sm:text-sm break-all leading-relaxed">
-//             {referralLink || 'https://ajoplus.com/ref/••••••••'}
+//             {referralLink || 'https://AbaGold.com/ref/••••••••'}
 //           </p>
 //         )}
 //       </div>

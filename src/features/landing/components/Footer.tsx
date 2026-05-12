@@ -44,18 +44,18 @@ const handleAnchor = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
 
 // Quick Links — How It Works / Packages / FAQ scroll to their IDs; Login routes
 const QUICK_LINKS: { label: string; href: string; isAnchor: boolean }[] = [
-  { label: 'How It Works', href: '#how-it-works', isAnchor: true  },
-  { label: 'Packages',     href: '#packages',     isAnchor: true  },
-  { label: 'FAQ',          href: '#faq',          isAnchor: true  },
-  { label: 'Login',        href: '/login',        isAnchor: false },
+  { label: 'How It Works', href: '#how-it-works', isAnchor: true },
+  { label: 'Packages', href: '#packages', isAnchor: true },
+  { label: 'FAQ', href: '#faq', isAnchor: true },
+  { label: 'Login', href: '/login', isAnchor: false },
 ];
 
 // Legal links — plain # for now, swap with real routes/pages when ready
 const LEGAL_LINKS: { label: string; href: string }[] = [
   { label: 'Terms of Service', href: '#' },
-  { label: 'Privacy Policy',   href: '#' },
-  { label: 'Cookie Policy',    href: '#' },
-  { label: 'Contact Us',       href: '#' },
+  { label: 'Privacy Policy', href: '#' },
+  { label: 'Cookie Policy', href: '#' },
+  { label: 'Contact Us', href: '#' },
 ];
 
 const linkCls = 'text-[13.5px] text-blue-200/55 hover:text-white transition-colors duration-200';
@@ -79,7 +79,7 @@ const Footer: React.FC = () => (
             <div className="w-9 h-9 rounded-lg bg-[#16a34a] flex items-center justify-center shrink-0">
               <span className="text-white font-extrabold text-[15px] leading-none select-none">A+</span>
             </div>
-            <span className="text-white font-bold text-[18px]">AjoPlus</span>
+            <span className="text-white font-bold text-[18px]">AbaGold</span>
           </div>
           <p className="text-[13.5px] text-blue-200/55 leading-relaxed max-w-65 mb-6">
             Save smart and contribute easily with Nigeria's leading digital Ajo and structured savings platform.
@@ -137,7 +137,7 @@ const Footer: React.FC = () => (
       {/* Bottom bar */}
       <div className="pt-5 text-center">
         <p className="text-[13px] text-blue-200/40">
-          © 2026 AjoPlus. All rights reserved.
+          © 2026 AbaGold. All rights reserved.
         </p>
       </div>
     </div>

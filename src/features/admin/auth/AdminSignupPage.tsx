@@ -140,7 +140,7 @@ const AdminSignupPage = () => {
 									type="email"
 									value={formData.email}
 									onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-									placeholder="admin@ajoplus.com"
+									placeholder="admin@AbaGold.com"
 									className="w-full pl-12 pr-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
 								/>
 							</div>

@@ -18,7 +18,7 @@ const ReferralSection = () => {
 
         {/* Description */}
         <p className="text-xl text-white/90 max-w-2xl mx-auto leading-relaxed mb-12">
-          Become an agent and earn ₦4,000 for every person who joins and buys a 
+          Become an agent and earn ₦2,000 for every person who joins and buys a
           package through your referral link.
         </p>
 

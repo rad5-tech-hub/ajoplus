@@ -10,9 +10,9 @@ import { initializeErrorMonitoring } from './lib/errorMonitoring';
 initializeErrorMonitoring();
 
 // One-time migration: clear stale localStorage from old builds
-const MIGRATION_KEY = 'ajoplus-migration-v3';
+const MIGRATION_KEY = 'AbaGold-migration-v3';
 if (!localStorage.getItem(MIGRATION_KEY)) {
-  ['daily-ajo-storage', 'ajoplus-withdrawals', 'ajoplus-pending-payments', 'ajoplus-cart']
+  ['daily-ajo-storage', 'AbaGold-withdrawals', 'AbaGold-pending-payments', 'AbaGold-cart']
     .forEach((key) => localStorage.removeItem(key));
   localStorage.setItem(MIGRATION_KEY, '1');
 }

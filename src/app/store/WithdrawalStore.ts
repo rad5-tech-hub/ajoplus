@@ -8,8 +8,8 @@ import type { Withdrawal, SubmitWithdrawalResponse } from '@/api/withdrawals';
 // ─── Smart retry logic ──────────────────────────────────────────────────────
 
 const smartRetry = (failureCount: number, error: unknown): boolean => {
-  if (error instanceof APIError) return false;
-  return failureCount < 2;
+	if (error instanceof APIError) return false;
+	return failureCount < 2;
 };
 
 // ─── Zustand — local pending withdrawal tracker ───────────────────────────────
@@ -37,7 +37,7 @@ export const useWithdrawalStore = create<WithdrawalStore>()(
 				})),
 			clearAll: () => set({ pending: [] }),
 		}),
-		{ name: 'ajoplus-withdrawals' }
+		{ name: 'AbaGold-withdrawals' }
 	)
 );
 

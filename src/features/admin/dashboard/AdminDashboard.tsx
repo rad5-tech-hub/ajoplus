@@ -1,5 +1,6 @@
 // src/features/admin/dashboard/AdminDashboard.tsx
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AgentNavbar from '../components/AgentNavbar';
 import OverviewCards from '../components/OverviewCards';
 import PackageManagement from '../components/PackageManagement';
@@ -11,15 +12,16 @@ import PlatformSettings from '../components/PlatformSettings';
 type Tab = 'packages' | 'products' | 'approvals' | 'withdrawals' | 'settings';
 
 const TABS: { key: Tab; label: string; shortLabel: string }[] = [
-  { key: 'packages',    label: 'Package Management', shortLabel: 'Packages'   },
-  { key: 'products',    label: 'Product Management', shortLabel: 'Products'   },
-  { key: 'approvals',   label: 'Payment Approvals',  shortLabel: 'Approvals'  },
-  { key: 'withdrawals', label: 'Withdrawals',         shortLabel: 'Withdrawals'},
-  { key: 'settings',    label: 'Settings',            shortLabel: 'Settings'   },
+  { key: 'packages', label: 'Package Management', shortLabel: 'Packages' },
+  { key: 'products', label: 'Product Management', shortLabel: 'Products' },
+  { key: 'approvals', label: 'Payment Approvals', shortLabel: 'Approvals' },
+  { key: 'withdrawals', label: 'Withdrawals', shortLabel: 'Withdrawals' },
+  { key: 'settings', label: 'Settings', shortLabel: 'Settings' },
 ];
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState<Tab>('packages');
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
@@ -37,9 +39,18 @@ const AdminDashboard = () => {
               Manage platform operations and user activities
             </p>
           </div>
-          <p className="text-xs sm:text-sm text-slate-500 xs:text-right xs:shrink-0 xs:mt-1">
-            Last updated <span className="font-medium">11:59 AM</span>
-          </p>
+          <div className="flex flex-col sm:items-end gap-3">
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard/admin/savings')}
+              className="rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition-colors"
+            >
+              Savings Overview
+            </button>
+            <p className="text-xs sm:text-sm text-slate-500 xs:text-right xs:shrink-0">
+              Last updated <span className="font-medium">11:59 AM</span>
+            </p>
+          </div>
         </div>
 
         {/* Overview Cards */}
@@ -53,11 +64,10 @@ const AdminDashboard = () => {
               <button
                 key={key}
                 onClick={() => setActiveTab(key)}
-                className={`pb-3 sm:pb-4 px-4 sm:px-8 font-medium whitespace-nowrap transition-colors border-b-2 text-sm sm:text-base shrink-0 ${
-                  activeTab === key
+                className={`pb-3 sm:pb-4 px-4 sm:px-8 font-medium whitespace-nowrap transition-colors border-b-2 text-sm sm:text-base shrink-0 ${activeTab === key
                     ? 'border-emerald-600 text-emerald-600'
                     : 'border-transparent text-slate-500 hover:text-slate-700'
-                }`}
+                  }`}
               >
                 {/* Show short label on small screens, full label on sm+ */}
                 <span className="sm:hidden">{shortLabel}</span>
@@ -69,11 +79,11 @@ const AdminDashboard = () => {
 
         {/* Tab Content */}
         <div>
-          {activeTab === 'packages'    && <PackageManagement />}
-          {activeTab === 'products'    && <ProductManagement />}
-          {activeTab === 'approvals'   && <PaymentApprovals />}
+          {activeTab === 'packages' && <PackageManagement />}
+          {activeTab === 'products' && <ProductManagement />}
+          {activeTab === 'approvals' && <PaymentApprovals />}
           {activeTab === 'withdrawals' && <WithdrawalRequests />}
-          {activeTab === 'settings'    && <PlatformSettings />}
+          {activeTab === 'settings' && <PlatformSettings />}
         </div>
 
       </div>

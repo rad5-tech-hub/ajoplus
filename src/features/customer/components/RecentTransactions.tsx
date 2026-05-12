@@ -122,7 +122,7 @@ const RecentTransactions = () => {
         </div>
         <h3 className="text-xl font-semibold text-slate-900 mb-3">No Transactions Yet</h3>
         <p className="text-slate-500 max-w-xs mx-auto mb-8 leading-relaxed text-sm">
-          Your savings, payments, and withdrawals will appear here once you start using AjoPlus.
+          Your savings, payments, and withdrawals will appear here once you start using AbaGold.
         </p>
         <button
           onClick={() => navigate('/browse')}

@@ -30,6 +30,6 @@ export const usePendingPaymentStore = create<PendingPaymentStore>()(
         })),
       clearAll: () => set({ pending: [] }),
     }),
-    { name: 'ajoplus-pending-payments' }
+    { name: 'AbaGold-pending-payments' }
   )
 );

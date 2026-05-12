@@ -54,7 +54,7 @@ const AgentNavbar = () => {
               A+
             </div>
             <span className="font-bold text-[18px] sm:text-[20px] tracking-tight text-slate-900 hidden xs:block">
-              AjoPlus
+              AbaGold
             </span>
           </Link>
 

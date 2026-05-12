@@ -32,14 +32,14 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
-  
+
   // Cart functionality
   const { getCount } = useCartStore();
   const cartCount = getCount();
 
   // Close mobile menu on route change
-  useEffect(() => { 
-    setMenuOpen(false); 
+  useEffect(() => {
+    setMenuOpen(false);
   }, [location]);
 
   // Add shadow on scroll
@@ -76,7 +76,7 @@ const Navbar = () => {
               A+
             </div>
             <span className="font-bold text-[19px] tracking-tight text-[#0f2d3d]">
-              AjoPlus
+              AbaGold
             </span>
           </Link>
 
@@ -96,10 +96,10 @@ const Navbar = () => {
 
           {/* Desktop Right Side: Cart + Auth Buttons */}
           <div className="hidden md:flex items-center gap-4">
-            
+
             {/* Cart Icon with Count */}
-            <Link 
-              to="/cart" 
+            <Link
+              to="/cart"
               className="relative p-3 text-slate-600 hover:text-emerald-600 transition-colors rounded-xl hover:bg-slate-100 group"
               aria-label="View Cart"
             >
@@ -128,10 +128,10 @@ const Navbar = () => {
 
           {/* Mobile: Cart + Login + Hamburger */}
           <div className="flex md:hidden items-center gap-3">
-            
+
             {/* Mobile Cart */}
-            <Link 
-              to="/cart" 
+            <Link
+              to="/cart"
               className="relative p-2 text-slate-600 hover:text-emerald-600 transition-colors"
             >
               <ShoppingCart className="w-5 h-5" />
@@ -208,7 +208,7 @@ const Navbar = () => {
               className="flex items-center gap-3 px-4 py-4 text-[15px] font-medium text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-2xl transition-colors"
             >
               <ShoppingCart className="w-5 h-5" />
-              Cart 
+              Cart
               {cartCount > 0 && (
                 <span className="ml-auto bg-emerald-600 text-white text-xs px-2.5 py-0.5 rounded-full">
                   {cartCount} items

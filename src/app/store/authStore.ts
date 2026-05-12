@@ -45,32 +45,32 @@ export const useAuthStore = create<AuthStore>()(
       logout: async () => {
         // Clear all persisted stores with correct keys
         const STORAGE_KEYS = [
-          'ajoplus-auth-storage',
-          'ajoplus-admin-auth-storage',
-          'ajoplus-cart',
+          'AbaGold-auth-storage',
+          'AbaGold-admin-auth-storage',
+          'AbaGold-cart',
           'daily-ajo-storage',
-          'ajoplus-withdrawals',
-          'ajoplus-pending-payments',
-          'ajoplus-migration-v3',
+          'AbaGold-withdrawals',
+          'AbaGold-pending-payments',
+          'AbaGold-migration-v3',
         ];
         STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
-        
+
         // Clear all stores + React Query cache
         const { useDailyAjoStore } = await import('@/app/store/DailyAjoStore');
         const { useCartStore } = await import('@/app/store/CartStore');
         const { QueryClient } = await import('@tanstack/react-query');
-        
+
         await useDailyAjoStore.getState().clearForLogout();
         useCartStore.getState().clearCart?.();
         useCartStore.setState?.({ cartId: undefined });
-        
+
         // Clear React Query cache to prevent stale data for next user
         try {
           new QueryClient().clear();
         } catch {
           // Ignore if QueryClient not available
         }
-        
+
         set({ user: null, token: null, refreshToken: null, isAuthenticated: false, error: null });
 
         // Call API in background (don't await)
@@ -82,7 +82,7 @@ export const useAuthStore = create<AuthStore>()(
       clearError: () => set({ error: null }),
     }),
     {
-      name: 'ajoplus-auth-storage',
+      name: 'AbaGold-auth-storage',
       partialize: (state) => ({
         user: state.user,
         token: state.token,

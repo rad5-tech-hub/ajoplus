@@ -86,7 +86,7 @@ function generateVercelConfig(options = {}) {
 
 // CLI: Generate vercel.json when run directly
 if (process.argv[1] && process.argv[1].endsWith('vercel-routes.js')) {
-	// Default configuration for AjoPlus project
+	// Default configuration for AbaGold project
 	const config = generateVercelConfig({
 		apiRoutes: ['/api/(.*)'],
 		staticRoutes: ['/assets/(.*)', '/favicon.ico', '/robots.txt', '/manifest.json'],

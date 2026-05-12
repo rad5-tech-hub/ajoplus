@@ -75,7 +75,7 @@ export const useCartStore = create<CartStore>()(
       getTotal: () =>
         get().items.reduce((sum, item) => sum + item.price * item.quantity, 0),
     }),
-    { name: 'ajoplus-cart' }
+    { name: 'AbaGold-cart' }
   )
 );
 

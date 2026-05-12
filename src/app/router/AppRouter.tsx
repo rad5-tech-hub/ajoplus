@@ -24,6 +24,9 @@ const AdminSignupPage = lazy(() => import('@/features/admin/auth/AdminSignupPage
 const CustomerDashboard = lazy(() => import('@/features/customer/dashboard/CustomerDashboard'));
 const AgentDashboard = lazy(() => import('@/features/agent/dashboard/AgentDashboard'));
 const AdminDashboard = lazy(() => import('@/features/admin/dashboard/AdminDashboard'));
+const PackageMemberList = lazy(() => import('@/features/admin/packages/PackageMemberList'));
+const ProductTransactions = lazy(() => import('@/features/admin/products/ProductTransactions'));
+const SavingsOverview = lazy(() => import('@/features/admin/savings/SavingsOverview'));
 const PackageDetail = lazy(() => import('@/features/customer/packages/PackagesDetail'));
 const MakePayment = lazy(() => import('@/features/customer/Payments/MakePayment'));
 const ShoppingCart = lazy(() => import('@/features/cart/ShoppingCart'));
@@ -151,6 +154,30 @@ const AppRouter = () => {
           element={
             <Suspense fallback={<RouteSuspenseFallback />}>
               <AdminDashboard />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/dashboard/admin/packages/:packageId/members"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <PackageMemberList />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/dashboard/admin/products/:productId/transactions"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <ProductTransactions />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/dashboard/admin/savings"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <SavingsOverview />
             </Suspense>
           }
         />

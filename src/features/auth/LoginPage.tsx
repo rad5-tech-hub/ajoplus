@@ -70,7 +70,7 @@ const LoginPage = () => {
             <div className="w-12 h-12 bg-white text-emerald-600 rounded-2xl flex items-center justify-center font-bold text-2xl">
               A+
             </div>
-            <span className="text-3xl font-semibold tracking-tight">AjoPlus</span>
+            <span className="text-3xl font-semibold tracking-tight">AbaGold</span>
           </div>
           <p className="text-white/90 mt-2 text-lg">Save Smart, Grow Together</p>
         </div>

@@ -102,7 +102,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
     </h3>
 
     {/* Description */}
-    <p className="text-[14.5px] text-gray-500 leading-relaxed max-w-[220px]">
+    <p className="text-[14.5px] text-gray-500 leading-relaxed max-w-55">
       {description}
     </p>
   </div>
@@ -119,14 +119,14 @@ const TrustBadge: React.FC<TrustBadgeProps> = ({ label }) => (
   </div>
 );
 
-const WhyChooseAjoPlus: React.FC = () => {
+const WhyChooseAbaGold: React.FC = () => {
   return (
     <section className="w-full bg-[#f3f4f6] px-4 py-16 sm:py-20">
       <div className="max-w-5xl mx-auto">
         {/* Heading */}
         <div className="text-center mb-12">
           <h2 className="text-[34px] sm:text-[40px] font-extrabold text-[#0f2d3d] leading-tight mb-3">
-            Why Choose AjoPlus?
+            Why Choose AbaGold?
           </h2>
           <p className="text-gray-500 text-[15.5px]">
             Trusted by over 1,200 Nigerians
@@ -164,4 +164,4 @@ const WhyChooseAjoPlus: React.FC = () => {
   );
 };
 
-export default WhyChooseAjoPlus;
+export default WhyChooseAbaGold;

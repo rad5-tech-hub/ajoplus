@@ -89,13 +89,13 @@ export const useAdminAuthStore = create<AdminAuthStore>()(
 			logout: async () => {
 				// Clear all persisted stores with correct keys
 				const STORAGE_KEYS = [
-					'ajoplus-admin-auth-storage',
-					'ajoplus-auth-storage',
-					'ajoplus-cart',
+					'AbaGold-admin-auth-storage',
+					'AbaGold-auth-storage',
+					'AbaGold-cart',
 					'daily-ajo-storage',
-					'ajoplus-withdrawals',
-					'ajoplus-pending-payments',
-					'ajoplus-migration-v3',
+					'AbaGold-withdrawals',
+					'AbaGold-pending-payments',
+					'AbaGold-migration-v3',
 				];
 				STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
 
@@ -115,7 +115,7 @@ export const useAdminAuthStore = create<AdminAuthStore>()(
 			clearError: () => set({ error: null }),
 		}),
 		{
-			name: 'ajoplus-admin-auth-storage',
+			name: 'AbaGold-admin-auth-storage',
 			partialize: (state) => ({
 				admin: state.admin,
 				token: state.token,

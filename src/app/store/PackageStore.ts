@@ -2,6 +2,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as packageAPI from '@/api/package';
 import * as categoriesAPI from '@/api/categories';
+import * as adminPackageAPI from '@/api/adminPackages';
 import { APIError } from '@/api/client';
 import { useModalStore } from './ModalStore';
 
@@ -50,6 +51,30 @@ export const usePackageById = (packageId: string | undefined) =>
     gcTime: 10 * 60 * 1000,
     retry: smartRetry,
   });
+
+export const useGetPackageMembers = (packageId: string) =>
+  useQuery({
+    queryKey: ['admin', 'package', packageId, 'members'],
+    queryFn: () => adminPackageAPI.getPackageMembers(packageId),
+    enabled: !!packageId,
+    staleTime: 60 * 1000,
+    retry: smartRetry,
+  });
+
+export const useUpdateMemberStatus = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ packageId, userPackageId, status }: {
+      packageId: string;
+      userPackageId: string;
+      status: adminPackageAPI.MemberStatus;
+    }) => adminPackageAPI.updateMemberStatus(packageId, userPackageId, { status }),
+    onSuccess: (_, { packageId }) => {
+      qc.invalidateQueries({ queryKey: ['admin', 'package', packageId, 'members'] });
+      qc.invalidateQueries({ queryKey: ['availablePackages'] });
+    },
+  });
+};
 
 export const useCategories = () =>
   useQuery({

@@ -9,7 +9,7 @@ const ReadyToStartSaving: React.FC = () => {
           Ready to Start Saving?
         </h2>
         <p className="text-[15px] text-blue-200/70 leading-relaxed mb-10 max-w-md mx-auto">
-          Join thousands of Nigerians who are achieving their financial goals with AjoPlus.
+          Join thousands of Nigerians who are achieving their financial goals with AbaGold.
         </p>
         <Link to="/signup" className="bg-[#16a34a] cursor-pointer hover:bg-[#15803d] active:bg-[#166534] text-white text-[15px] font-semibold px-10 py-4 rounded-xl transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400">
           Get Started Free

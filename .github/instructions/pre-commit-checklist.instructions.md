@@ -1,10 +1,10 @@
 ---
-name: ajoplus-pre-commit-checklist
-description: "Quick pre-commit checklist for AjoPlus non-negotiable principles. Run before pushing any branch. Validates code splitting, error handling, bundle size, design compliance, type safety in under 1 minute. Use when: preparing to commit, validating before PR, catching issues early."
+name: AbaGold-pre-commit-checklist
+description: "Quick pre-commit checklist for AbaGold non-negotiable principles. Run before pushing any branch. Validates code splitting, error handling, bundle size, design compliance, type safety in under 1 minute. Use when: preparing to commit, validating before PR, catching issues early."
 applyTo: "src/**/*.tsx,src/**/*.ts"
 ---
 
-# AjoPlus Pre-Commit Checklist
+# AbaGold Pre-Commit Checklist
 
 Quick validation before committing code. Run these checks locally to catch issues early.
 

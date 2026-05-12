@@ -1,10 +1,42 @@
 // src/features/auth/SignupPage.tsx
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Mail, Phone, Lock, Eye, EyeOff, ArrowLeft, ArrowRight, Check, Building2 } from 'lucide-react';
+import {
+  User,
+  Mail,
+  Phone,
+  Lock,
+  Eye,
+  EyeOff,
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Building2,
+  Camera,
+  Upload,
+  MapPin,
+  CreditCard,
+  X,
+} from 'lucide-react';
 import { useAuthStore } from '@/app/store/authStore';
 
-type Step = 1 | 2 | 3;
+type Step = 1 | 2 | 3 | 4 | 5;
+
+const NIGERIAN_STATES = [
+  'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue',
+  'Borno', 'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu', 'FCT',
+  'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi',
+  'Kwara', 'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo', 'Osun', 'Oyo',
+  'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara',
+];
+
+const STEP_LABELS: Record<Step, string> = {
+  1: 'Personal Info',
+  2: 'Address',
+  3: 'Bank Details',
+  4: 'Account Setup',
+  5: 'Security',
+};
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -15,32 +47,91 @@ const SignupPage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [localError, setLocalError] = useState('');
 
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const uploadInputRef = useRef<HTMLInputElement>(null);
+
   const [formData, setFormData] = useState({
+    // Step 1 – Personal Info
     fullName: '',
     email: '',
     phone: '',
-    accountNumber: '',
+    profileImage: null as File | null,
+    profilePreview: '',
+
+    // Step 2 – Address
+    streetAddress: '',
+    city: '',
+    state: '',
+
+    // Step 3 – Bank Details
     bankName: '',
+    accountNumber: '',
+    accountName: '',
+
+    // Step 4 – Account Setup
     accountType: 'customer' as 'customer' | 'agent',
+    referralCode: '',
+
+    // Step 5 – Security
     password: '',
     confirmPassword: '',
-    referralCode: '',
     agreeTerms: false,
   });
+
+  const handleImageFile = (file: File | undefined) => {
+    if (!file) return;
+    const preview = URL.createObjectURL(file);
+    setFormData((prev) => ({ ...prev, profileImage: file, profilePreview: preview }));
+  };
+
+  const clearProfileImage = () => {
+    if (formData.profilePreview) URL.revokeObjectURL(formData.profilePreview);
+    setFormData((prev) => ({ ...prev, profileImage: null, profilePreview: '' }));
+  };
 
   const validateStep = (currentStep: Step): boolean => {
     setLocalError('');
 
     if (currentStep === 1) {
-      if (!formData.fullName.trim()) return (setLocalError('Full name is required'), false);
+      if (!formData.profileImage)
+        return (setLocalError('A profile photo is required'), false);
+      if (!formData.fullName.trim())
+        return (setLocalError('Full name is required'), false);
       if (!formData.email.trim() || !formData.email.includes('@'))
-        return (setLocalError('Valid email is required'), false);
-      if (!formData.phone.trim()) return (setLocalError('Phone number is required'), false);
-      if (!formData.accountNumber.trim()) return (setLocalError('Account number is required'), false);
-      if (!formData.bankName.trim()) return (setLocalError('Bank name is required'), false);
+        return (setLocalError('A valid email address is required'), false);
+      if (!formData.phone.trim())
+        return (setLocalError('Phone number is required'), false);
+    }
+
+    if (currentStep === 2) {
+      if (!formData.streetAddress.trim())
+        return (setLocalError('Street address is required'), false);
+      if (!formData.city.trim())
+        return (setLocalError('City is required'), false);
+      if (!formData.state)
+        return (setLocalError('Please select a state'), false);
     }
 
     if (currentStep === 3) {
+      if (!formData.bankName)
+        return (setLocalError('Please select your bank'), false);
+      if (!formData.accountNumber.trim())
+        return (setLocalError('Account number is required'), false);
+      if (!formData.accountName.trim())
+        return (setLocalError('Account name is required'), false);
+      if (
+        formData.accountName.trim().toLowerCase() !==
+        formData.fullName.trim().toLowerCase()
+      )
+        return (
+          setLocalError(
+            'Account name must exactly match your full name. Please check and try again.',
+          ),
+          false
+        );
+    }
+
+    if (currentStep === 5) {
       if (formData.password.length < 6)
         return (setLocalError('Password must be at least 6 characters'), false);
       if (formData.password !== formData.confirmPassword)
@@ -53,31 +144,36 @@ const SignupPage = () => {
   };
 
   const nextStep = () => {
-    if (validateStep(step)) {
-      setStep((s) => (s + 1) as Step);
-    }
+    if (validateStep(step)) setStep((s) => (s + 1) as Step);
   };
-
   const prevStep = () => setStep((s) => (s - 1) as Step);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     clearError();
+    if (!validateStep(5)) return;
 
-    if (!validateStep(3)) return;
+    // These are guaranteed by step-1 validation, but we assert for TypeScript
+    if (!formData.profileImage) {
+      setLocalError('A profile photo is required');
+      return;
+    }
 
     try {
       await signup({
         fullName: formData.fullName,
         email: formData.email,
         phone: formData.phone,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
         accountNumber: formData.accountNumber,
         bankName: formData.bankName,
+        accountName: formData.accountName,
+        address: `${formData.streetAddress}, ${formData.city}, ${formData.state}`,
+        profileImage: formData.profileImage,
         accountType: formData.accountType,
-        password: formData.password,
         referralCode: formData.referralCode || undefined,
       });
-
       navigate('/dashboard/customer');
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to create account';
@@ -85,58 +181,154 @@ const SignupPage = () => {
     }
   };
 
+  const inputCls =
+    'w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none transition-all';
+  const iconInputCls =
+    'w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none transition-all';
+
   return (
-    <div className="min-h-screen bg-linear-to-br from-emerald-600 to-emerald-700 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-600 to-emerald-700 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
-        <Link to="/" className="flex items-center gap-2 text-white/80 hover:text-white mb-8">
+        <Link to="/" className="flex items-center gap-2 text-white/80 hover:text-white mb-8 transition-colors">
           <ArrowLeft className="w-5 h-5" />
           <span className="font-medium">Back to Home</span>
         </Link>
 
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 text-white">
-            <div className="w-12 h-12 bg-white text-emerald-600 rounded-2xl flex items-center justify-center font-bold text-2xl">
+            <div className="w-12 h-12 bg-white text-emerald-600 rounded-2xl flex items-center justify-center font-bold text-2xl shadow-lg">
               A+
             </div>
-            <span className="text-3xl font-semibold tracking-tight">AjoPlus</span>
+            <span className="text-3xl font-semibold tracking-tight">AbaGold</span>
           </div>
         </div>
 
         <div className="bg-white rounded-3xl shadow-2xl p-8">
-          {/* Progress Bar */}
-          <div className="flex gap-2 mb-8">
-            {[1, 2, 3].map((s) => (
-              <div
-                key={s}
-                className={`flex-1 h-1.5 rounded-full transition-all ${s <= step ? 'bg-emerald-600' : 'bg-slate-200'
-                  }`}
-              />
-            ))}
+          <div className="mb-6">
+            <div className="flex gap-1.5 mb-3">
+              {([1, 2, 3, 4, 5] as Step[]).map((s) => (
+                <div
+                  key={s}
+                  className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${s <= step ? 'bg-emerald-600' : 'bg-slate-200'}`}
+                />
+              ))}
+            </div>
+            <p className="text-xs font-medium text-slate-400 tracking-wide uppercase">
+              Step {step} of 5 — {STEP_LABELS[step]}
+            </p>
           </div>
 
           <h1 className="text-3xl font-bold text-slate-900 mb-1">Create Account</h1>
-          <p className="text-slate-500 mb-8">Join thousands of smart savers</p>
+          <p className="text-slate-500 mb-6">Join thousands of smart savers</p>
 
           {(error || localError) && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-2xl text-sm">
-              {error || localError}
+            <div className="mb-5 p-4 bg-red-50 border border-red-200 text-red-600 rounded-2xl text-sm flex items-start gap-2">
+              <span className="flex-1">{error || localError}</span>
+              <button
+                type="button"
+                onClick={() => { setLocalError(''); clearError(); }}
+                className="text-red-400 hover:text-red-600 shrink-0 mt-0.5"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
-            {/* Step 1 */}
+            {/* ── STEP 1 – Personal Info ── */}
             {step === 1 && (
-              <div className="space-y-6">
+              <div className="space-y-5">
+                {/* Profile photo — REQUIRED */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-3">
+                    Profile Photo <span className="text-red-500">*</span>
+                  </label>
+
+                  {formData.profilePreview ? (
+                    <div className="flex items-center gap-4">
+                      <div className="relative w-20 h-20 shrink-0">
+                        <img
+                          src={formData.profilePreview}
+                          alt="Profile preview"
+                          className="w-20 h-20 rounded-2xl object-cover border-2 border-emerald-200 shadow-sm"
+                        />
+                        <button
+                          type="button"
+                          onClick={clearProfileImage}
+                          className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-600 transition-colors"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                      <div className="text-sm text-slate-500">
+                        <p className="font-medium text-slate-700">{formData.profileImage?.name}</p>
+                        <p>{((formData.profileImage?.size ?? 0) / 1024).toFixed(0)} KB</p>
+                        <button
+                          type="button"
+                          onClick={clearProfileImage}
+                          className="text-emerald-600 hover:text-emerald-700 font-medium mt-1"
+                        >
+                          Change photo
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex gap-3">
+                      <button
+                        type="button"
+                        onClick={() => cameraInputRef.current?.click()}
+                        className="flex-1 flex flex-col items-center gap-2 p-4 border-2 border-dashed border-slate-200 rounded-2xl hover:border-emerald-400 hover:bg-emerald-50 transition-all group"
+                      >
+                        <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
+                          <Camera className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition-colors" />
+                        </div>
+                        <span className="text-xs font-medium text-slate-500 group-hover:text-emerald-600 transition-colors">
+                          Take Photo
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => uploadInputRef.current?.click()}
+                        className="flex-1 flex flex-col items-center gap-2 p-4 border-2 border-dashed border-slate-200 rounded-2xl hover:border-emerald-400 hover:bg-emerald-50 transition-all group"
+                      >
+                        <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
+                          <Upload className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition-colors" />
+                        </div>
+                        <span className="text-xs font-medium text-slate-500 group-hover:text-emerald-600 transition-colors">
+                          Upload Photo
+                        </span>
+                      </button>
+
+                      <input
+                        ref={cameraInputRef}
+                        type="file"
+                        accept="image/*"
+                        capture="user"
+                        className="sr-only"
+                        onChange={(e) => handleImageFile(e.target.files?.[0])}
+                      />
+                      <input
+                        ref={uploadInputRef}
+                        type="file"
+                        accept="image/*"
+                        className="sr-only"
+                        onChange={(e) => handleImageFile(e.target.files?.[0])}
+                      />
+                    </div>
+                  )}
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Full Name *
+                    Full Name <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
                       type="text"
                       placeholder="Adebayo Johnson"
-                      className="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 outline-none"
+                      className={iconInputCls}
                       value={formData.fullName}
                       onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                       required
@@ -146,14 +338,14 @@ const SignupPage = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Email Address *
+                    Email Address <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
                       type="email"
                       placeholder="you@example.com"
-                      className="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 outline-none"
+                      className={iconInputCls}
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       required
@@ -163,14 +355,14 @@ const SignupPage = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Phone Number *
+                    Phone Number <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
-                      type="number"
+                      type="tel"
                       placeholder="+234 803 456 7890"
-                      className="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 outline-none"
+                      className={iconInputCls}
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       required
@@ -178,14 +370,110 @@ const SignupPage = () => {
                   </div>
                 </div>
 
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200"
+                >
+                  Next <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
+            )}
+
+            {/* ── STEP 2 – Address ── */}
+            {step === 2 && (
+              <div className="space-y-5">
+                <div className="flex items-center gap-2 text-sm text-slate-500 bg-slate-50 rounded-2xl px-4 py-3 mb-2">
+                  <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>This address will be used for product deliveries and your profile.</span>
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Bank Name *
+                    Street Address <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    rows={2}
+                    placeholder="12 Adeola Odeku Street, Victoria Island"
+                    className="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none transition-all resize-none"
+                    value={formData.streetAddress}
+                    onChange={(e) => setFormData({ ...formData, streetAddress: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    City / LGA <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <input
+                      type="text"
+                      placeholder="Lagos Island"
+                      className={iconInputCls}
+                      value={formData.city}
+                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    State <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    className={`${inputCls} appearance-none`}
+                    value={formData.state}
+                    onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                    required
+                  >
+                    <option value="">Select state</option>
+                    {NIGERIAN_STATES.map((st) => (
+                      <option key={st} value={st}>{st}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={prevStep}
+                    className="flex-1 border border-slate-300 text-slate-700 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all active:scale-95"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="button"
+                    onClick={nextStep}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200"
+                  >
+                    Next <ArrowRight className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ── STEP 3 – Bank Details ── */}
+            {step === 3 && (
+              <div className="space-y-5">
+                <div className="flex items-center gap-2 text-sm text-slate-500 bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3 mb-2">
+                  <CreditCard className="w-4 h-4 text-amber-500 shrink-0" />
+                  <span>
+                    Your <strong>Account Name</strong> must exactly match your{' '}
+                    <strong>Full Name</strong> — this is how we verify your identity.
+                  </span>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Bank Name <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <select
-                      className="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 outline-none appearance-none"
+                      className={`${iconInputCls} appearance-none`}
                       value={formData.bankName}
                       onChange={(e) => setFormData({ ...formData, bankName: e.target.value })}
                       required
@@ -199,6 +487,9 @@ const SignupPage = () => {
                       <option value="Stanbic">Stanbic IBTC Bank</option>
                       <option value="Ecobank">Ecobank</option>
                       <option value="FCMB">FCMB</option>
+                      <option value="Opay">OPay</option>
+                      <option value="Kuda">Kuda Bank</option>
+                      <option value="Palmpay">PalmPay</option>
                       <option value="Other">Other Bank</option>
                     </select>
                   </div>
@@ -206,75 +497,77 @@ const SignupPage = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Account Number *
+                    Account Number <span className="text-red-500">*</span>
                   </label>
                   <input
-                    type="number"
-                    placeholder="Your bank account number"
-                    className="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 outline-none"
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="10-digit account number"
+                    maxLength={10}
+                    className={inputCls}
                     value={formData.accountNumber}
-                    onChange={(e) => setFormData({ ...formData, accountNumber: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, accountNumber: e.target.value.replace(/\D/g, '') })
+                    }
                     required
                   />
                 </div>
 
-                <button
-                  type="button"
-                  onClick={nextStep}
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2"
-                >
-                  Next <ArrowRight className="w-5 h-5" />
-                </button>
-              </div>
-            )}
-
-            {/* Step 2 */}
-            {step === 2 && (
-              <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
-                    I want to join as *
+                    Account Name <span className="text-red-500">*</span>
                   </label>
-                  <select
-                    className="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 outline-none"
-                    value={formData.accountType}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        accountType: e.target.value as 'customer' | 'agent',
-                      })
-                    }
-                  >
-                    <option value="customer">Customer (Save & Earn)</option>
-                    <option value="agent">Agent</option>
-                  </select>
+                  <div className="relative">
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <input
+                      type="text"
+                      placeholder={`Must match "${formData.fullName || 'your full name'}"`}
+                      className={`${iconInputCls} ${formData.accountName &&
+                          formData.accountName.trim().toLowerCase() !==
+                          formData.fullName.trim().toLowerCase()
+                          ? 'border-red-300 bg-red-50 focus:border-red-400 focus:ring-red-100'
+                          : formData.accountName &&
+                            formData.accountName.trim().toLowerCase() ===
+                            formData.fullName.trim().toLowerCase()
+                            ? 'border-emerald-300 bg-emerald-50 focus:border-emerald-500'
+                            : ''
+                        }`}
+                      value={formData.accountName}
+                      onChange={(e) => setFormData({ ...formData, accountName: e.target.value })}
+                      required
+                    />
+                    {formData.accountName && (
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                        {formData.accountName.trim().toLowerCase() ===
+                          formData.fullName.trim().toLowerCase() ? (
+                          <Check className="w-5 h-5 text-emerald-500" />
+                        ) : (
+                          <X className="w-5 h-5 text-red-400" />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {formData.accountName &&
+                    formData.accountName.trim().toLowerCase() !==
+                    formData.fullName.trim().toLowerCase() && (
+                      <p className="text-xs text-red-500 mt-1.5 ml-1">
+                        Must match your full name: <strong>{formData.fullName || '—'}</strong>
+                      </p>
+                    )}
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Referral Code (optional)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter referral code"
-                    className="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 outline-none"
-                    value={formData.referralCode}
-                    onChange={(e) => setFormData({ ...formData, referralCode: e.target.value })}
-                  />
-                </div>
-
-                <div className="flex gap-4">
+                <div className="flex gap-3">
                   <button
                     type="button"
                     onClick={prevStep}
-                    className="flex-1 border border-slate-300 text-slate-700 py-4 rounded-2xl font-semibold"
+                    className="flex-1 border border-slate-300 text-slate-700 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all active:scale-95"
                   >
                     Back
                   </button>
                   <button
                     type="button"
                     onClick={nextStep}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200"
                   >
                     Next <ArrowRight className="w-5 h-5" />
                   </button>
@@ -282,19 +575,88 @@ const SignupPage = () => {
               </div>
             )}
 
-            {/* Step 3 */}
-            {step === 3 && (
-              <div className="space-y-6">
+            {/* ── STEP 4 – Account Setup ── */}
+            {step === 4 && (
+              <div className="space-y-5">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-3">
+                    I want to join as <span className="text-red-500">*</span>
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {(['customer', 'agent'] as const).map((type) => (
+                      <button
+                        key={type}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, accountType: type })}
+                        className={`py-4 px-3 rounded-2xl border-2 font-medium text-sm transition-all active:scale-95 ${formData.accountType === type
+                            ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
+                            : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                          }`}
+                      >
+                        {type === 'customer' ? (
+                          <span className="flex flex-col gap-1">
+                            <span className="text-xl">💰</span>
+                            <span>Customer</span>
+                            <span className="text-xs font-normal text-slate-400">Save & Earn</span>
+                          </span>
+                        ) : (
+                          <span className="flex flex-col gap-1">
+                            <span className="text-xl">🤝</span>
+                            <span>Agent</span>
+                            <span className="text-xs font-normal text-slate-400">Refer & Earn</span>
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Password *
+                    Referral Code{' '}
+                    <span className="text-slate-400 font-normal">(optional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter referral code"
+                    className={inputCls}
+                    value={formData.referralCode}
+                    onChange={(e) => setFormData({ ...formData, referralCode: e.target.value })}
+                  />
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={prevStep}
+                    className="flex-1 border border-slate-300 text-slate-700 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all active:scale-95"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="button"
+                    onClick={nextStep}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200"
+                  >
+                    Next <ArrowRight className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ── STEP 5 – Security ── */}
+            {step === 5 && (
+              <div className="space-y-5">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Password <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       placeholder="At least 6 characters"
-                      className="w-full pl-11 pr-12 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 outline-none"
+                      className="w-full pl-11 pr-12 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none transition-all"
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                       required
@@ -302,33 +664,51 @@ const SignupPage = () => {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
+                  {formData.password && (
+                    <div className="mt-2 flex gap-1">
+                      {[1, 2, 3].map((i) => (
+                        <div
+                          key={i}
+                          className={`flex-1 h-1 rounded-full transition-all ${formData.password.length >= i * 4
+                              ? i === 1
+                                ? 'bg-red-400'
+                                : i === 2
+                                  ? 'bg-amber-400'
+                                  : 'bg-emerald-500'
+                              : 'bg-slate-200'
+                            }`}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Confirm Password *
+                    Confirm Password <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
                       type={showConfirmPassword ? 'text' : 'password'}
                       placeholder="Re-enter password"
-                      className="w-full pl-11 pr-12 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 outline-none"
+                      className={`w-full pl-11 pr-12 py-4 bg-slate-50 border rounded-2xl focus:ring-2 outline-none transition-all ${formData.confirmPassword && formData.confirmPassword !== formData.password
+                          ? 'border-red-300 focus:border-red-400 focus:ring-red-100'
+                          : 'border-slate-200 focus:border-emerald-600 focus:ring-emerald-100'
+                        }`}
                       value={formData.confirmPassword}
-                      onChange={(e) =>
-                        setFormData({ ...formData, confirmPassword: e.target.value })
-                      }
+                      onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                       required
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                     >
                       {showConfirmPassword ? (
                         <EyeOff className="w-5 h-5" />
@@ -339,43 +719,66 @@ const SignupPage = () => {
                   </div>
                 </div>
 
-                <label className="flex items-start gap-3 cursor-pointer text-sm">
+                <label className="flex items-start gap-3 cursor-pointer text-sm select-none">
                   <input
                     type="checkbox"
                     checked={formData.agreeTerms}
                     onChange={(e) => setFormData({ ...formData, agreeTerms: e.target.checked })}
-                    className="mt-1 accent-emerald-600"
+                    className="mt-0.5 w-4 h-4 accent-emerald-600 shrink-0"
                   />
-                  <span className="text-slate-600">
-                    I agree to the <span className="text-emerald-600">Terms of Service</span> and{' '}
-                    <span className="text-emerald-600">Privacy Policy</span>
+                  <span className="text-slate-600 leading-relaxed">
+                    I agree to the{' '}
+                    <span className="text-emerald-600 font-medium">Terms of Service</span> and{' '}
+                    <span className="text-emerald-600 font-medium">Privacy Policy</span>
                   </span>
                 </label>
 
-                <div className="flex gap-4">
+                <div className="flex gap-3">
                   <button
                     type="button"
                     onClick={prevStep}
-                    className="flex-1 border border-slate-300 text-slate-700 py-4 rounded-2xl font-semibold"
+                    className="flex-1 border border-slate-300 text-slate-700 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all active:scale-95"
                   >
                     Back
                   </button>
                   <button
                     type="submit"
                     disabled={isLoading || !formData.agreeTerms}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 disabled:cursor-not-allowed active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200"
                   >
-                    {isLoading ? 'Creating Account...' : 'Create Account'}
-                    {!isLoading && <Check className="w-5 h-5" />}
+                    {isLoading ? (
+                      <>
+                        <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
+                          <circle
+                            className="opacity-25"
+                            cx="12" cy="12" r="10"
+                            stroke="currentColor" strokeWidth="4"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v8z"
+                          />
+                        </svg>
+                        Creating...
+                      </>
+                    ) : (
+                      <>
+                        Create Account <Check className="w-5 h-5" />
+                      </>
+                    )}
                   </button>
                 </div>
               </div>
             )}
           </form>
 
-          <p className="text-center text-slate-500 mt-8">
+          <p className="text-center text-slate-500 mt-6 text-sm">
             Already have an account?{' '}
-            <Link to="/login" className="text-emerald-600 font-semibold hover:text-emerald-700">
+            <Link
+              to="/login"
+              className="text-emerald-600 font-semibold hover:text-emerald-700 transition-colors"
+            >
               Sign in
             </Link>
           </p>

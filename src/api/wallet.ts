@@ -1,5 +1,5 @@
 // src/api/client.ts
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.ajoplus.com';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.AbaGold.com';
 
 export class APIError extends Error {
 	constructor(
@@ -24,7 +24,7 @@ const PERMANENT_ERROR_STATUSES = new Set([400, 401, 403, 404, 422]);
 
 /**
  * Base API client with auth, retry, and consistent response handling
- * Optimized for AjoPlus (3G networks + reliability)
+ * Optimized for AbaGold (3G networks + reliability)
  */
 export async function apiCall<T>(
 	endpoint: string,
@@ -95,14 +95,14 @@ export async function apiCall<T>(
  */
 export function getAuthToken(): string | null {
 	try {
-		const auth = localStorage.getItem('ajoplus-auth-storage');
+		const auth = localStorage.getItem('AbaGold-auth-storage');
 		if (auth) {
 			const parsed = JSON.parse(auth);
 			const token = parsed.state?.token;
 			if (token) return token;
 		}
 
-		const adminAuth = localStorage.getItem('ajoplus-admin-auth-storage');
+		const adminAuth = localStorage.getItem('AbaGold-admin-auth-storage');
 		if (adminAuth) {
 			const parsed = JSON.parse(adminAuth);
 			const token = parsed.state?.token;

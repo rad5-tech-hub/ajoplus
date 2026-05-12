@@ -1,5 +1,6 @@
 // src/features/admin/components/PackageManagement.tsx
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Trash2, Edit2, AlertTriangle } from 'lucide-react';
 import CreatePackageModal from '@/components/ui/CreatePackageModal';
 import CategoryManagement from '@/components/ui/CategoryManagement';
@@ -64,6 +65,7 @@ const PackageManagement = () => {
   const { data: apiPackages, isLoading, error, refetch } = useAvailablePackages();
   const packages = useMemo(() => (apiPackages ?? []).map(toDisplay), [apiPackages]);
 
+  const navigate = useNavigate();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
@@ -76,6 +78,10 @@ const PackageManagement = () => {
   //   deletePackageMutation.mutate(id);
   //   setDeleteConfirmId(null);
   // };
+
+  const handleRowClick = (id: string) => {
+    navigate(`/dashboard/admin/packages/${id}/members`);
+  };
 
   const handleEditClick = (id: string) => {
     setEditingPackage(apiPackages?.find((p) => p.id === id) ?? null);
@@ -158,7 +164,8 @@ const PackageManagement = () => {
                 : packages.map((pkg) => (
                   <tr
                     key={pkg.id}
-                    className="border-b border-slate-100 last:border-b-0 hover:bg-slate-50 transition-colors"
+                    onClick={() => handleRowClick(pkg.id)}
+                    className="cursor-pointer border-b border-slate-100 last:border-b-0 hover:bg-slate-50 transition-colors"
                   >
                     <td className="py-5 px-6 lg:px-8">
                       <p className="font-semibold text-slate-900 text-sm lg:text-base">{pkg.name}</p>
@@ -176,13 +183,19 @@ const PackageManagement = () => {
                     <td className="py-5 px-4 text-slate-600 text-sm">{pkg.frequency}</td>
                     <td className="py-5 px-6 lg:px-8 text-right whitespace-nowrap">
                       <button
-                        onClick={() => handleEditClick(pkg.id)}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleEditClick(pkg.id);
+                        }}
                         className="text-emerald-600 cursor-pointer hover:text-emerald-700 mr-4 text-sm font-medium transition-colors inline-flex items-center gap-1"
                       >
                         <Edit2 className="w-3 h-3" /> Edit
                       </button>
                       <button
-                        onClick={() => setDeleteConfirmId(pkg.id)}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setDeleteConfirmId(pkg.id);
+                        }}
                         className="text-red-600 hover:text-red-700 hover:underline cursor-pointer text-sm font-medium transition-colors inline-flex items-center gap-1"
                       >
                         <Trash2 className="w-3 h-3" /> Delete
@@ -201,7 +214,11 @@ const PackageManagement = () => {
           {isLoading
             ? [1, 2, 3].map((i) => <SkeletonCard key={i} />)
             : packages.map((pkg) => (
-              <div key={pkg.id} className="bg-white rounded-2xl border border-slate-100 p-4">
+              <div
+                key={pkg.id}
+                onClick={() => handleRowClick(pkg.id)}
+                className="bg-white rounded-2xl border border-slate-100 p-4 cursor-pointer hover:border-slate-300 transition-colors"
+              >
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="min-w-0">
                     <p className="font-semibold text-slate-900 text-sm leading-snug">{pkg.name}</p>
@@ -220,14 +237,20 @@ const PackageManagement = () => {
                 </div>
                 <div className="flex gap-3 border-t border-slate-100 pt-3">
                   <button
-                    onClick={() => handleEditClick(pkg.id)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handleEditClick(pkg.id);
+                    }}
                     className="flex-1 text-center text-emerald-600 cursor-pointer text-sm font-medium py-1.5 rounded-lg hover:bg-emerald-50 transition-colors inline-flex items-center justify-center gap-1"
                   >
                     <Edit2 className="w-4 h-4" /> Edit
                   </button>
                   <div className="w-px bg-slate-100" />
                   <button
-                    onClick={() => setDeleteConfirmId(pkg.id)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setDeleteConfirmId(pkg.id);
+                    }}
                     className="flex-1 text-center text-red-500 cursor-pointer text-sm font-medium py-1.5 rounded-lg hover:bg-red-50 transition-colors inline-flex items-center justify-center gap-1"
                   >
                     <Trash2 className="w-4 h-4" /> Delete

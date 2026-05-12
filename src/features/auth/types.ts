@@ -15,15 +15,19 @@ export interface LoginCredentials {
   password: string;
   remember?: boolean;
 }
-
+// Add / update only the SignupData interface; keep everything else unchanged
 export interface SignupData {
   fullName: string;
   email: string;
   phone: string;
+  password: string;
+  confirmPassword: string;
   accountNumber: string;
   bankName: string;
+  accountName: string;
+  address: string;
+  profileImage: File;
   accountType: 'customer' | 'agent';
-  password: string;
   referralCode?: string;
 }
 export interface AuthTokens {

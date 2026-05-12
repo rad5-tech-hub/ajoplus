@@ -1,6 +1,6 @@
-# AjoPlus Agent Instructions
+# AbaGold Agent Instructions
 
-**Project**: AjoPlus — A fintech savings & referral platform built on the Ajo (African savings) model.
+**Project**: AbaGold — A fintech savings & referral platform built on the Ajo (African savings) model.
 
 ---
 

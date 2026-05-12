@@ -58,11 +58,11 @@ const HeroSection = () => {
           <div className="relative w-full max-w-105 md:max-w-none">
             <img
               src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop"
-              alt="Happy woman saving with AjoPlus"
+              alt="Happy woman saving with AbaGold"
               className="w-full h-auto rounded-3xl shadow-2xl"
               loading="eager"
             />
-            
+
             {/* Subtle decorative overlay for premium feel */}
             <div className="absolute -bottom-6 -right-6 bg-white rounded-2xl shadow-xl p-5 hidden md:block">
               <div className="flex items-center gap-3">

@@ -1,11 +1,11 @@
 ---
-name: ajoplus-principles-review
-description: "**WORKFLOW SKILL** — Code review checklist for AjoPlus non-negotiable principles. USE WHEN: reviewing PRs, validating architecture decisions, checking performance optimizations, ensuring Figma fidelity, catching reliability issues. VALIDATES: route-level code splitting, error handling, API layer separation, bundle size, design system compliance, type safety. FOR: Pre-merge validation, architectural reviews, catching anti-patterns before they reach main branch."
+name: abagold-principles-review
+description: "**WORKFLOW SKILL** — Code review checklist for AbaGold non-negotiable principles. USE WHEN: reviewing PRs, validating architecture decisions, checking performance optimizations, ensuring Figma fidelity, catching reliability issues. VALIDATES: route-level code splitting, error handling, API layer separation, bundle size, design system compliance, type safety. FOR: Pre-merge validation, architectural reviews, catching anti-patterns before they reach main branch."
 ---
 
-# AjoPlus Principles Review Checklist
+# AbaGold Principles Review Checklist
 
-This skill helps validate that code changes honor all 4 non-negotiable AjoPlus principles before merging.
+This skill helps validate that code changes honor all 4 non-negotiable AbaGold principles before merging.
 
 ## When to Use This Skill
 

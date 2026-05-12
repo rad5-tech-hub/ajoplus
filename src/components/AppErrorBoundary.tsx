@@ -84,7 +84,7 @@ function ErrorFallback({ error, onReset }: ErrorFallbackProps) {
 // ─── Boundary (minimal class — only what React requires here) ─────────────────
 
 /**
- * Global Error Boundary for AjoPlus.
+ * Global Error Boundary for AbaGold.
  * Catches render errors and delegates display to <ErrorFallback />.
  * In production, errors are forwarded to your monitoring service in logError().
  */

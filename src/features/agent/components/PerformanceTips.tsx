@@ -3,7 +3,7 @@ import { Check } from 'lucide-react';
 
 const tips = [
   'Share your link on social media platforms',
-  'Explain the benefits of AjoPlus to potential users',
+  'Explain the benefits of AbaGold to potential users',
   'Follow up with people who click your link',
   'Share success stories from existing users',
 ];
