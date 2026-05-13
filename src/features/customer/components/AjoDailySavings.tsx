@@ -146,6 +146,7 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
         isOpen={isWithdrawOpen}
         onClose={() => setIsWithdrawOpen(false)}
         availableBalance={wallet?.availableBalance ?? availableBalance}
+        walletId={wallet?.wallets?.[0]?.id}
       />
     </>
   );

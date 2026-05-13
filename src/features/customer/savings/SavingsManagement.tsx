@@ -140,6 +140,7 @@ const SavingsManagement = () => {
           isOpen={withdrawPlanId !== null}
           onClose={() => setWithdrawPlanId(null)}
           availableBalance={selectedPlan?.availableBalance ?? 0}
+          walletId={selectedPlan?.walletId}
         />
       </div>
     </div>

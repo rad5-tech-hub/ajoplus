@@ -25,6 +25,7 @@ export interface WalletSnapshot {
 
 export interface SubmitWithdrawalRequest {
 	amount: number;
+	walletId: string;
 	description?: string;
 }
 

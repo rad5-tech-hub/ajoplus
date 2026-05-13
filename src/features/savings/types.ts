@@ -1,6 +1,7 @@
 export interface SavingsPlan {
   id: string;
   userId: string;
+  walletId?: string;
   name: string;
   description?: string;
   dailyAmount: number;

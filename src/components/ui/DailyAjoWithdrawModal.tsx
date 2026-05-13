@@ -8,9 +8,10 @@ interface DailyAjoWithdrawModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	availableBalance: number;
+	walletId?: string;
 }
 
-const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance }: DailyAjoWithdrawModalProps) => {
+const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: DailyAjoWithdrawModalProps) => {
 	const [amount, setAmount] = useState<string>('');
 	const [description, setDescription] = useState<string>('');
 	const [isSuccess, setIsSuccess] = useState(false);
@@ -53,8 +54,10 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance }: DailyAjoWi
 		e.preventDefault();
 		if (!isValid || isPending) return;
 
+		if (!walletId) return;
+
 		submitWithdrawal(
-			{ amount: parsedAmount, description: description.trim() || undefined },
+			{ amount: parsedAmount, walletId, description: description.trim() || undefined },
 			{
 				onSuccess: () => {
 					setSubmittedAmount(parsedAmount);

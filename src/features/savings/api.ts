@@ -18,6 +18,7 @@ export async function fetchSavingsPlans(): Promise<SavingsPlan[]> {
     return wallets.map((w) => ({
       id: w.savingPlanId,
       userId: w.userId,
+      walletId: w.id,
       name: 'Savings Plan',
       dailyAmount: w.dailyAmount,
       totalSaved: w.totalSaved,
@@ -37,6 +38,7 @@ export async function fetchSavingsPlans(): Promise<SavingsPlan[]> {
     return {
       id: apiPlan.id,
       userId: apiPlan.userId,
+      walletId: w?.id,
       name: apiPlan.description || 'Savings Plan',
       description: apiPlan.description ?? undefined,
       dailyAmount: w?.dailyAmount ?? apiPlan.amount,
@@ -65,5 +67,6 @@ export interface SavingsPaymentPayload {
 
 export interface SavingsWithdrawalPayload {
   amount: number;
+  walletId: string;
   description?: string;
 }
