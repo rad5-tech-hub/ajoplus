@@ -99,6 +99,7 @@ const ProductTransactions = () => {
 									<th className="py-4 px-5 text-sm font-semibold text-slate-500">Amount</th>
 									<th className="py-4 px-5 text-sm font-semibold text-slate-500">Date</th>
 									<th className="py-4 px-5 text-sm font-semibold text-slate-500">Status</th>
+									<th className="py-4 px-5 text-sm font-semibold text-slate-500">Receipt</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -119,12 +120,24 @@ const ProductTransactions = () => {
 											</div>
 										</td>
 										<td className="py-5 px-5 text-slate-500 text-sm">{transaction.user.email}</td>
-										<td className="py-5 px-5 font-semibold text-emerald-600">{formatCurrency(Number(transaction.amountPaid))}</td>
-										<td className="py-5 px-5 text-slate-500 text-sm">{formatDate(transaction.createdAt)}</td>
+										<td className="py-5 px-5 font-semibold text-emerald-600">{formatCurrency(transaction.amount)}</td>
+										<td className="py-5 px-5 text-slate-500 text-sm">{formatDate(transaction.date)}</td>
 										<td className="py-5 px-5">
 											<span className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${statusStyles[transaction.status]}`}>
 												{transaction.status}
 											</span>
+										</td>
+										<td className="py-5 px-5">
+											{transaction.receiptUrl && (
+												<a
+													href={transaction.receiptUrl}
+													target="_blank"
+													rel="noopener noreferrer"
+													className="text-emerald-600 hover:text-emerald-700 text-xs underline"
+												>
+													View Receipt
+												</a>
+											)}
 										</td>
 									</tr>
 								))}

@@ -24,6 +24,8 @@ const MakePayment = () => {
   const isSavingPayment = location.state?.isSavingPayment === true || packageId === 'saving';
   const isCartPayment = location.state?.isCartPayment === true || packageId === 'cart';
   const userPackageId = location.state?.userPackageId as string | undefined;
+  const savingsId = location.state?.savingsId as string | undefined;
+  const savingPlanId = location.state?.savingPlanId as string | undefined;
   const cartItems: CartItem[] = location.state?.items || [];
   const cartTotal = location.state?.total || 0;
   const savingTotal = location.state?.total || 0;
@@ -161,6 +163,7 @@ const MakePayment = () => {
             setAmountPaid={setAmountPaid}
             packageId={packageId ?? ''}
             userPackageId={userPackageId}
+            savingPlanId={savingPlanId ?? savingsId}
             packageName={
               isCartPayment ? 'Cart Checkout' : isSavingPayment ? 'Daily Savings' : packageName
             }

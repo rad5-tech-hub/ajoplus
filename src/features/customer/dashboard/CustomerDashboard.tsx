@@ -1,4 +1,3 @@
-// src/features/customer/dashboard/CustomerDashboard.tsx
 import { useAuthStore } from '@/app/store/authStore';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -10,7 +9,6 @@ import RecentTransactions from '../components/RecentTransactions';
 import NeedHelp from '../components/NeedHelp';
 import PaymentStatusBanner from '@/components/ui/PaymentStatusBanner';
 import DailyAjoSetupModal from '@/components/ui/DailyAjoSetupModal';
-// ✂️ Removed: import Modal from '@/components/ui/GeneralModal';
 
 const CustomerDashboard = () => {
   const { user } = useAuthStore();
@@ -27,7 +25,6 @@ const CustomerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
-      {/* ✂️ Removed: <Modal> wrapper + duplicate <DailyAjoSetupModal /> inside it */}
       <DailyAjoSetupModal
         isOpen={showDailyAjoModal}
         onClose={closeDailyAjoModal}
@@ -81,7 +78,7 @@ const CustomerDashboard = () => {
           <RecentTransactions />
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 

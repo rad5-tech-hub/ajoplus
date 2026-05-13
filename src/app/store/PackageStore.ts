@@ -61,17 +61,18 @@ export const useGetPackageMembers = (packageId: string) =>
     retry: smartRetry,
   });
 
-export const useUpdateMemberStatus = () => {
+export const useFinalizePackage = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ packageId, userPackageId, status }: {
-      packageId: string;
-      userPackageId: string;
-      status: adminPackageAPI.MemberStatus;
-    }) => adminPackageAPI.updateMemberStatus(packageId, userPackageId, { status }),
-    onSuccess: (_, { packageId }) => {
-      qc.invalidateQueries({ queryKey: ['admin', 'package', packageId, 'members'] });
+    mutationFn: (userPackageId: string) =>
+      adminPackageAPI.finalizePackage(userPackageId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin', 'package'] });
       qc.invalidateQueries({ queryKey: ['availablePackages'] });
+      qc.invalidateQueries({ queryKey: ['userPackages'] });
+    },
+    onError: (error: Error) => {
+      console.error('[Finalize Package Error]', error);
     },
   });
 };

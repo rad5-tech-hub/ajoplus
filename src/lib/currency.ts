@@ -5,11 +5,12 @@
 
 const EXCHANGE_RATE = 1550; // 1 USD to NGN
 
-export const formatCurrency = (amount: number, currency: 'NGN' | 'USD' = 'NGN'): string => {
+export const formatCurrency = (amount: number | null | undefined, currency: 'NGN' | 'USD' = 'NGN'): string => {
+	const value = amount ?? 0;
 	if (currency === 'NGN') {
-		return `₦${amount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+		return `₦${value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 	}
-	return `$${(amount / EXCHANGE_RATE).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+	return `$${(value / EXCHANGE_RATE).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 };
 
 export const formatDualCurrency = (amount: number): string => {

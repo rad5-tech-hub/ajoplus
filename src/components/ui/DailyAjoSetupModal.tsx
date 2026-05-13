@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, type FormEvent } from 'react';
 import { X, Loader2 } from 'lucide-react';
-import { useSetupSavingPlan } from '@/app/store/SavingPlanStore';
+import { useCreateSavingPlan } from '@/app/store/SavingPlanStore';
 
 interface DailyAjoSetupModalProps {
   isOpen: boolean;
@@ -13,7 +13,7 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const { mutate: setupPlan, isPending } = useSetupSavingPlan();
+  const { mutate: createPlan, isPending } = useCreateSavingPlan();
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -45,7 +45,7 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
       return;
     }
 
-    setupPlan(
+    createPlan(
       { amount, description: description.trim() || undefined },
       {
         onSuccess: () => {

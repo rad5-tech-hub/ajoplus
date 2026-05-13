@@ -1,12 +1,3 @@
-// src/features/landing/constants/adConfig.ts
-//
-// ─── HOW TO ADD A NEW AD ────────────────────────────────────────────────────
-//  1. Pick a slotId from AdSlotId (or add a new one to adTypes.ts)
-//  2. Add an entry to AD_REGISTRY below
-//  3. Set status: 'inactive' until creative is ready
-//  4. Deploy — the AdSlot component will pick it up automatically
-// ────────────────────────────────────────────────────────────────────────────
-
 import type { AdConfig } from '../types/adTypes';
 
 export const AD_REGISTRY: AdConfig[] = [

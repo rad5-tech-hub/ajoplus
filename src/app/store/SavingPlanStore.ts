@@ -8,22 +8,21 @@ const smartRetry = (failureCount: number, error: unknown): boolean => {
   return failureCount < 2;
 };
 
-export const useGetSavingPlan = () =>
+export const useGetSavingPlans = () =>
   useQuery({
-    queryKey: ['savingPlan'],
-    queryFn: savingPlanAPI.getSavingPlan,
-    staleTime: 5 * 60 * 1000,
+    queryKey: ['savingPlans'],
+    queryFn: savingPlanAPI.getSavingPlans,
+    staleTime: 60 * 1000,
     refetchOnWindowFocus: true,
     retry: smartRetry,
   });
 
-export const useSetupSavingPlan = () => {
+export const useCreateSavingPlan = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (payload: savingPlanAPI.SetupSavingPlanRequest) =>
-      savingPlanAPI.upsertSavingPlan(payload),
+      savingPlanAPI.createSavingPlan(payload),
     onSuccess: (plan) => {
-      // Only update dailyAmount — never overwrite real balance fields with zeros
       const current = useDailyAjoStore.getState();
       useDailyAjoStore.getState().syncFromWallet({
         dailyAmount: plan.amount,
@@ -31,9 +30,9 @@ export const useSetupSavingPlan = () => {
         commissionPaid: current.commissionPaid,
         availableBalance: current.availableBalance,
         daysSaved: current.daysSaved,
+        hasActivePlans: true,
       });
-
-      qc.invalidateQueries({ queryKey: ['savingPlan'] });
+      qc.invalidateQueries({ queryKey: ['savingPlans'] });
       qc.refetchQueries({ queryKey: ['wallet'] });
       qc.invalidateQueries({ queryKey: ['customerDashboard'] });
     },

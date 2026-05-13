@@ -22,6 +22,7 @@ interface PaymentUploadReceiptProps {
   packageId: string;
   packageName?: string;
   userPackageId?: string;
+  savingPlanId?: string;
   expectedAmount?: number;
   isCartPayment?: boolean;
   isSavingPayment?: boolean;
@@ -39,6 +40,7 @@ const PaymentUploadReceipt = ({
   isSavingPayment = false,
   cartId,
   userPackageId,
+  savingPlanId,
 }: PaymentUploadReceiptProps) => {
   const { mutate: submitPaymentMutation, isPending: isSubmitting } = useSubmitPayment();
   const { clearCart: clearCartLocal } = useCartStore();
@@ -94,10 +96,8 @@ const PaymentUploadReceipt = ({
       amountPaid,
       paymentType,
       ...(isCartPayment && { cartId }),
-      ...(!isCartPayment && !isSavingPayment && {
-        userPackageId,
-        // packageId,
-      }),
+      ...((!isCartPayment && !isSavingPayment) && { userPackageId }),
+      ...(isSavingPayment && savingPlanId && { savingPlanId }),
     };
 
     if (!isCartPayment && !isSavingPayment && !userPackageId) {

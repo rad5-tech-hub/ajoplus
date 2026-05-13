@@ -1,30 +1,36 @@
 import { apiCall } from './client';
 
+export interface WalletItem {
+  id: string;
+  userId: string;
+  savingPlanId: string;
+  dailyAmount: number;
+  totalSaved: number;
+  commissionPaid: number;
+  availableBalance: number;
+  pendingWithdrawalAmount: number;
+  withdrawableBalance: number;
+  daysSaved: number;
+  commissionType: string;
+  monthlySummary: number;
+  nextCommissionDeductionDate: string;
+  daysUntilCommissionDeduction: number;
+}
+
 interface WalletResponse {
   success: boolean;
   statusCode: number;
   message: string;
   data: {
-    wallet: {
-      id: string;
-      userId: string;
-      dailyAmount: number;
-      totalSaved: number;
-      commissionPaid: number;
-      availableBalance: number;
-      daysSaved: number;
-      commissionType: string;
-      monthlySummary: number;
-      nextCommissionDeductionDate: string;
-      daysUntilCommissionDeduction: number;
-    };
+    totalBalance: number;
+    wallets: WalletItem[];
   };
 }
 
 export async function getCustomerWallet() {
   const resp = await apiCall<WalletResponse>('/api/customer/wallet');
   if (!resp?.success) throw new Error(resp?.message || 'Failed to fetch wallet');
-  return resp.data.wallet;
+  return resp.data;
 }
 
 interface CustomerDashboardResponse {

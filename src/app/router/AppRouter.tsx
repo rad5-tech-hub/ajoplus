@@ -29,6 +29,7 @@ const ProductTransactions = lazy(() => import('@/features/admin/products/Product
 const SavingsOverview = lazy(() => import('@/features/admin/savings/SavingsOverview'));
 const PackageDetail = lazy(() => import('@/features/customer/packages/PackagesDetail'));
 const MakePayment = lazy(() => import('@/features/customer/Payments/MakePayment'));
+const SavingsManagement = lazy(() => import('@/features/customer/savings/SavingsManagement'));
 const ShoppingCart = lazy(() => import('@/features/cart/ShoppingCart'));
 const Checkout = lazy(() => import('@/features/cart/Checkout'));
 const PaymentSuccess = lazy(() => import('@/components/ui/PaymentSuccess'));
@@ -102,6 +103,14 @@ const AppRouter = () => {
           element={
             <Suspense fallback={<RouteSuspenseFallback />}>
               <CustomerDashboard />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/dashboard/customer/savings"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <SavingsManagement />
             </Suspense>
           }
         />

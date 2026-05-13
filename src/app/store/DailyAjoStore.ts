@@ -16,13 +16,13 @@ interface DailyAjoState {
 	clearError: () => void;
 	resetDailyAjo: () => void;
 
-	// ✅ Add these two — they exist in the implementation but were missing from the interface
 	syncFromWallet: (wallet: {
 		dailyAmount: number;
 		totalSaved: number;
 		commissionPaid: number;
 		availableBalance: number;
 		daysSaved: number;
+		hasActivePlans?: boolean;
 	}) => void;
 	clearForLogout: () => Promise<void>;
 }
@@ -95,9 +95,10 @@ export const useDailyAjoStore = create<DailyAjoState>()(
 				commissionPaid: number;
 				availableBalance: number;
 				daysSaved: number;
+				hasActivePlans?: boolean;
 			}) =>
 				set({
-					isActive: wallet.dailyAmount > 0,
+					isActive: wallet.dailyAmount > 0 || wallet.hasActivePlans === true,
 					dailyAmount: wallet.dailyAmount,
 					totalSaved: wallet.totalSaved,
 					commissionPaid: wallet.commissionPaid,

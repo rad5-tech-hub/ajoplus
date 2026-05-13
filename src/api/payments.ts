@@ -20,14 +20,11 @@ export interface RejectPaymentRequest {
 export interface SubmitPaymentRequest {
   receipt: File;
   amountPaid: string;
-  userPackageId?: string;           // Optional for cart payments
-  cartId?: string;                 // Optional (from Postman)
-  paymentType?: PaymentType;       // Optional
-  product?: string;                // Optional
-  // Legacy fields (kept for compatibility if used elsewhere)
-  // expectedAmount?: string;
-  // packageId?: string;
-  // cartItems?: string;
+  userPackageId?: string;           // For package payments
+  savingPlanId?: string;           // For saving payments
+  cartId?: string;
+  paymentType?: PaymentType;
+  product?: string;
 }
 export interface Payment {
   id: string;
@@ -83,14 +80,10 @@ export const submitPayment = async (payload: SubmitPaymentRequest): Promise<Paym
     if (payload.userPackageId) formData.append('userPackageId', payload.userPackageId);
     formData.append('receipt', payload.receipt);
 
+    if (payload.savingPlanId) formData.append('savingPlanId', payload.savingPlanId);
     if (payload.cartId) formData.append('cartId', payload.cartId);
     if (payload.paymentType) formData.append('paymentType', payload.paymentType);
     if (payload.product) formData.append('product', payload.product);
-
-    // Legacy support if needed by other flows
-    // if (payload.expectedAmount) formData.append('expectedAmount', payload.expectedAmount);
-    // if (payload.packageId) formData.append('packageId', payload.packageId);
-    // if (payload.cartId) formData.append('cartId', payload.cartId);
 
     const response = await apiCall<ApiResponse<Payment>>('/api/payment/manual-payment', {
       method: 'POST',

@@ -1,10 +1,10 @@
-// src/features/customer/dashboard/components/AjoDailySavings.tsx
 import { useState } from 'react';
-import { PiggyBank } from 'lucide-react';
+import { PiggyBank, Settings } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useDailyAjoStore } from '@/app/store/DailyAjoStore';
 import DailyAjoWithdrawModal from '@/components/ui/DailyAjoWithdrawModal';
 import { useCustomerWallet } from '@/app/store/CustomerStore';
+import { useGetSavingPlans } from '@/app/store/SavingPlanStore';
 
 interface AjoDailySavingsProps {
   onOpenDailyModal: () => void;
@@ -21,14 +21,16 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
   } = useDailyAjoStore();
 
   const { data: wallet } = useCustomerWallet();
+  const { data: plans = [] } = useGetSavingPlans();
 
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const navigate = useNavigate();
 
   const showActiveStateForDev = false;
   const isCurrentlyActive = showActiveStateForDev || isActive;
+  const planCount = plans.length;
+  const isMultiPlan = planCount > 1;
 
-  // Empty State
   if (!isCurrentlyActive) {
     return (
       <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm">
@@ -54,38 +56,30 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
             Start Saving Now
           </button>
         </div>
-
-        {/* {process.env.NODE_ENV === 'development' && (
-          <div className="mt-4 pt-3 border-t border-slate-200 text-center">
-            <button
-              onClick={() => window.location.reload()}
-              className="text-xs text-slate-400 hover:text-slate-600 underline"
-            >
-              Switch to Active State (Dev)
-            </button>
-          </div>
-        )} */}
       </div>
     );
   }
 
-  // Active Daily Ajo Card
   return (
     <>
       <div className="bg-emerald-600 text-white rounded-3xl p-5 w-full">
-        {/* Header */}
         <div className="flex items-center justify-between mb-3">
-          <p className="text-emerald-200 text-xs font-medium">Ajo Daily Savings</p>
+          <div>
+            <p className="text-emerald-200 text-xs font-medium">Ajo Daily Savings</p>
+            {isMultiPlan && (
+              <p className="text-emerald-300 text-xs mt-0.5">{planCount} active plans</p>
+            )}
+          </div>
           <span className="text-2xl">🐷</span>
         </div>
 
-        {/* Daily Amount */}
         <div className="mb-4">
-          <p className="text-emerald-100 text-xs font-medium">Daily Amount</p>
+          <p className="text-emerald-100 text-xs font-medium">
+            {isMultiPlan ? 'Total Daily Amount' : 'Daily Amount'}
+          </p>
           <p className="text-2xl font-bold mt-0.5">₦{(wallet?.dailyAmount ?? dailyAmount).toLocaleString()}</p>
         </div>
 
-        {/* First Info Box */}
         <div className="bg-emerald-50/20 border border-emerald-100/30 py-3 px-4 rounded-2xl mb-3">
           <div className="space-y-2.5">
             <div>
@@ -103,7 +97,6 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
           </div>
         </div>
 
-        {/* Second Info Box */}
         <div className="bg-emerald-50/20 border border-emerald-100/30 py-3 px-4 rounded-2xl mb-4">
           <div className="space-y-2.5">
             <div>
@@ -121,7 +114,6 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex flex-col gap-2">
           <button
             onClick={() => setIsWithdrawOpen(true)}
@@ -140,24 +132,16 @@ const AjoDailySavings = ({ onOpenDailyModal }: AjoDailySavingsProps) => {
           >
             Add to Savings
           </button>
+          <button
+            onClick={() => navigate('/dashboard/customer/savings')}
+            className="w-full cursor-pointer bg-white/10 hover:bg-white/20 border border-white/30 text-white/70 hover:text-white font-semibold py-2.5 rounded-2xl transition-all text-xs flex items-center justify-center gap-1.5"
+          >
+            <Settings className="w-3.5 h-3.5" />
+            Manage Savings Plans
+          </button>
         </div>
-
-        {/* {process.env.NODE_ENV === 'development' && (
-          <div className="mt-4 pt-3 border-t border-white/20 text-center">
-            <button
-              onClick={() => {
-                useDailyAjoStore.getState().resetDailyAjo();
-                window.location.reload();
-              }}
-              className="text-xs text-emerald-200 hover:text-white underline"
-            >
-              Switch to Empty State (Dev)
-            </button>
-          </div>
-        )} */}
       </div>
 
-      {/* Withdraw Modal */}
       <DailyAjoWithdrawModal
         isOpen={isWithdrawOpen}
         onClose={() => setIsWithdrawOpen(false)}

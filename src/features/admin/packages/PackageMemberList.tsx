@@ -1,13 +1,12 @@
-import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft } from 'lucide-react';
-import { useGetPackageMembers, useUpdateMemberStatus } from '@/app/store/PackageStore';
+import { useGetPackageMembers, useFinalizePackage } from '@/app/store/PackageStore';
 import { formatCurrency } from '@/lib/currency';
 
 const statusStyles = {
 	active: 'bg-sky-100 text-sky-700',
 	completed: 'bg-emerald-100 text-emerald-700',
-	finalised: 'bg-slate-100 text-slate-700',
+	finalized: 'bg-slate-100 text-slate-700',
 	suspended: 'bg-red-100 text-red-700',
 	inactive: 'bg-slate-100 text-slate-700',
 } as const;
@@ -15,22 +14,9 @@ const statusStyles = {
 const PackageMemberList = () => {
 	const { packageId } = useParams<{ packageId: string }>();
 	const navigate = useNavigate();
-	const [updatingId, setUpdatingId] = useState<string | null>(null);
 
 	const { data, isLoading, isError, error, refetch } = useGetPackageMembers(packageId ?? '');
-	const updateStatus = useUpdateMemberStatus();
-	const isUpdating = updateStatus.status === 'pending';
-
-	const handleFinalize = (userPackageId: string) => {
-		if (!packageId) return;
-		setUpdatingId(userPackageId);
-		updateStatus.mutate(
-			{ packageId, userPackageId, status: 'finalised' },
-			{
-				onSettled: () => setUpdatingId(null),
-			}
-		);
-	};
+	const { mutate: finalizePackage, isPending: isFinalizing } = useFinalizePackage();
 
 	const headerLabel = data?.package.name ?? 'Package Members';
 	const totalRevenue = data?.totalRevenue ?? 0;
@@ -136,11 +122,11 @@ const PackageMemberList = () => {
 									{member.status === 'completed' && (
 										<button
 											type="button"
-											onClick={() => handleFinalize(member.id)}
-											disabled={isUpdating && updatingId === member.id}
-											className="rounded-2xl bg-emerald-600 text-white px-4 py-2 text-sm font-semibold hover:bg-emerald-700 transition-colors disabled:cursor-not-allowed disabled:bg-slate-300"
+											onClick={() => finalizePackage(member.id)}
+											disabled={isFinalizing}
+											className="rounded-2xl bg-emerald-600 text-white px-4 py-2 text-sm font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 										>
-											{isUpdating && updatingId === member.id ? 'Updating…' : 'Mark as Finalised'}
+											{isFinalizing ? 'Finalizing…' : 'Mark as Finalised'}
 										</button>
 									)}
 								</div>

@@ -84,17 +84,17 @@ const SavingsOverview = () => {
 								</thead>
 								<tbody>
 									{savers.map((saver) => (
-										<tr key={saver.userId} className="border-t border-slate-100 hover:bg-slate-50 transition-colors">
+										<tr key={saver.id} className="border-t border-slate-100 hover:bg-slate-50 transition-colors">
 											<td className="py-5 px-5">
-												<p className="font-semibold text-slate-900">{saver.fullName}</p>
+												<p className="font-semibold text-slate-900">{saver.name}</p>
 											</td>
 											<td className="py-5 px-5 text-slate-500 text-sm truncate" title={saver.email}>
 												{saver.email}
 											</td>
 											<td className="py-5 px-5 font-semibold text-emerald-600">{formatCurrency(saver.dailyAmount)}</td>
 											<td className="py-5 px-5 text-slate-900">{formatCurrency(saver.totalSaved)}</td>
-											<td className="py-5 px-5 text-slate-900">{formatCurrency(saver.availableBalance)}</td>
-											<td className="py-5 px-5 text-slate-900">{formatCurrency(saver.commissionPaid)}</td>
+											<td className="py-5 px-5 text-slate-900">{formatCurrency(saver.payable)}</td>
+											<td className="py-5 px-5 text-slate-900">{formatCurrency(saver.commission)}</td>
 											<td className="py-5 px-5 text-slate-500">{saver.daysSaved}</td>
 										</tr>
 									))}
