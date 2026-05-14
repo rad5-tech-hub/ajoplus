@@ -1,90 +1,34 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Clock, Calendar, Package as PackageIcon, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useAuthStore } from '@/app/store/authStore';
 import Button from '@/components/ui/Button';
-import { getAvailablePackages, getPackageCategoryName, formatPackagePrice } from '@/api/package';
-
-interface PackageFallback {
-  name: string;
-  category: string;
-  amount: string;
-  duration: string;
-  frequency: string;
-  description: string;
-  totalPrice: number;
-  durationMonths: number;
-  items: { itemName: string; quantity: string }[];
-}
-
-const FALLBACK_PACKAGES: PackageFallback[] = [
-  {
-    name: 'Special Food Package', category: 'Food & Groceries',
-    amount: '₦350,000', duration: '12 months', frequency: 'Daily',
-    description: 'Complete food package with essential items - ₦1,000 daily from Jan. - Dec.',
-    totalPrice: 350000, durationMonths: 12, items: [
-      { itemName: 'Bag of Rice', quantity: '1' },
-      { itemName: 'Vegetable Oil', quantity: '5 Litres' },
-      { itemName: 'Beans', quantity: '10kg' },
-    ],
-  },
-  {
-    name: 'Rice Package', category: 'Food & Groceries',
-    amount: '₦97,500', duration: '12 months', frequency: 'Daily',
-    description: 'Essential rice and groceries package - ₦250 daily',
-    totalPrice: 97500, durationMonths: 12, items: [
-      { itemName: 'Premium Rice (50kg)', quantity: '1' },
-    ],
-  },
-  {
-    name: 'Garri Package', category: 'Food & Groceries',
-    amount: '₦91,200', duration: '12 months', frequency: 'Daily',
-    description: 'Garri and staples package - ₦250 daily',
-    totalPrice: 91200, durationMonths: 12, items: [
-      { itemName: 'Garri (50kg)', quantity: '1' },
-    ],
-  },
-  {
-    name: 'Provision Package', category: 'Food & Groceries',
-    amount: '₦91,200', duration: '12 months', frequency: 'Daily',
-    description: 'Household provisions - ₦250 daily',
-    totalPrice: 91200, durationMonths: 12, items: [
-      { itemName: 'Household Provisions Pack', quantity: '1' },
-    ],
-  },
-];
+import { fetchPublicPackages } from '@/api/public';
+import { formatNaira, formatFrequency, getCategoryName } from '@/features/browse/types';
 
 const PackagesSection = () => {
-  const [packages, setPackages] = useState<PackageFallback[]>([]);
-  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
   const [expanded, setExpanded] = useState<string | null>(null);
 
-  useEffect(() => {
-    let mounted = true;
-    getAvailablePackages()
-      .then((data) => {
-        if (!mounted) return;
-        if (data.length > 0) {
-          setPackages(data.slice(0, 4).map((p) => ({
-            name: p.name,
-            category: getPackageCategoryName(p),
-            amount: formatPackagePrice(p.totalPrice),
-            duration: `${p.duration} months`,
-            frequency: p.paymentFrequency.charAt(0).toUpperCase() + p.paymentFrequency.slice(1),
-            description: p.description,
-            totalPrice: parseFloat(String(p.totalPrice)),
-            durationMonths: p.duration,
-            items: (p.items ?? []).map((i) => ({ itemName: i.itemName, quantity: i.quantity })),
-          })));
-        } else {
-          setPackages(FALLBACK_PACKAGES);
-        }
-      })
-      .catch(() => { if (mounted) setPackages(FALLBACK_PACKAGES); })
-      .finally(() => { if (mounted) setLoading(false); });
-    return () => { mounted = false; };
-  }, []);
+  const { data: packages = [], isLoading, isError, refetch } = useQuery({
+    queryKey: ['publicPackages'],
+    queryFn: fetchPublicPackages,
+    staleTime: 5 * 60 * 1000,
+  });
 
-  if (loading) {
+  const handleJoin = (pkgId: string) => {
+    if (!isAuthenticated) {
+      navigate(`/signup?redirect=/browse&packageId=${pkgId}`);
+      return;
+    }
+    navigate(`/dashboard/customer/packages/${pkgId}`);
+  };
+
+  const displayPackages = packages.slice(0, 4);
+
+  if (isLoading) {
     return (
       <section id="packages" className="py-24 bg-[#f8fafc]">
         <div className="max-w-7xl mx-auto px-6">
@@ -109,7 +53,7 @@ const PackagesSection = () => {
           <span className="inline-block px-4 py-1.5 text-amber-700 text-sm font-medium tracking-widest">
             INSTALLMENT SAVINGS
           </span>
-          <h2 className="mt-4 text-2xl md:text-4xl font-bold tracking-tighter text-slate-950">
+          <h2 className="mt-4 text-2xl md:text-4xl font-bold tracking-tighter text-blue-950">
             Ongoing Contribution Packages
           </h2>
           <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
@@ -117,89 +61,76 @@ const PackagesSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {packages.map((pkg, index) => {
-            const isExpanded = expanded === `pkg-${index}`;
-            return (
-              <div
-                key={index}
-                className="bg-white border border-slate-100 hover:border-amber-200 rounded-3xl p-8 flex flex-col h-full transition-all duration-300 hover:shadow-xl group"
-              >
-                <div className="inline-block px-4 py-1 bg-amber-100/40 text-amber-500 text-xs font-medium rounded-2xl mb-6 w-fit">
-                  {pkg.category}
-                </div>
-
-                <h3 className="text-xl font-semibold text-blue-950 mb-3 tracking-tight">
-                  {pkg.name}
-                </h3>
-
-                <div className="text-2xl font-bold text-amber-600 mb-8">
-                  {pkg.amount}
-                </div>
-
-                <div className="space-y-4 mb-6 text-sm">
-                  <div className="flex items-center gap-3 text-slate-600">
-                    <Clock className="w-5 h-5 text-slate-400" />
-                    <span>Duration: {pkg.duration}</span>
+        {isError ? (
+          <div className="text-center py-12 bg-white rounded-3xl border border-red-200">
+            <p className="text-red-600 mb-4 text-sm">Could not load packages. Please try again.</p>
+            <button onClick={() => refetch()} className="text-sm text-red-600 underline hover:text-red-700 cursor-pointer">
+              Retry
+            </button>
+          </div>
+        ) : displayPackages.length === 0 ? (
+          <div className="text-center py-12 text-slate-500 text-sm">No packages available right now.</div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {displayPackages.map((pkg) => {
+              const key = pkg.id;
+              const isExpanded = expanded === key;
+              return (
+                <div key={key} className="bg-white border border-amber-200 hover:border-amber-400 rounded-3xl p-8 flex flex-col h-full transition-all duration-300 hover:shadow-xl group">
+                  <div className="inline-block px-4 py-1 bg-amber-100/40 text-amber-700 text-xs font-medium rounded-2xl mb-6 w-fit">
+                    {getCategoryName(pkg.category)}
                   </div>
-                  <div className="flex items-center gap-3 text-slate-600">
-                    <Calendar className="w-5 h-5 text-slate-400" />
-                    <span>Frequency: {pkg.frequency}</span>
+                  <h3 className="text-xl font-semibold text-blue-950 mb-3 tracking-tight">{pkg.name}</h3>
+                  <div className="text-2xl font-bold text-amber-600 mb-8">{formatNaira(pkg.totalPrice)}</div>
+                  <div className="space-y-4 mb-6 text-sm">
+                    <div className="flex items-center gap-3 text-slate-600">
+                      <Clock className="w-5 h-5 text-slate-400" />
+                      <span>Duration: {pkg.duration} month{pkg.duration !== 1 ? 's' : ''}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-slate-600">
+                      <Calendar className="w-5 h-5 text-slate-400" />
+                      <span>Frequency: {formatFrequency(pkg.paymentFrequency)}</span>
+                    </div>
                   </div>
-                </div>
-
-                {/* Package Items */}
-                {pkg.items.length > 0 && (
-                  <div className="mb-6">
-                    <button
-                      onClick={() => setExpanded(isExpanded ? null : `pkg-${index}`)}
-                      className="flex items-center gap-1.5 text-xs text-amber-600 hover:text-amber-700 font-medium transition-colors cursor-pointer"
-                    >
-                      {pkg.items.length} item{pkg.items.length !== 1 ? 's' : ''} included
-                      <ChevronRight className={`w-3.5 h-3.5 transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`} />
+                  {pkg.items?.length > 0 && (
+                    <div className="mb-6">
+                      <button onClick={() => setExpanded(isExpanded ? null : key)}
+                        className="flex items-center gap-1.5 text-xs text-amber-600 hover:text-amber-700 font-medium transition-colors cursor-pointer">
+                        {pkg.items.length} item{pkg.items.length !== 1 ? 's' : ''} included
+                        <ChevronRight className={`w-3.5 h-3.5 transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`} />
+                      </button>
+                      {isExpanded && (
+                        <div className="mt-3 space-y-2 bg-slate-50 rounded-2xl p-3">
+                          {pkg.items.map((item, i) => (
+                            <div key={i} className="flex items-center justify-between text-sm">
+                              <span className="text-slate-700">{item.itemName}</span>
+                              <span className="text-slate-400 text-xs">{item.quantity}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <div className="text-[15px] text-slate-600 leading-relaxed mb-8 flex-1">{pkg.description}</div>
+                  <div className="mt-auto">
+                    <button onClick={() => handleJoin(pkg.id)}
+                      className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.985] cursor-pointer">
+                      <PackageIcon className="w-5 h-5" />
+                      Join Package
                     </button>
-                    {isExpanded && (
-                      <div className="mt-3 space-y-2 bg-slate-50 rounded-2xl p-3">
-                        {pkg.items.map((item, i) => (
-                          <div key={i} className="flex items-center justify-between text-sm">
-                            <span className="text-slate-700">{item.itemName}</span>
-                            <span className="text-slate-400 text-xs">{item.quantity}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
                   </div>
-                )}
-
-                <div className="text-[15px] text-slate-600 leading-relaxed mb-8 flex-1">
-                  {pkg.description}
                 </div>
-
-                <div className="mt-auto">
-                  <Link
-                    to="/signup"
-                    className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.985]"
-                  >
-                    <PackageIcon className="w-5 h-5" />
-                    Join Package
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
 
         <div className="flex justify-center mt-16">
-          <Link to="/browse">
-            <Button
-              variant="outline"
-              size="lg"
-              showArrow
-              className="font-medium text-base tracking-wide rounded-3xl cursor-pointer hover:bg-amber-600 hover:text-white hover:border-amber-700"
-            >
-              View All Packages
-            </Button>
-          </Link>
+          <Button variant="outline" size="lg" showArrow
+            onClick={() => navigate('/browse')}
+            className="font-medium text-base tracking-wide rounded-3xl cursor-pointer hover:bg-amber-600 hover:text-white hover:border-amber-700">
+            View All Packages
+          </Button>
         </div>
       </div>
     </section>

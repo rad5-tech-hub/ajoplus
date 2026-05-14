@@ -1,131 +1,105 @@
-// src/features/browse/BrowsePage.tsx
-import { useState } from 'react';
-import { Search, ArrowLeft, Package as PackageIcon } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Search, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useAuthStore } from '@/app/store/authStore';
+import { useCartStore } from '@/app/store/CartStore';
+import { useModalStore } from '@/app/store/ModalStore';
+import { fetchPublicPackages, fetchPublicProducts } from '@/api/public';
+import type { PublicProduct } from '@/api/public';
+import { formatNaira, formatFrequency, getCategoryName } from './types';
 import BrowseTabs from './components/BrowseTabs';
 import ProductCard from './components/ProductCard';
-import { useAvailablePackages } from '@/app/store/PackageStore';
-import { getProducts, type Product } from '@/api/product';
-import type { Package } from '@/api/package';
+import { useAddToCart } from '@/app/store/CartStore';
 
-// ─── Transform API Package → card item ────────────────────────────────────────
+type Tab = 'all' | 'packages' | 'products';
 
-function toPackageCardItem(pkg: Package) {
-  return {
-    id: pkg.id,
-    title: pkg.name,
-    price: typeof pkg.totalPrice === 'string' ? parseFloat(pkg.totalPrice) : pkg.totalPrice,
-    category: typeof pkg.category === 'string' ? pkg.category : pkg.category?.name ?? 'Package',
-    type: 'package' as const,
-    duration: `${pkg.duration} month${pkg.duration !== 1 ? 's' : ''}`,
-    frequency: pkg.paymentFrequency.charAt(0).toUpperCase() + pkg.paymentFrequency.slice(1),
-    description: pkg.description,
-    image: '',
-    packageItems: pkg.items?.map((i) => `${i.quantity} ${i.itemName}`) ?? [],
-  };
-}
-
-// ─── Transform API Product → card item ────────────────────────────────────────
-
-function toProductCardItem(product: Product) {
-  return {
-    id: product.id,
-    title: product.name,
-    price: typeof product.price === 'string' ? parseFloat(product.price) : product.price,
-    category: product.category?.name ?? 'Product',
-    type: 'product' as const,
-    duration: undefined,
-    frequency: undefined,
-    description: product.description,
-    image: product.imageUrl ?? '',
-    packageItems: [],
-    stockStatus: product.stockStatus,
-    quantityInStock: product.quantityInStock,
-  };
-}
-
-// ─── Skeleton ─────────────────────────────────────────────────────────────────
-
-function CardSkeleton() {
-  return (
-    <div className="bg-white border border-amber-200 rounded-3xl p-6 animate-pulse flex flex-col gap-4">
-      <div className="h-4 bg-slate-200 rounded-full w-1/3" />
-      <div className="h-5 bg-slate-200 rounded-full w-2/3" />
-      <div className="h-8 bg-slate-100 rounded-full w-1/2" />
-      <div className="h-3 bg-slate-100 rounded-full w-full" />
-      <div className="h-3 bg-slate-100 rounded-full w-4/5" />
-      <div className="mt-auto h-12 bg-slate-200 rounded-2xl" />
-    </div>
-  );
-}
-
-// ─── BrowsePage ───────────────────────────────────────────────────────────────
-
-const BrowsePage = () => {
+function BrowsePage() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'all' | 'packages' | 'products'>('all');
+  const { isAuthenticated } = useAuthStore();
+  const addToCartLocal = useCartStore((s) => s.addToCart);
+  const { mutate: addToCartAPI } = useAddToCart();
+  const { openModal } = useModalStore();
+  const productsTopRef = useRef<HTMLDivElement>(null);
+
+  const [activeTab, setActiveTab] = useState<Tab>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
+  const [page, setPage] = useState(1);
 
-  // Packages
-  const {
-    data: packages,
-    isLoading: packagesLoading,
-    error: packagesError,
-    refetch: refetchPackages,
-  } = useAvailablePackages();
-
-  // Products
-  const {
-    data: productsResp,
-    isLoading: productsLoading,
-    error: productsError,
-    refetch: refetchProducts,
-  } = useQuery({
-    queryKey: ['products', 'browse'],
-    queryFn: () => getProducts(1, 100),
+  const { data: packages = [], isLoading: pkgLoading, isError: pkgErr, refetch: refetchPkgs } = useQuery({
+    queryKey: ['publicPackages'],
+    queryFn: fetchPublicPackages,
     staleTime: 5 * 60 * 1000,
   });
 
-  const isLoading = packagesLoading || productsLoading;
-  const error = packagesError || productsError;
+  const { data: productsResp, isLoading: prodLoading, isError: prodErr, refetch: refetchProds } = useQuery({
+    queryKey: ['publicProducts', page],
+    queryFn: () => fetchPublicProducts(page),
+    staleTime: 5 * 60 * 1000,
+  });
 
-  const refetchAll = () => {
-    refetchPackages();
-    refetchProducts();
-  };
+  useEffect(() => { productsTopRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [page]);
 
-  // Merge both data sources into a unified list
-  const packageItems = (packages ?? []).map(toPackageCardItem);
-  const productItems = (productsResp?.products ?? []).map(toProductCardItem);
-  const allItems = [...packageItems, ...productItems];
+  const products = productsResp?.products ?? [];
+  const pagination = productsResp?.pagination;
+  const isLoading = pkgLoading || prodLoading;
+  const isError = pkgErr || prodErr;
 
-  // Derive category list from live data
-  const categories = [
+  const refetchAll = () => { refetchPkgs(); refetchProds(); };
+
+  function handleJoinPackage(pkgId: string) {
+    if (!isAuthenticated) { navigate(`/signup?redirect=/browse&packageId=${pkgId}`); return; }
+    navigate(`/dashboard/customer/package/${pkgId}`);
+  }
+
+  function handleAddToCart(product: PublicProduct) {
+    addToCartLocal({
+      id: product.id, title: product.name, price: parseFloat(product.price),
+      image: product.imageUrl, type: 'product',
+    });
+    addToCartAPI({ itemId: product.id, type: 'product', quantity: 1, price: parseFloat(product.price) }, {
+      onSuccess: () => {
+        openModal({ type: 'success', title: 'Added to Cart', message: `${product.name} has been added successfully.` });
+        setTimeout(() => useModalStore.getState().closeModal(), 2500);
+      },
+      onError: () => {
+        openModal({ type: 'error', title: 'Failed to Add to Cart', message: 'Please try again' });
+        setTimeout(() => useModalStore.getState().closeModal(), 2500);
+      },
+    });
+  }
+
+  // Derived categories
+  const allCategories = [
     'All Categories',
-    ...Array.from(new Set(allItems.map((i) => i.category))),
+    ...Array.from(new Set([
+      ...packages.map((p) => getCategoryName(p.category)),
+      ...products.map((p) => p.category?.name ?? 'Product'),
+    ])),
   ];
 
-  const filteredItems = allItems.filter((item) => {
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      selectedCategory === 'All Categories' || item.category === selectedCategory;
-    const matchesTab =
-      activeTab === 'all' ||
-      (activeTab === 'packages' && item.type === 'package') ||
-      (activeTab === 'products' && item.type === 'product');
-    return matchesSearch && matchesCategory && matchesTab;
+  // Filtered data per tab
+  const filteredPackages = packages.filter((p) => {
+    const name = p.name.toLowerCase();
+    const cat = getCategoryName(p.category).toLowerCase();
+    const q = searchTerm.toLowerCase();
+    return name.includes(q) || cat.includes(q);
+  });
+
+  const filteredProducts = products.filter((p) => {
+    const name = p.name.toLowerCase();
+    const cat = (p.category?.name ?? '').toLowerCase();
+    const q = searchTerm.toLowerCase();
+    const catMatch = selectedCategory === 'All Categories' || (p.category?.name ?? '') === selectedCategory;
+    return catMatch && (name.includes(q) || cat.includes(q));
   });
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-20">
-
-        <button
-          onClick={() => navigate(-1)}
-          className="flex cursor-pointer mb-2 items-center gap-2 text-slate-600 hover:text-amber-800 transition-colors"
-        >
+        <button onClick={() => navigate(-1)}
+          className="flex cursor-pointer mb-2 items-center gap-2 text-slate-600 hover:text-amber-800 transition-colors">
           <ArrowLeft className="w-3 h-3" />
           <span className="font-medium text-sm">Back</span>
         </button>
@@ -139,80 +113,140 @@ const BrowsePage = () => {
           </p>
         </div>
 
-        <BrowseTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        <BrowseTabs activeTab={activeTab} onTabChange={(t) => { setActiveTab(t); setPage(1); }} />
 
         {/* Search & Filter */}
-        <div className="mt-10 bg-white rounded-3xl shadow-sm border border-slate-100 p-2">
+        <div ref={productsTopRef} className="mt-10 bg-white rounded-3xl shadow-sm border border-amber-200 p-2">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative group">
               <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 transition-colors group-focus-within:text-amber-500" />
-              <input
-                type="text"
-                placeholder="Search packages and products..."
-                value={searchTerm}
+              <input type="text" placeholder="Search packages and products..." value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-14 pr-6 py-4 bg-transparent border border-transparent focus:border-amber-200 rounded-2xl focus:outline-none text-base placeholder:text-slate-400"
-              />
+                className="w-full pl-14 pr-6 py-4 bg-transparent border border-transparent focus:border-amber-200 rounded-2xl focus:outline-none text-base placeholder:text-slate-400" />
             </div>
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="bg-white border border-amber-200 px-6 py-4 rounded-2xl focus:outline-none focus:border-amber-500 text-base w-full md:w-80 cursor-pointer"
-            >
-              {categories.map((cat) => (
-                <option key={cat}>{cat}</option>
-              ))}
-            </select>
+            {activeTab !== 'packages' && (
+              <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}
+                className="bg-white border border-amber-200 px-6 py-4 rounded-2xl focus:outline-none focus:border-amber-500 text-base w-full md:w-80 cursor-pointer">
+                {allCategories.map((cat) => <option key={cat}>{cat}</option>)}
+              </select>
+            )}
           </div>
         </div>
 
         {/* Loading */}
         {isLoading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-            {Array.from({ length: 6 }).map((_, i) => <CardSkeleton key={i} />)}
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="bg-white border border-amber-200 rounded-3xl p-6 animate-pulse flex flex-col gap-4">
+                <div className="h-4 bg-slate-200 rounded-full w-1/3" />
+                <div className="h-5 bg-slate-200 rounded-full w-2/3" />
+                <div className="h-8 bg-slate-100 rounded-full w-1/2" />
+                <div className="h-3 bg-slate-100 rounded-full w-full" />
+                <div className="h-3 bg-slate-100 rounded-full w-4/5" />
+                <div className="mt-auto h-12 bg-slate-200 rounded-2xl" />
+              </div>
+            ))}
           </div>
         )}
 
         {/* Error */}
-        {error && !isLoading && (
+        {isError && !isLoading && (
           <div className="mt-12 text-center py-16 bg-white rounded-3xl border border-red-200">
             <p className="text-red-600 mb-4">Failed to load items. Please try again.</p>
-            <button
-              onClick={refetchAll}
-              className="text-sm text-red-600 underline hover:text-red-700 cursor-pointer"
-            >
-              Retry
-            </button>
+            <button onClick={refetchAll} className="text-sm text-red-600 underline hover:text-red-700 cursor-pointer">Retry</button>
           </div>
         )}
 
         {/* Results */}
-        {!isLoading && !error && (
+        {!isLoading && !isError && (
           <>
-            <p className="mt-8 text-sm text-slate-500 font-medium">
-              Showing {filteredItems.length} result{filteredItems.length !== 1 ? 's' : ''}
-            </p>
+            {/* Packages Tab */}
+            {(activeTab === 'all' || activeTab === 'packages') && (
+              <div className="mt-8">
+                <h2 className="text-xl font-semibold text-blue-950 mb-4">
+                  {activeTab === 'all' ? 'Contribution Packages' : 'All Packages'}
+                </h2>
+                {filteredPackages.length === 0 ? (
+                  <div className="text-center py-10 bg-white rounded-3xl border border-amber-200 mb-6">
+                    <p className="text-slate-500">No packages found.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    {filteredPackages.map((pkg) => (
+                      <div key={pkg.id} className="bg-white border border-amber-200 rounded-3xl p-6 flex flex-col h-full hover:shadow-lg transition-shadow">
+                        <div className="inline-block px-3 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded-2xl mb-3 w-fit">
+                          {getCategoryName(pkg.category)}
+                        </div>
+                        <h3 className="font-semibold text-lg text-blue-950 mb-2">{pkg.name}</h3>
+                        <p className="text-2xl font-bold text-amber-600 mb-4">{formatNaira(pkg.totalPrice)}</p>
+                        <div className="text-sm text-slate-500 mb-3 space-y-1">
+                          <p>Duration: {pkg.duration} month{pkg.duration !== 1 ? 's' : ''}</p>
+                          <p>Frequency: {formatFrequency(pkg.paymentFrequency)}</p>
+                        </div>
+                        {pkg.items?.length > 0 && (
+                          <div className="mb-3 text-sm">
+                            <p className="font-medium text-slate-700 mb-1">Includes:</p>
+                            <ul className="space-y-1">
+                              {pkg.items.slice(0, 3).map((item, i) => (
+                                <li key={i} className="text-slate-500 text-xs">• {item.quantity} {item.itemName}</li>
+                              ))}
+                              {pkg.items.length > 3 && <li className="text-xs text-slate-400">+{pkg.items.length - 3} more</li>}
+                            </ul>
+                          </div>
+                        )}
+                        <p className="text-xs text-slate-400 flex-1 line-clamp-2 mb-4">{pkg.description}</p>
+                        <button onClick={() => handleJoinPackage(pkg.id)}
+                          className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-2xl text-sm transition-all active:scale-[0.985] cursor-pointer">
+                          Join Package
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-              {filteredItems.map((item) => (
-                <ProductCard key={item.id} item={item} />
-              ))}
-            </div>
+            {/* Products Tab */}
+            {(activeTab === 'all' || activeTab === 'products') && (
+              <div className="mt-8">
+                <h2 className="text-xl font-semibold text-blue-950 mb-4">
+                  {activeTab === 'all' ? 'One-Time Products' : 'All Products'}
+                </h2>
+                {filteredProducts.length === 0 ? (
+                  <div className="text-center py-10 bg-white rounded-3xl border border-amber-200">
+                    <p className="text-slate-500">No products found.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredProducts.map((product) => (
+                      <ProductCard key={product.id} product={product} onAddToCart={handleAddToCart} />
+                    ))}
+                  </div>
+                )}
 
-            {filteredItems.length === 0 && (
-              <div className="text-center py-20 bg-white rounded-3xl border border-amber-200 mt-4">
-                <div className="mx-auto w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
-                  <PackageIcon className="w-8 h-8 text-slate-400" />
-                </div>
-                <p className="text-slate-500 text-lg">No items found matching your search.</p>
+                {/* Pagination */}
+                {pagination && pagination.totalPages > 1 && (
+                  <div className="flex items-center justify-between mt-8 bg-white border border-amber-200 rounded-2xl px-5 py-3">
+                    <p className="text-sm text-slate-500">Page {pagination.page} of {pagination.totalPages}</p>
+                    <div className="flex gap-2">
+                      <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1}
+                        className="px-4 py-2 border border-amber-200 rounded-2xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
+                        Previous
+                      </button>
+                      <button onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))} disabled={page >= pagination.totalPages}
+                        className="px-4 py-2 border border-amber-200 rounded-2xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </>
         )}
-
       </div>
     </div>
   );
-};
+}
 
 export default BrowsePage;

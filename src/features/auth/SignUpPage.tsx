@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '@/app/store/authStore';
 import RegistrationFeeModal from './components/RegistrationFeeModal';
+import CameraCaptureModal from '@/components/ui/CameraCaptureModal';
 type Step = 1 | 2 | 3 | 4 | 5;
 
 const NIGERIAN_STATES = [
@@ -48,8 +49,8 @@ const SignupPage = () => {
   const [localError, setLocalError] = useState('');
 
   const [showFeeModal, setShowFeeModal] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
 
-  const cameraInputRef = useRef<HTMLInputElement>(null);
   const uploadInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
@@ -195,6 +196,11 @@ const SignupPage = () => {
         userName={formData.fullName}
         onComplete={() => navigate('/login')}
       />
+      <CameraCaptureModal
+        isOpen={showCamera}
+        onClose={() => setShowCamera(false)}
+        onCapture={(file) => handleImageFile(file)}
+      />
       <div className="w-full max-w-md">
         <Link to="/" className="flex items-center gap-2 text-white/80 hover:text-white mb-8 transition-colors">
           <ArrowLeft className="w-5 h-5" />
@@ -286,8 +292,8 @@ const SignupPage = () => {
                     <div className="flex gap-3">
                       <button
                         type="button"
-                        onClick={() => cameraInputRef.current?.click()}
-                        className="flex-1 flex flex-col items-center gap-2 p-4 border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 hover:bg-amber-50 transition-all group"
+                        onClick={() => setShowCamera(true)}
+                        className="flex-1 flex flex-col items-center gap-2 p-4 border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 hover:bg-amber-50 transition-all group cursor-pointer"
                       >
                         <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-amber-100 flex items-center justify-center transition-colors">
                           <Camera className="w-5 h-5 text-slate-400 group-hover:text-amber-600 transition-colors" />
@@ -310,14 +316,6 @@ const SignupPage = () => {
                         </span>
                       </button>
 
-                      <input
-                        ref={cameraInputRef}
-                        type="file"
-                        accept="image/*"
-                        capture="user"
-                        className="sr-only"
-                        onChange={(e) => handleImageFile(e.target.files?.[0])}
-                      />
                       <input
                         ref={uploadInputRef}
                         type="file"
