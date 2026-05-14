@@ -1,5 +1,5 @@
 // src/features/customer/packages/PackageDetail.tsx
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   ArrowLeft,
   Calendar,
@@ -237,10 +237,11 @@ const PackageDetail = () => {
         </div>
         <ul className="space-y-2 sm:space-y-3 text-xs sm:text-sm text-slate-500">
           {[
-            'Contributions must be made on time to maintain package status',
-            'Grace period of 7 days for missed payments',
-            'Package delivery upon 100% completion',
-            'All payments are non-refundable',
+            'A N1,000 registration fee is added to each package price.',
+            'Food items will be delivered on or before 30 days of completion.',
+            'No refund of money is accepted on package contributions.',
+            'Multiple packages can be registered at the same time.',
+            'A well detailed delivery address must be provided during registration.',
           ].map((term) => (
             <li key={term} className="flex gap-2 leading-relaxed">
               <span className="text-emerald-500 mt-0.5 shrink-0">•</span>
@@ -248,6 +249,12 @@ const PackageDetail = () => {
             </li>
           ))}
         </ul>
+        <Link
+          to="/terms"
+          className="inline-block mt-3 text-emerald-600 hover:text-emerald-700 text-xs font-medium underline"
+        >
+          View full terms and conditions
+        </Link>
       </div>
     </div>
   );

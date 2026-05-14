@@ -32,6 +32,7 @@ const MakePayment = lazy(() => import('@/features/customer/Payments/MakePayment'
 const SavingsManagement = lazy(() => import('@/features/customer/savings/SavingsManagement'));
 const ShoppingCart = lazy(() => import('@/features/cart/ShoppingCart'));
 const Checkout = lazy(() => import('@/features/cart/Checkout'));
+const TermsAndConditions = lazy(() => import('@/features/legal/TermsAndConditions'));
 const PaymentSuccess = lazy(() => import('@/components/ui/PaymentSuccess'));
 
 const AppRouter = () => {
@@ -90,6 +91,14 @@ const AppRouter = () => {
         element={
           <Suspense fallback={<RouteSuspenseFallback />}>
             <BrowsePage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/terms"
+        element={
+          <Suspense fallback={<RouteSuspenseFallback />}>
+            <TermsAndConditions />
           </Suspense>
         }
       />

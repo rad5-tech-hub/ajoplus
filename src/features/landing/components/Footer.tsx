@@ -54,10 +54,7 @@ const QUICK_LINKS: { label: string; href: string; isAnchor: boolean }[] = [
 
 // Legal links — plain # for now, swap with real routes/pages when ready
 const LEGAL_LINKS: { label: string; href: string }[] = [
-  { label: 'Terms of Service', href: '#' },
-  { label: 'Privacy Policy', href: '#' },
-  { label: 'Cookie Policy', href: '#' },
-  { label: 'Contact Us', href: '#' },
+  { label: 'Terms & Conditions', href: '/terms' },
 ];
 
 const linkCls = 'text-[13.5px] text-blue-200/55 hover:text-white transition-colors duration-200';
