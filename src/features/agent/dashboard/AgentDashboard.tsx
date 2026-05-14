@@ -26,7 +26,7 @@ const AgentDashboard = () => {
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="mb-10">
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900">Agent Dashboard</h1>
+          <h1 className="text-4xl font-bold tracking-tight text-blue-950">Agent Dashboard</h1>
           <p className="text-slate-600 mt-1">Track your referrals and earnings</p>
         </div>
 

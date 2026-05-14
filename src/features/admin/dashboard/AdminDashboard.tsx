@@ -38,7 +38,7 @@ const AdminDashboard = () => {
         {/* Header */}
         <div className="flex flex-col xs:flex-row xs:items-start xs:justify-between gap-2 xs:gap-4 mb-7 sm:mb-10">
           <div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 leading-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-blue-950 leading-tight">
               Admin Dashboard
             </h1>
             <p className="text-slate-600 mt-1 text-sm sm:text-base">
@@ -49,7 +49,7 @@ const AdminDashboard = () => {
             <button
               type="button"
               onClick={() => navigate('/dashboard/admin/savings')}
-              className="rounded-2xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 transition-colors"
+              className="rounded-2xl bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700 transition-colors"
             >
               Savings Overview
             </button>
@@ -65,13 +65,13 @@ const AdminDashboard = () => {
         {/* Tabs */}
         <div className="mt-8 sm:mt-12 mb-6 sm:mb-10">
           {/* Scrollable tab strip */}
-          <div className="flex border-b border-slate-200 overflow-x-auto scrollbar-none -mx-4 sm:mx-0 px-4 sm:px-0">
+          <div className="flex border-b border-amber-200 overflow-x-auto scrollbar-none -mx-4 sm:mx-0 px-4 sm:px-0">
             {TABS.map(({ key, label, shortLabel }) => (
               <button
                 key={key}
                 onClick={() => setActiveTab(key)}
                 className={`pb-3 sm:pb-4 px-4 sm:px-8 font-medium whitespace-nowrap transition-colors border-b-2 text-sm sm:text-base shrink-0 ${activeTab === key
-                  ? 'border-emerald-600 text-emerald-600'
+                  ? 'border-amber-600 text-amber-600'
                   : 'border-transparent text-slate-500 hover:text-slate-700'
                   }`}
               >

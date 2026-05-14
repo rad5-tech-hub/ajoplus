@@ -70,7 +70,7 @@ function BannerVariant({ ad, onDismiss, className, ...rest }: VariantProps) {
 	return (
 		<div
 			className={cn(
-				'relative w-full bg-gradient-to-r from-emerald-600 to-emerald-500',
+				'relative w-full bg-gradient-to-r from-amber-600 to-amber-500',
 				'px-4 py-5 sm:px-6',
 				className,
 			)}
@@ -80,7 +80,7 @@ function BannerVariant({ ad, onDismiss, className, ...rest }: VariantProps) {
 				{/* Left: badge + copy */}
 				<div className="flex flex-col gap-1 pr-8">
 					{ad.badge && (
-						<span className="inline-block w-fit text-xs font-semibold uppercase tracking-wider text-emerald-100 bg-white/20 rounded-full px-2.5 py-0.5">
+						<span className="inline-block w-fit text-xs font-semibold uppercase tracking-wider text-amber-100 bg-white/20 rounded-full px-2.5 py-0.5">
 							{ad.badge}
 						</span>
 					)}
@@ -88,7 +88,7 @@ function BannerVariant({ ad, onDismiss, className, ...rest }: VariantProps) {
 						{ad.headline}
 					</p>
 					{ad.subtext && (
-						<p className="text-emerald-100 text-sm leading-relaxed">{ad.subtext}</p>
+						<p className="text-amber-100 text-sm leading-relaxed">{ad.subtext}</p>
 					)}
 				</div>
 
@@ -98,9 +98,9 @@ function BannerVariant({ ad, onDismiss, className, ...rest }: VariantProps) {
 						href={ad.cta.href}
 						className={cn(
 							'flex-shrink-0 inline-flex items-center gap-1.5',
-							'bg-white text-emerald-700 font-semibold text-sm',
+							'bg-white text-amber-700 font-semibold text-sm',
 							'px-4 py-2.5 rounded-2xl',
-							'hover:bg-emerald-50 active:scale-95 transition-all duration-200',
+							'hover:bg-amber-50 active:scale-95 transition-all duration-200',
 							'focus:outline-none focus:ring-2 focus:ring-white/60',
 						)}
 						rel="noopener noreferrer"
@@ -122,7 +122,7 @@ function CardVariant({ ad, onDismiss, className, ...rest }: VariantProps) {
 	return (
 		<div
 			className={cn(
-				'relative w-full border border-slate-200 bg-white rounded-2xl overflow-hidden',
+				'relative w-full border border-amber-200 bg-white rounded-2xl overflow-hidden',
 				'shadow-sm',
 				className,
 			)}
@@ -145,7 +145,7 @@ function CardVariant({ ad, onDismiss, className, ...rest }: VariantProps) {
 				<div className="flex-1 p-5 flex flex-col justify-center gap-3 pr-10">
 					{ad.badge && <AdBadge label={ad.badge} />}
 					<div>
-						<p className="text-slate-900 font-semibold text-base leading-snug">
+						<p className="text-blue-950 font-semibold text-base leading-snug">
 							{ad.headline}
 						</p>
 						{ad.subtext && (
@@ -157,10 +157,10 @@ function CardVariant({ ad, onDismiss, className, ...rest }: VariantProps) {
 							href={ad.cta.href}
 							className={cn(
 								'self-start inline-flex items-center gap-1.5',
-								'bg-emerald-600 text-white font-semibold text-sm',
+								'bg-amber-600 text-white font-semibold text-sm',
 								'px-4 py-2 rounded-2xl',
-								'hover:bg-emerald-700 active:scale-95 transition-all duration-200',
-								'focus:outline-none focus:ring-2 focus:ring-emerald-500',
+								'hover:bg-amber-700 active:scale-95 transition-all duration-200',
+								'focus:outline-none focus:ring-2 focus:ring-amber-500',
 							)}
 							rel="noopener noreferrer"
 						>
@@ -181,7 +181,7 @@ function InlineVariant({ ad, onDismiss, className, ...rest }: VariantProps) {
 	return (
 		<div
 			className={cn(
-				'relative w-full bg-slate-50 border border-slate-200 rounded-2xl',
+				'relative w-full bg-slate-50 border border-amber-200 rounded-2xl',
 				'px-4 py-3 pr-10',
 				'flex flex-wrap items-center gap-x-3 gap-y-1',
 				className,
@@ -200,10 +200,10 @@ function InlineVariant({ ad, onDismiss, className, ...rest }: VariantProps) {
 				<a
 					href={ad.cta.href}
 					className={cn(
-						'ml-auto text-emerald-600 text-sm font-semibold',
-						'hover:text-emerald-700 underline-offset-2 hover:underline',
+						'ml-auto text-amber-600 text-sm font-semibold',
+						'hover:text-amber-700 underline-offset-2 hover:underline',
 						'active:scale-95 transition-all duration-200',
-						'focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded',
+						'focus:outline-none focus:ring-2 focus:ring-amber-500 rounded',
 					)}
 					rel="noopener noreferrer"
 				>
@@ -222,7 +222,7 @@ function InlineVariant({ ad, onDismiss, className, ...rest }: VariantProps) {
 
 function AdBadge({ label }: { label: string }) {
 	return (
-		<span className="inline-block text-xs font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-2.5 py-0.5">
+		<span className="inline-block text-xs font-semibold uppercase tracking-wider text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2.5 py-0.5">
 			{label}
 		</span>
 	);

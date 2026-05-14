@@ -35,7 +35,7 @@ const ReceiptPreviewModal = ({ isOpen, onClose, receiptId }: ReceiptPreviewModal
           >
             Close
           </button>
-          <button className="flex-1 py-4 bg-emerald-600 text-white rounded-2xl font-semibold flex items-center justify-center gap-2 text-base cursor-pointer">
+          <button className="flex-1 py-4 bg-amber-600 text-white rounded-2xl font-semibold flex items-center justify-center gap-2 text-base cursor-pointer">
             <Download className="w-5 h-5" /> Download
           </button>
         </div>

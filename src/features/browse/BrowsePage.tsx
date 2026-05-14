@@ -49,7 +49,7 @@ function toProductCardItem(product: Product) {
 
 function CardSkeleton() {
   return (
-    <div className="bg-white border border-slate-200 rounded-3xl p-6 animate-pulse flex flex-col gap-4">
+    <div className="bg-white border border-amber-200 rounded-3xl p-6 animate-pulse flex flex-col gap-4">
       <div className="h-4 bg-slate-200 rounded-full w-1/3" />
       <div className="h-5 bg-slate-200 rounded-full w-2/3" />
       <div className="h-8 bg-slate-100 rounded-full w-1/2" />
@@ -124,14 +124,14 @@ const BrowsePage = () => {
 
         <button
           onClick={() => navigate(-1)}
-          className="flex cursor-pointer mb-2 items-center gap-2 text-slate-600 hover:text-emerald-900 transition-colors"
+          className="flex cursor-pointer mb-2 items-center gap-2 text-slate-600 hover:text-amber-800 transition-colors"
         >
           <ArrowLeft className="w-3 h-3" />
           <span className="font-medium text-sm">Back</span>
         </button>
 
         <div className="mb-10">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-blue-950 leading-tight">
             Discover Premium Packages & Products
           </h1>
           <p className="text-slate-600 mt-3 text-base sm:text-lg max-w-2xl">
@@ -145,19 +145,19 @@ const BrowsePage = () => {
         <div className="mt-10 bg-white rounded-3xl shadow-sm border border-slate-100 p-2">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative group">
-              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 transition-colors group-focus-within:text-emerald-500" />
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 transition-colors group-focus-within:text-amber-500" />
               <input
                 type="text"
                 placeholder="Search packages and products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-14 pr-6 py-4 bg-transparent border border-transparent focus:border-emerald-200 rounded-2xl focus:outline-none text-base placeholder:text-slate-400"
+                className="w-full pl-14 pr-6 py-4 bg-transparent border border-transparent focus:border-amber-200 rounded-2xl focus:outline-none text-base placeholder:text-slate-400"
               />
             </div>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="bg-white border border-slate-200 px-6 py-4 rounded-2xl focus:outline-none focus:border-emerald-500 text-base w-full md:w-80 cursor-pointer"
+              className="bg-white border border-amber-200 px-6 py-4 rounded-2xl focus:outline-none focus:border-amber-500 text-base w-full md:w-80 cursor-pointer"
             >
               {categories.map((cat) => (
                 <option key={cat}>{cat}</option>
@@ -200,7 +200,7 @@ const BrowsePage = () => {
             </div>
 
             {filteredItems.length === 0 && (
-              <div className="text-center py-20 bg-white rounded-3xl border border-slate-200 mt-4">
+              <div className="text-center py-20 bg-white rounded-3xl border border-amber-200 mt-4">
                 <div className="mx-auto w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
                   <PackageIcon className="w-8 h-8 text-slate-400" />
                 </div>

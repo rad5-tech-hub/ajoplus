@@ -33,7 +33,7 @@ const TableRowSkeleton = () => (
 
 // ── Skeleton card for mobile ─────────────────────────────────────────────────
 const CardSkeleton = () => (
-  <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+  <div className="bg-white border border-amber-200 rounded-2xl overflow-hidden">
     <div className="w-full h-40 bg-slate-200 animate-pulse" />
     <div className="p-4 space-y-3">
       <div className="space-y-2">
@@ -62,8 +62,8 @@ const CardSkeleton = () => (
 // ── Empty state ──────────────────────────────────────────────────────────────
 const EmptyState = ({ onCreateClick }: { onCreateClick: () => void }) => (
   <div className="bg-white rounded-3xl border border-slate-100 flex flex-col items-center justify-center py-20 px-6 text-center">
-    <div className="w-20 h-20 bg-emerald-50 rounded-3xl flex items-center justify-center mb-5">
-      <PackageSearch className="w-10 h-10 text-emerald-500" />
+    <div className="w-20 h-20 bg-amber-50 rounded-3xl flex items-center justify-center mb-5">
+      <PackageSearch className="w-10 h-10 text-amber-500" />
     </div>
     <h3 className="text-xl font-bold text-slate-800 mb-2">No products yet</h3>
     <p className="text-slate-500 text-sm max-w-xs mb-6">
@@ -71,7 +71,7 @@ const EmptyState = ({ onCreateClick }: { onCreateClick: () => void }) => (
     </p>
     <button
       onClick={onCreateClick}
-      className="cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white px-8 py-3 rounded-2xl font-semibold text-sm flex items-center gap-2"
+      className="cursor-pointer bg-amber-600 hover:bg-amber-700 active:scale-95 transition-all text-white px-8 py-3 rounded-2xl font-semibold text-sm flex items-center gap-2"
     >
       + Create Product
     </button>
@@ -117,7 +117,7 @@ const ProductManagement = () => {
     <div>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
-        <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">All Products</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold text-blue-950">All Products</h2>
         <div className="flex gap-3 flex-wrap">
           <button
             onClick={() => setIsCategoryModalOpen(true)}
@@ -127,7 +127,7 @@ const ProductManagement = () => {
           </button>
           <button
             onClick={() => setIsCreateModalOpen(true)}
-            className="cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white px-4 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base whitespace-nowrap flex items-center gap-1.5"
+            className="cursor-pointer bg-amber-600 hover:bg-amber-700 active:scale-95 transition-all text-white px-4 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base whitespace-nowrap flex items-center gap-1.5"
           >
             + <span className="xs:inline">Create</span> Product
           </button>
@@ -169,7 +169,7 @@ const ProductManagement = () => {
                         className="w-12 h-12 rounded-lg object-cover"
                       />
                       <div>
-                        <p className="font-semibold text-slate-900 text-sm lg:text-base">{product.name}</p>
+                        <p className="font-semibold text-blue-950 text-sm lg:text-base">{product.name}</p>
                         <p className="text-xs text-slate-500 mt-0.5 max-w-60 line-clamp-1">{product.description}</p>
                       </div>
                     </div>
@@ -179,7 +179,7 @@ const ProductManagement = () => {
                       {product.category?.name ?? product.categoryId}
                     </span>
                   </td>
-                  <td className="py-5 px-4 font-semibold text-emerald-600 text-sm whitespace-nowrap">
+                  <td className="py-5 px-4 font-semibold text-amber-600 text-sm whitespace-nowrap">
                     ₦{Number(product.price).toLocaleString()}
                   </td>
                   <td className="py-5 px-4 text-slate-600 text-sm whitespace-nowrap">
@@ -188,7 +188,7 @@ const ProductManagement = () => {
                   <td className="py-5 px-4">
                     <span
                       className={`px-3 py-1 text-xs font-medium rounded-xl whitespace-nowrap ${product.quantityInStock > 10
-                        ? 'bg-emerald-100 text-emerald-700'
+                        ? 'bg-amber-100 text-amber-700'
                         : product.quantityInStock > 0
                           ? 'bg-yellow-100 text-yellow-700'
                           : 'bg-red-100 text-red-700'
@@ -203,7 +203,7 @@ const ProductManagement = () => {
                         event.stopPropagation();
                         // TODO: open edit product flow
                       }}
-                      className="text-emerald-600 hover:text-emerald-700 hover:underline cursor-pointer mr-4 text-sm font-medium transition-colors inline-flex items-center gap-1"
+                      className="text-amber-600 hover:text-amber-700 hover:underline cursor-pointer mr-4 text-sm font-medium transition-colors inline-flex items-center gap-1"
                     >
                       <Edit2 className="w-3 h-3" /> Edit
                     </button>
@@ -238,7 +238,7 @@ const ProductManagement = () => {
               <div
                 key={product.id}
                 onClick={() => handleRowClick(product.id)}
-                className="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:border-slate-300 transition-colors cursor-pointer"
+                className="bg-white border border-amber-200 rounded-2xl overflow-hidden hover:border-slate-300 transition-colors cursor-pointer"
               >
                 <img
                   src={
@@ -251,7 +251,7 @@ const ProductManagement = () => {
                 />
                 <div className="p-4 space-y-3">
                   <div>
-                    <h3 className="font-semibold text-slate-900 text-base">{product.name}</h3>
+                    <h3 className="font-semibold text-blue-950 text-base">{product.name}</h3>
                     <p className="text-xs text-slate-500 mt-1 line-clamp-2">{product.description}</p>
                   </div>
 
@@ -261,7 +261,7 @@ const ProductManagement = () => {
                     </span>
                     <span
                       className={`px-3 py-1 text-xs font-medium rounded-xl ${product.quantityInStock > 10
-                        ? 'bg-emerald-100 text-emerald-700'
+                        ? 'bg-amber-100 text-amber-700'
                         : product.quantityInStock > 0
                           ? 'bg-yellow-100 text-yellow-700'
                           : 'bg-red-100 text-red-700'
@@ -273,7 +273,7 @@ const ProductManagement = () => {
 
                   <div className="flex items-center justify-between pt-2">
                     <div>
-                      <p className="text-2xl font-bold text-emerald-600">
+                      <p className="text-2xl font-bold text-amber-600">
                         ₦{Number(product.price).toLocaleString()}
                       </p>
                       <p className="text-xs text-slate-500 mt-1">{product.quantityInStock} units</p>
@@ -284,7 +284,7 @@ const ProductManagement = () => {
                           event.stopPropagation();
                           setIsCreateModalOpen(true);
                         }}
-                        className="px-3 py-2 text-emerald-600 hover:bg-emerald-50 rounded-xl text-sm font-medium transition-colors inline-flex items-center gap-1"
+                        className="px-3 py-2 text-amber-600 hover:bg-amber-50 rounded-xl text-sm font-medium transition-colors inline-flex items-center gap-1"
                       >
                         <Edit2 className="w-4 h-4" /> Edit
                       </button>
@@ -315,7 +315,7 @@ const ProductManagement = () => {
             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mb-4 mx-auto">
               <AlertTriangle className="w-6 h-6 text-red-600" />
             </div>
-            <h3 className="text-xl font-bold text-center text-slate-900 mb-2">Delete Product?</h3>
+            <h3 className="text-xl font-bold text-center text-blue-950 mb-2">Delete Product?</h3>
             <p className="text-center text-slate-600 mb-6">
               Are you sure you want to delete this product? This action cannot be undone.
             </p>

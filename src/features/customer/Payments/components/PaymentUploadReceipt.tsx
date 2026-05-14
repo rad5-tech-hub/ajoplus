@@ -144,7 +144,7 @@ const PaymentUploadReceipt = ({
   return (
     <div className="space-y-8">
       <div className="bg-white rounded-3xl p-8 border border-slate-100">
-        <h2 className="text-2xl font-semibold text-slate-900 mb-8">Upload Payment Receipt</h2>
+        <h2 className="text-2xl font-semibold text-blue-950 mb-8">Upload Payment Receipt</h2>
 
         {/* ── Inline Error Banner ──────────────────────────────────────────── */}
         {submitError && (
@@ -171,7 +171,7 @@ const PaymentUploadReceipt = ({
             onChange={(e) => { setAmountPaid(e.target.value.replace(/[^0-9.]/g, '')); setSubmitError(null); }}
             placeholder="Enter amount"
             disabled={isSubmitting}
-            className="w-full bg-white border-2 border-emerald-500 focus:border-emerald-600 rounded-2xl px-5 py-4 text-lg focus:outline-none transition-all disabled:opacity-50"
+            className="w-full bg-white border-2 border-amber-500 focus:border-amber-600 rounded-2xl px-5 py-4 text-lg focus:outline-none transition-all disabled:opacity-50"
           />
           <p className="text-xs text-slate-500 mt-2">
             Expected: {formatCurrency(expectedAmount, 'NGN')} ({formatCurrency(convertToUSD(expectedAmount), 'USD')})
@@ -191,7 +191,7 @@ const PaymentUploadReceipt = ({
               onDrop={handleDrop}
               onClick={() => !isSubmitting && fileInputRef.current?.click()}
               className={`border-2 border-dashed rounded-3xl p-12 text-center transition-all cursor-pointer min-h-48 flex flex-col items-center justify-center
-                ${isDragging ? 'border-emerald-600 bg-emerald-50' : 'border-slate-300 hover:border-slate-400'}
+                ${isDragging ? 'border-amber-600 bg-amber-50' : 'border-slate-300 hover:border-slate-400'}
                 ${isSubmitting ? 'opacity-50 pointer-events-none' : ''}`}
             >
               <div className="mx-auto w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-6">
@@ -204,13 +204,13 @@ const PaymentUploadReceipt = ({
               </button>
             </div>
           ) : (
-            <div className="border-2 border-emerald-200 bg-emerald-50 rounded-3xl p-8 text-center">
-              <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-9 h-9 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="border-2 border-amber-200 bg-amber-50 rounded-3xl p-8 text-center">
+              <div className="mx-auto w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-9 h-9 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <p className="font-medium text-slate-900">{file.name}</p>
+              <p className="font-medium text-blue-950">{file.name}</p>
               <button onClick={removeFile} disabled={isSubmitting} className="text-red-600 hover:text-red-700 text-sm mt-3 font-medium disabled:opacity-50 cursor-pointer">
                 Remove
               </button>
@@ -243,7 +243,7 @@ const PaymentUploadReceipt = ({
           className={`flex-1 font-semibold py-4 rounded-2xl transition-all flex items-center justify-center gap-2
             ${isButtonDisabled
               ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-              : 'bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer active:scale-[0.985]'
+              : 'bg-amber-600 hover:bg-amber-700 text-white cursor-pointer active:scale-[0.985]'
             }`}
         >
           {isSubmitting ? (

@@ -63,10 +63,10 @@ const RegistrationFeeModal = ({ isOpen, userName, onComplete }: RegistrationFeeM
     return (
       <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-3xl w-full max-w-md mx-auto shadow-2xl p-8 text-center">
-          <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
-            <CheckCircle className="w-8 h-8 text-emerald-600" />
+          <div className="mx-auto w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
+            <CheckCircle className="w-8 h-8 text-amber-600" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Payment Proof Submitted!</h2>
+          <h2 className="text-xl font-bold text-blue-950 mb-2">Payment Proof Submitted!</h2>
           <p className="text-slate-500 text-sm mb-6">
             Your registration fee proof has been submitted. Your account is pending approval.
             You will be notified once an admin reviews your payment.
@@ -85,7 +85,7 @@ const RegistrationFeeModal = ({ isOpen, userName, onComplete }: RegistrationFeeM
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white rounded-3xl w-full max-w-lg mx-auto shadow-2xl my-auto">
         <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3.5">
-          <h2 className="text-lg font-semibold text-slate-900">Registration Fee</h2>
+          <h2 className="text-lg font-semibold text-blue-950">Registration Fee</h2>
           <div className="w-8" />
         </div>
 
@@ -93,14 +93,14 @@ const RegistrationFeeModal = ({ isOpen, userName, onComplete }: RegistrationFeeM
           <button
             onClick={() => setStep(1)}
             className={`flex-1 py-3 text-sm font-medium text-center transition-colors
-              ${step === 1 ? 'text-emerald-600 border-b-2 border-emerald-600' : 'text-slate-400 hover:text-slate-600'}`}
+              ${step === 1 ? 'text-amber-600 border-b-2 border-amber-600' : 'text-slate-400 hover:text-slate-600'}`}
           >
             Payment Details
           </button>
           <button
             onClick={() => setStep(2)}
             className={`flex-1 py-3 text-sm font-medium text-center transition-colors
-              ${step === 2 ? 'text-emerald-600 border-b-2 border-emerald-600' : 'text-slate-400 hover:text-slate-600'}`}
+              ${step === 2 ? 'text-amber-600 border-b-2 border-amber-600' : 'text-slate-400 hover:text-slate-600'}`}
           >
             Submit Proof
           </button>
@@ -116,13 +116,13 @@ const RegistrationFeeModal = ({ isOpen, userName, onComplete }: RegistrationFeeM
 
           {step === 1 && (
             <div className="space-y-6">
-              <div className="bg-emerald-50 border border-emerald-100 rounded-3xl p-6 text-center">
+              <div className="bg-amber-50 border border-amber-100 rounded-3xl p-6 text-center">
                 <p className="text-sm text-slate-500 mb-1">Registration Fee</p>
-                <p className="text-3xl font-bold text-slate-900">₦{REGISTRATION_FEE.toLocaleString()}</p>
+                <p className="text-3xl font-bold text-blue-950">₦{REGISTRATION_FEE.toLocaleString()}</p>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-3xl p-5 space-y-4">
-                <h3 className="font-semibold text-slate-900">Bank Details</h3>
+              <div className="bg-white border border-amber-200 rounded-3xl p-5 space-y-4">
+                <h3 className="font-semibold text-blue-950">Bank Details</h3>
                 {[
                   { label: 'Bank Name', value: 'AbaGold Microfinance Bank' },
                   { label: 'Account Number', value: '0123456789' },
@@ -131,7 +131,7 @@ const RegistrationFeeModal = ({ isOpen, userName, onComplete }: RegistrationFeeM
                 ].map(({ label, value }) => (
                   <div key={label} className="flex justify-between items-center py-2 border-b border-slate-100 last:border-0">
                     <p className="text-sm text-slate-500">{label}</p>
-                    <p className="text-sm font-semibold text-slate-900">{value}</p>
+                    <p className="text-sm font-semibold text-blue-950">{value}</p>
                   </div>
                 ))}
               </div>
@@ -143,7 +143,7 @@ const RegistrationFeeModal = ({ isOpen, userName, onComplete }: RegistrationFeeM
 
               <button
             onClick={() => setStep(2)}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-2xl text-sm transition-all active:scale-[0.985]"
+                className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-2xl text-sm transition-all active:scale-[0.985]"
               >
                 I've Made Payment — Next
               </button>
@@ -156,7 +156,7 @@ const RegistrationFeeModal = ({ isOpen, userName, onComplete }: RegistrationFeeM
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
                 <input
                   type="text" value={userName} disabled
-                  className="w-full px-4 py-3 border border-slate-200 rounded-2xl text-sm bg-slate-50 text-slate-500"
+                  className="w-full px-4 py-3 border border-amber-200 rounded-2xl text-sm bg-slate-50 text-slate-500"
                 />
               </div>
 
@@ -167,7 +167,7 @@ const RegistrationFeeModal = ({ isOpen, userName, onComplete }: RegistrationFeeM
                   <input
                     type="number" value={amount} min={REGISTRATION_FEE}
                     onChange={(e) => { setAmount(e.target.value); setError(null); }}
-                    className="w-full pl-9 pr-4 py-3 border border-slate-200 focus:border-emerald-600 rounded-2xl focus:outline-none text-sm"
+                    className="w-full pl-9 pr-4 py-3 border border-amber-200 focus:border-amber-600 rounded-2xl focus:outline-none text-sm"
                   />
                 </div>
               </div>
@@ -178,7 +178,7 @@ const RegistrationFeeModal = ({ isOpen, userName, onComplete }: RegistrationFeeM
                   type="date" value={paymentDate}
                   onChange={(e) => setPaymentDate(e.target.value)}
                   max={new Date().toISOString().split('T')[0]}
-                  className="w-full px-4 py-3 border border-slate-200 focus:border-emerald-600 rounded-2xl focus:outline-none text-sm"
+                  className="w-full px-4 py-3 border border-amber-200 focus:border-amber-600 rounded-2xl focus:outline-none text-sm"
                 />
               </div>
 
@@ -187,16 +187,16 @@ const RegistrationFeeModal = ({ isOpen, userName, onComplete }: RegistrationFeeM
                 {!file ? (
                   <div
                     onClick={() => fileInputRef.current?.click()}
-                    className="border-2 border-dashed border-slate-300 hover:border-emerald-400 rounded-3xl p-8 text-center cursor-pointer transition-colors"
+                    className="border-2 border-dashed border-slate-300 hover:border-amber-400 rounded-3xl p-8 text-center cursor-pointer transition-colors"
                   >
                     <Upload className="mx-auto w-8 h-8 text-slate-400 mb-3" />
                     <p className="text-sm text-slate-600 font-medium">Click to upload receipt</p>
                     <p className="text-xs text-slate-400 mt-1">PNG, JPG or PDF (max 5MB)</p>
                   </div>
                 ) : (
-                  <div className="border-2 border-emerald-200 bg-emerald-50 rounded-3xl p-5 text-center">
-                    <CheckCircle className="mx-auto w-8 h-8 text-emerald-600 mb-2" />
-                    <p className="text-sm font-medium text-slate-900">{file.name}</p>
+                  <div className="border-2 border-amber-200 bg-amber-50 rounded-3xl p-5 text-center">
+                    <CheckCircle className="mx-auto w-8 h-8 text-amber-600 mb-2" />
+                    <p className="text-sm font-medium text-blue-950">{file.name}</p>
                     <button onClick={() => setFile(null)} className="text-xs text-red-500 hover:text-red-600 mt-2">
                       Remove
                     </button>
@@ -208,7 +208,7 @@ const RegistrationFeeModal = ({ isOpen, userName, onComplete }: RegistrationFeeM
               <button
                 onClick={handleSubmit}
                 disabled={isPending}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-semibold py-3 rounded-2xl text-sm transition-all active:scale-[0.985] flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-amber-400 text-white font-semibold py-3 rounded-2xl text-sm transition-all active:scale-[0.985] flex items-center justify-center gap-2 cursor-pointer"
               >
                 {isPending ? <><Loader2 className="w-4 h-4 animate-spin" /> Submitting...</> : 'Submit Proof of Payment'}
               </button>

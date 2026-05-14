@@ -18,24 +18,24 @@ const UserPackageCard = ({ pkg }: UserPackageCardProps) => {
   return (
     <div
       onClick={() => navigate(`/dashboard/customer/package/${pkg.packageId}`)}
-      className="bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all duration-200 rounded-3xl p-6 cursor-pointer group"
+      className="bg-white border border-amber-200 shadow-sm hover:shadow-md hover:border-amber-200 transition-all duration-200 rounded-3xl p-6 cursor-pointer group"
     >
       <div className="flex items-start justify-between mb-6">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 flex-wrap">
-            <h3 className="text-lg font-semibold text-slate-900 group-hover:text-emerald-700 transition-colors">
+            <h3 className="text-lg font-semibold text-blue-950 group-hover:text-amber-700 transition-colors">
               {pkg.package.name}
             </h3>
             <span className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-2xl whitespace-nowrap
               ${pkg.status === 'active'
                 ? 'bg-blue-100 border border-blue-200 text-blue-700'
                 : pkg.status === 'completed'
-                  ? 'bg-emerald-100 border border-emerald-200 text-emerald-700'
-                  : 'bg-slate-100 border border-slate-200 text-slate-600'
+                  ? 'bg-amber-100 border border-amber-200 text-amber-700'
+                  : 'bg-slate-100 border border-amber-200 text-slate-600'
               }`}
             >
               {pkg.status === 'active' && <span className="w-2 h-2 bg-blue-700 rounded-full mr-1.5" />}
-              {pkg.status === 'completed' && <span className="w-2 h-2 bg-emerald-600 rounded-full mr-1.5" />}
+              {pkg.status === 'completed' && <span className="w-2 h-2 bg-amber-600 rounded-full mr-1.5" />}
               {pkg.status.charAt(0).toUpperCase() + pkg.status.slice(1)}
             </span>
           </div>
@@ -43,33 +43,33 @@ const UserPackageCard = ({ pkg }: UserPackageCardProps) => {
         </div>
         <div className="text-right shrink-0 ml-4 flex items-center gap-2">
           <div>
-            <p className="text-2xl font-bold text-emerald-600">{amount}</p>
+            <p className="text-2xl font-bold text-amber-600">{amount}</p>
             <p className="text-xs text-slate-500">{pkg.paymentFrequency}</p>
           </div>
-          <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition-colors" />
+          <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-amber-600 transition-colors" />
         </div>
       </div>
 
       <div className="grid grid-cols-3 gap-4 mb-6 bg-slate-50 p-4 rounded-2xl">
         <div>
           <p className="text-xs text-slate-500">Total Paid</p>
-          <p className="font-semibold text-slate-900 mt-1">{totalPaid}</p>
+          <p className="font-semibold text-blue-950 mt-1">{totalPaid}</p>
         </div>
         <div>
           <p className="text-xs text-slate-500">Remaining</p>
-          <p className={`font-semibold mt-1 ${pkg.remainingBalance === 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+          <p className={`font-semibold mt-1 ${pkg.remainingBalance === 0 ? 'text-amber-600' : 'text-red-600'}`}>
             {remaining}
           </p>
         </div>
         <div>
           <p className="text-xs text-slate-500">Progress</p>
-          <p className="font-semibold text-emerald-600 mt-1">{pkg.progress}%</p>
+          <p className="font-semibold text-amber-600 mt-1">{pkg.progress}%</p>
         </div>
       </div>
 
       <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden mb-4">
         <div
-          className="h-full bg-emerald-600 rounded-full transition-all duration-300"
+          className="h-full bg-amber-600 rounded-full transition-all duration-300"
           style={{ width: `${pkg.progress}%` }}
         />
       </div>

@@ -92,7 +92,7 @@ const PackageManagement = () => {
     <div>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
-        <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">All Packages</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold text-blue-950">All Packages</h2>
         <div className="flex gap-3 flex-wrap">
           <button
             onClick={() => setIsCategoryModalOpen(true)}
@@ -102,7 +102,7 @@ const PackageManagement = () => {
           </button>
           <button
             onClick={() => setIsCreateModalOpen(true)}
-            className="cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white px-4 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base whitespace-nowrap flex items-center gap-1.5"
+            className="cursor-pointer bg-amber-600 hover:bg-amber-700 active:scale-95 transition-all text-white px-4 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base whitespace-nowrap flex items-center gap-1.5"
           >
             + <span>Create</span> Package
           </button>
@@ -127,17 +127,17 @@ const PackageManagement = () => {
 
       {/* ── Empty state ── */}
       {!isLoading && !error && packages.length === 0 && (
-        <div className="bg-white border border-slate-200 rounded-3xl p-12 text-center">
-          <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mb-5">
+        <div className="bg-white border border-amber-200 rounded-3xl p-12 text-center">
+          <div className="mx-auto w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center mb-5">
             <span className="text-3xl">📦</span>
           </div>
-          <h3 className="text-xl font-semibold text-slate-900 mb-2">No Packages Yet</h3>
+          <h3 className="text-xl font-semibold text-blue-950 mb-2">No Packages Yet</h3>
           <p className="text-slate-500 text-sm max-w-xs mx-auto mb-6">
             Get started by creating your first package. It will appear here once added.
           </p>
           <button
             onClick={() => setIsCreateModalOpen(true)}
-            className="cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:scale-95 transition-all text-white px-6 py-3 rounded-2xl font-semibold text-sm inline-flex items-center gap-2"
+            className="cursor-pointer bg-amber-600 hover:bg-amber-700 active:scale-95 transition-all text-white px-6 py-3 rounded-2xl font-semibold text-sm inline-flex items-center gap-2"
           >
             + Create Package
           </button>
@@ -168,7 +168,7 @@ const PackageManagement = () => {
                     className="cursor-pointer border-b border-slate-100 last:border-b-0 hover:bg-slate-50 transition-colors"
                   >
                     <td className="py-5 px-6 lg:px-8">
-                      <p className="font-semibold text-slate-900 text-sm lg:text-base">{pkg.name}</p>
+                      <p className="font-semibold text-blue-950 text-sm lg:text-base">{pkg.name}</p>
                       <p className="text-xs text-slate-500 mt-0.5 max-w-55">{pkg.desc}</p>
                     </td>
                     <td className="py-5 px-4">
@@ -176,7 +176,7 @@ const PackageManagement = () => {
                         {pkg.category}
                       </span>
                     </td>
-                    <td className="py-5 px-4 font-semibold text-emerald-600 text-sm whitespace-nowrap">
+                    <td className="py-5 px-4 font-semibold text-amber-600 text-sm whitespace-nowrap">
                       {pkg.price}
                     </td>
                     <td className="py-5 px-4 text-slate-600 text-sm whitespace-nowrap">{pkg.duration}</td>
@@ -187,7 +187,7 @@ const PackageManagement = () => {
                           event.stopPropagation();
                           handleEditClick(pkg.id);
                         }}
-                        className="text-emerald-600 cursor-pointer hover:text-emerald-700 mr-4 text-sm font-medium transition-colors inline-flex items-center gap-1"
+                        className="text-amber-600 cursor-pointer hover:text-amber-700 mr-4 text-sm font-medium transition-colors inline-flex items-center gap-1"
                       >
                         <Edit2 className="w-3 h-3" /> Edit
                       </button>
@@ -221,7 +221,7 @@ const PackageManagement = () => {
               >
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="min-w-0">
-                    <p className="font-semibold text-slate-900 text-sm leading-snug">{pkg.name}</p>
+                    <p className="font-semibold text-blue-950 text-sm leading-snug">{pkg.name}</p>
                     <p className="text-xs text-slate-500 mt-0.5 line-clamp-2">{pkg.desc}</p>
                   </div>
                   <span className="px-2.5 py-1 bg-slate-100 text-slate-600 text-xs rounded-lg whitespace-nowrap shrink-0">
@@ -229,7 +229,7 @@ const PackageManagement = () => {
                   </span>
                 </div>
                 <div className="flex items-center gap-4 text-xs text-slate-500 mb-4">
-                  <span className="font-bold text-emerald-600 text-sm">{pkg.price}</span>
+                  <span className="font-bold text-amber-600 text-sm">{pkg.price}</span>
                   <span className="text-slate-300">·</span>
                   <span>{pkg.duration}</span>
                   <span className="text-slate-300">·</span>
@@ -241,7 +241,7 @@ const PackageManagement = () => {
                       event.stopPropagation();
                       handleEditClick(pkg.id);
                     }}
-                    className="flex-1 text-center text-emerald-600 cursor-pointer text-sm font-medium py-1.5 rounded-lg hover:bg-emerald-50 transition-colors inline-flex items-center justify-center gap-1"
+                    className="flex-1 text-center text-amber-600 cursor-pointer text-sm font-medium py-1.5 rounded-lg hover:bg-amber-50 transition-colors inline-flex items-center justify-center gap-1"
                   >
                     <Edit2 className="w-4 h-4" /> Edit
                   </button>
@@ -279,7 +279,7 @@ const PackageManagement = () => {
             <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mb-4 mx-auto">
               <AlertTriangle className="w-6 h-6 text-red-600" />
             </div>
-            <h3 className="text-xl font-bold text-center text-slate-900 mb-2">Delete Package?</h3>
+            <h3 className="text-xl font-bold text-center text-blue-950 mb-2">Delete Package?</h3>
             <p className="text-center text-slate-600 mb-6">
               Are you sure you want to delete &quot;{packages.find((p) => p.id === deleteConfirmId)?.name}&quot;?
               This action cannot be undone.

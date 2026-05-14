@@ -72,13 +72,13 @@
 //   }
 
 //   return (
-//     <div className="bg-emerald-600 text-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8">
+//     <div className="bg-amber-600 text-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8">
 //       <div className="flex items-center gap-2.5 sm:gap-3 mb-4 sm:mb-5 lg:mb-6">
 //         <LinkIcon className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
 //         <h3 className="text-base sm:text-lg lg:text-xl font-semibold">Your Referral Link</h3>
 //       </div>
 
-//       <p className="text-emerald-100 text-sm sm:text-[15px] leading-relaxed mb-4 sm:mb-5 lg:mb-6">
+//       <p className="text-amber-100 text-sm sm:text-[15px] leading-relaxed mb-4 sm:mb-5 lg:mb-6">
 //         Share this link with friends and family. You earn{' '}
 //         <span className="font-semibold text-white">₦2,000</span> for every person
 //         who signs up and buys a package!
@@ -86,7 +86,7 @@
 
 //       {/* URL box */}
 //       <div className="bg-white/15 rounded-xl sm:rounded-2xl p-3 sm:p-4 mb-4 sm:mb-5 lg:mb-6">
-//         <p className="text-[10px] sm:text-xs text-emerald-200 uppercase tracking-wide mb-1">
+//         <p className="text-[10px] sm:text-xs text-amber-200 uppercase tracking-wide mb-1">
 //           Referral URL
 //         </p>
 //         {isLoading ? (
@@ -102,7 +102,7 @@
 //         <button
 //           onClick={copyLink}
 //           disabled={isLoading || !referralLink}
-//           className="bg-emerald-950 hover:bg-black active:scale-95 disabled:opacity-50 disabled:pointer-events-none cursor-pointer text-white py-3 sm:py-3.5 lg:py-4 px-3 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] font-semibold flex items-center justify-center gap-2 transition-all"
+//           className="bg-amber-950 hover:bg-black active:scale-95 disabled:opacity-50 disabled:pointer-events-none cursor-pointer text-white py-3 sm:py-3.5 lg:py-4 px-3 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] font-semibold flex items-center justify-center gap-2 transition-all"
 //         >
 //           {copied ? (
 //             <>
@@ -118,7 +118,7 @@
 //         <button
 //           onClick={shareLink}
 //           disabled={isLoading || !referralLink}
-//           className="bg-emerald-950 hover:bg-black active:scale-95 disabled:opacity-50 disabled:pointer-events-none cursor-pointer text-white py-3 sm:py-3.5 lg:py-4 px-3 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] font-semibold flex items-center justify-center gap-2 transition-all"
+//           className="bg-amber-950 hover:bg-black active:scale-95 disabled:opacity-50 disabled:pointer-events-none cursor-pointer text-white py-3 sm:py-3.5 lg:py-4 px-3 rounded-xl sm:rounded-2xl text-sm sm:text-[15px] font-semibold flex items-center justify-center gap-2 transition-all"
 //         >
 //           <Share2 className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
 //           Share Link

@@ -21,8 +21,8 @@ const SkeletonBar = () => (
 /* ── Empty state (no earnings yet) ── */
 const EmptyEarnings = () => (
   <div className="flex flex-col items-center justify-center py-8 text-center">
-    <div className="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center mb-3">
-      <TrendingUp className="w-7 h-7 text-emerald-400" />
+    <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center mb-3">
+      <TrendingUp className="w-7 h-7 text-amber-400" />
     </div>
     <p className="font-semibold text-slate-800 text-sm mb-1">No earnings yet</p>
     <p className="text-xs text-slate-400 max-w-55 leading-relaxed">
@@ -54,7 +54,7 @@ const EarningsBreakdown = () => {
 
   return (
     <div className="bg-white border border-slate-100 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8">
-      <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-slate-900 mb-6">
+      <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-blue-950 mb-6">
         Earnings Breakdown
       </h3>
 
@@ -70,13 +70,13 @@ const EarningsBreakdown = () => {
             <div key={label}>
               <div className="flex justify-between text-sm mb-2">
                 <span className="text-slate-500">{label}</span>
-                <span className="font-semibold text-slate-900">
+                <span className="font-semibold text-blue-950">
                   ₦{amount.toLocaleString()}
                 </span>
               </div>
               <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-emerald-600 rounded-full transition-all duration-500"
+                  className="h-full bg-amber-600 rounded-full transition-all duration-500"
                   style={{ width: `${pct}%` }}
                 />
               </div>
@@ -88,7 +88,7 @@ const EarningsBreakdown = () => {
       <button
         onClick={() => setIsWithdrawOpen(true)}
         disabled={isLoading || !hasEarnings}
-        className="w-full mt-10 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] disabled:opacity-50 disabled:pointer-events-none text-white font-semibold py-4 rounded-2xl text-base transition-all"
+        className="w-full mt-10 bg-amber-600 hover:bg-amber-700 active:scale-[0.985] disabled:opacity-50 disabled:pointer-events-none text-white font-semibold py-4 rounded-2xl text-base transition-all"
       >
         Request Withdrawal
       </button>

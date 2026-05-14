@@ -94,7 +94,7 @@ const ProductsSection = () => {
     <section className="py-16 md:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12 md:mb-16">
-          <span className="inline-block px-5 py-1.5 text-emerald-700 text-xs sm:text-sm font-bold rounded-full tracking-widest border border-emerald-200">
+          <span className="inline-block px-5 py-1.5 text-amber-700 text-xs sm:text-sm font-bold rounded-full tracking-widest border border-amber-200">
             ONE-TIME PURCHASE
           </span>
           <h2 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-slate-950">
@@ -109,7 +109,7 @@ const ProductsSection = () => {
           {products.map((product) => (
             <div
               key={product.id}
-              className="bg-white border border-slate-100 rounded-3xl overflow-hidden hover:border-emerald-200 hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
+              className="bg-white border border-slate-100 rounded-3xl overflow-hidden hover:border-amber-200 hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
             >
               <div className="relative aspect-4/3 sm:aspect-16/10 md:aspect-video bg-slate-100 overflow-hidden">
                 <img
@@ -120,7 +120,7 @@ const ProductsSection = () => {
                   onError={(e) => { (e.target as HTMLImageElement).src = FALLBACK_PRODUCTS[0].image; }}
                 />
                 <div className="absolute top-4 right-4">
-                  <span className="inline-flex items-center px-3.5 py-1 bg-emerald-600 text-white text-xs font-medium rounded-2xl shadow-sm">
+                  <span className="inline-flex items-center px-3.5 py-1 bg-amber-600 text-white text-xs font-medium rounded-2xl shadow-sm">
                     In Stock
                   </span>
                 </div>
@@ -130,19 +130,19 @@ const ProductsSection = () => {
                 <p className="text-xs uppercase tracking-widest text-slate-500 mb-2">
                   {product.category}
                 </p>
-                <h3 className="text-lg sm:text-xl font-semibold text-slate-900 leading-tight mb-3 line-clamp-2">
+                <h3 className="text-lg sm:text-xl font-semibold text-blue-950 leading-tight mb-3 line-clamp-2">
                   {product.title}
                 </h3>
                 <p className="text-slate-600 text-sm sm:text-[15px] leading-relaxed mb-6 flex-1 line-clamp-3">
                   {product.description}
                 </p>
                 <div className="flex items-center justify-between mt-auto pt-2">
-                  <span className="text-2xl sm:text-3xl font-bold text-emerald-600">
+                  <span className="text-2xl sm:text-3xl font-bold text-amber-600">
                     ₦{product.price.toLocaleString()}
                   </span>
                   <button
                     onClick={() => handleAddToCart(product)}
-                    className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-semibold text-sm sm:text-base px-5 py-3 rounded-2xl transition-all active:scale-[0.97] shadow-sm cursor-pointer"
+                    className="flex items-center gap-2 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white font-semibold text-sm sm:text-base px-5 py-3 rounded-2xl transition-all active:scale-[0.97] shadow-sm cursor-pointer"
                   >
                     <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span className="hidden md:inline">Add to Cart</span>

@@ -31,10 +31,10 @@ const PaymentBankDetails = ({ onNext, totalAmount = 37500 }: PaymentBankDetailsP
     return (
       <div className="space-y-6">
         {/* Amount Card Skeleton */}
-        <div className="bg-emerald-600 text-white rounded-3xl p-8 text-center">
-          <p className="text-emerald-100 text-sm font-medium tracking-wider">Amount to Pay</p>
+        <div className="bg-amber-600 text-white rounded-3xl p-8 text-center">
+          <p className="text-amber-100 text-sm font-medium tracking-wider">Amount to Pay</p>
           <p className="text-4xl sm:text-5xl font-bold mt-3 mb-2">{formatCurrency(totalAmount, 'NGN')}</p>
-          <p className="text-emerald-100 text-lg">{formatCurrency(convertToUSD(totalAmount), 'USD')}</p>
+          <p className="text-amber-100 text-lg">{formatCurrency(convertToUSD(totalAmount), 'USD')}</p>
         </div>
 
         {/* Bank Details Skeleton */}
@@ -60,17 +60,17 @@ const PaymentBankDetails = ({ onNext, totalAmount = 37500 }: PaymentBankDetailsP
     <div className="space-y-6 relative">
       {/* Toast Notification */}
       {showToast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 bg-emerald-100 border border-emerald-200 text-emerald-800 px-6 py-3 rounded-2xl flex items-center gap-3 shadow-lg z-50">
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 bg-amber-100 border border-amber-200 text-amber-800 px-6 py-3 rounded-2xl flex items-center gap-3 shadow-lg z-50">
           <span>✅</span>
           Copied to clipboard!
         </div>
       )}
 
       {/* Amount Card */}
-      <div className="bg-emerald-600 text-white rounded-3xl p-8 text-center">
-        <p className="text-emerald-100 text-sm font-medium tracking-wider">Amount to Pay</p>
+      <div className="bg-amber-600 text-white rounded-3xl p-8 text-center">
+        <p className="text-amber-100 text-sm font-medium tracking-wider">Amount to Pay</p>
         <p className="text-4xl sm:text-5xl font-bold mt-3 mb-2">{formatCurrency(totalAmount, 'NGN')}</p>
-        <p className="text-emerald-100 text-lg">{formatCurrency(convertToUSD(totalAmount), 'USD')}</p>
+        <p className="text-amber-100 text-lg">{formatCurrency(convertToUSD(totalAmount), 'USD')}</p>
       </div>
 
       {/* Bank Details Cards */}
@@ -83,12 +83,12 @@ const PaymentBankDetails = ({ onNext, totalAmount = 37500 }: PaymentBankDetailsP
         <div className="p-6 border-b border-slate-100 flex items-center justify-between">
           <div>
             <p className="text-xs text-slate-500">Bank Name</p>
-            <p className="font-semibold text-slate-900 mt-1">{bankDetails.bankName}</p>
+            <p className="font-semibold text-blue-950 mt-1">{bankDetails.bankName}</p>
           </div>
           <button
             onClick={() => copyToClipboard(bankDetails.bankName)}
             disabled={bankDetails.bankName === '—'}
-            className="text-emerald-600 cursor-pointer hover:text-emerald-700 p-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-amber-600 cursor-pointer hover:text-amber-700 p-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Copy className="w-5 h-5" />
           </button>
@@ -98,14 +98,14 @@ const PaymentBankDetails = ({ onNext, totalAmount = 37500 }: PaymentBankDetailsP
         <div className="p-6 border-b border-slate-100 flex items-center justify-between">
           <div>
             <p className="text-xs text-slate-500">Account Number</p>
-            <p className="font-semibold text-slate-900 mt-1 font-mono tracking-wider">
+            <p className="font-semibold text-blue-950 mt-1 font-mono tracking-wider">
               {bankDetails.accountNumber}
             </p>
           </div>
           <button
             onClick={() => copyToClipboard(bankDetails.accountNumber)}
             disabled={bankDetails.accountNumber === '—'}
-            className="text-emerald-600 hover:text-emerald-700 p-2 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-amber-600 hover:text-amber-700 p-2 cursor-pointer transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Copy className="w-5 h-5" />
           </button>
@@ -115,12 +115,12 @@ const PaymentBankDetails = ({ onNext, totalAmount = 37500 }: PaymentBankDetailsP
         <div className="p-6 flex items-center justify-between">
           <div>
             <p className="text-xs text-slate-500">Account Name</p>
-            <p className="font-semibold text-slate-900 mt-1">{bankDetails.accountName}</p>
+            <p className="font-semibold text-blue-950 mt-1">{bankDetails.accountName}</p>
           </div>
           <button
             onClick={() => copyToClipboard(bankDetails.accountName)}
             disabled={bankDetails.accountName === '—'}
-            className="text-emerald-600 hover:text-emerald-700 p-2 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-amber-600 hover:text-amber-700 p-2 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Copy className="w-5 h-5" />
           </button>
@@ -133,24 +133,24 @@ const PaymentBankDetails = ({ onNext, totalAmount = 37500 }: PaymentBankDetailsP
           <div className="w-8 h-8 bg-white rounded-2xl flex items-center justify-center shadow-sm">
             <Info className="w-5 h-5 text-sky-600" />
           </div>
-          <h4 className="font-semibold text-slate-900">Important Instructions</h4>
+          <h4 className="font-semibold text-blue-950">Important Instructions</h4>
         </div>
 
         <ul className="space-y-3 text-sm text-slate-600">
           <li className="flex gap-2">
-            <span className="text-emerald-600 mt-0.5">•</span>
+            <span className="text-amber-600 mt-0.5">•</span>
             Transfer the exact amount shown above
           </li>
           <li className="flex gap-2">
-            <span className="text-emerald-600 mt-0.5">•</span>
+            <span className="text-amber-600 mt-0.5">•</span>
             Use the bank details provided
           </li>
           <li className="flex gap-2">
-            <span className="text-emerald-600 mt-0.5">•</span>
+            <span className="text-amber-600 mt-0.5">•</span>
             Keep your payment receipt/screenshot
           </li>
           <li className="flex gap-2">
-            <span className="text-emerald-600 mt-0.5">•</span>
+            <span className="text-amber-600 mt-0.5">•</span>
             After making payment, click "I've Made Payment" below
           </li>
         </ul>
@@ -158,7 +158,7 @@ const PaymentBankDetails = ({ onNext, totalAmount = 37500 }: PaymentBankDetailsP
 
       <button
         onClick={onNext}
-        className="w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 transition-all text-white font-semibold py-4.5 rounded-2xl text-lg shadow-sm"
+        className="w-full cursor-pointer bg-amber-600 hover:bg-amber-700 active:bg-amber-800 transition-all text-white font-semibold py-4.5 rounded-2xl text-lg shadow-sm"
       >
         I've Made Payment
       </button>

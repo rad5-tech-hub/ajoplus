@@ -20,7 +20,7 @@ const SavingsOverview = ({ onOpenSetupModal }: SavingsOverviewProps) => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-slate-900">Savings Plans</h2>
+        <h2 className="text-lg font-semibold text-blue-950">Savings Plans</h2>
         <SavingsSetupButton onClick={onOpenSetupModal} />
       </div>
 
@@ -30,7 +30,7 @@ const SavingsOverview = ({ onOpenSetupModal }: SavingsOverviewProps) => {
           <p className="text-slate-500 text-sm mb-4">{error instanceof Error ? error.message : 'Please try again.'}</p>
           <button
             onClick={() => refetch()}
-            className="px-5 py-2 rounded-2xl bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition-colors"
+            className="px-5 py-2 rounded-2xl bg-amber-600 text-white text-sm font-semibold hover:bg-amber-700 transition-colors"
           >
             Retry
           </button>

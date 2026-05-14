@@ -99,12 +99,12 @@ const Navbar = () => {
             {/* Cart Icon with Count */}
             <Link
               to="/cart"
-              className="relative p-3 text-slate-600 hover:text-emerald-600 transition-colors rounded-xl hover:bg-slate-100 group"
+              className="relative p-3 text-slate-600 hover:text-amber-600 transition-colors rounded-xl hover:bg-slate-100 group"
               aria-label="View Cart"
             >
               <ShoppingCart className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-emerald-600 text-white text-[10px] font-medium min-w-4.5 h-4.5 flex items-center justify-center rounded-full ring-2 ring-white">
+                <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-[10px] font-medium min-w-4.5 h-4.5 flex items-center justify-center rounded-full ring-2 ring-white">
                   {cartCount}
                 </span>
               )}
@@ -131,11 +131,11 @@ const Navbar = () => {
             {/* Mobile Cart */}
             <Link
               to="/cart"
-              className="relative p-2 text-slate-600 hover:text-emerald-600 transition-colors"
+              className="relative p-2 text-slate-600 hover:text-amber-600 transition-colors"
             >
               <ShoppingCart className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-emerald-600 text-white text-[10px] font-medium w-5 h-5 flex items-center justify-center rounded-full">
+                <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-[10px] font-medium w-5 h-5 flex items-center justify-center rounded-full">
                   {cartCount}
                 </span>
               )}
@@ -204,12 +204,12 @@ const Navbar = () => {
             <Link
               to="/cart"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 px-4 py-4 text-[15px] font-medium text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-2xl transition-colors"
+              className="flex items-center gap-3 px-4 py-4 text-[15px] font-medium text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded-2xl transition-colors"
             >
               <ShoppingCart className="w-5 h-5" />
               Cart
               {cartCount > 0 && (
-                <span className="ml-auto bg-emerald-600 text-white text-xs px-2.5 py-0.5 rounded-full">
+                <span className="ml-auto bg-amber-600 text-white text-xs px-2.5 py-0.5 rounded-full">
                   {cartCount} items
                 </span>
               )}

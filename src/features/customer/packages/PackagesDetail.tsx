@@ -139,7 +139,7 @@ const PackageDetail = () => {
           </p>
           <button
             onClick={() => navigate('/dashboard/customer')}
-            className="text-emerald-600 underline hover:text-emerald-700 text-sm font-medium"
+            className="text-amber-600 underline hover:text-amber-700 text-sm font-medium"
           >
             Back to Dashboard
           </button>
@@ -163,16 +163,16 @@ const PackageDetail = () => {
     <div className="space-y-4 sm:space-y-6">
 
       {/* Payment Summary */}
-      <div className="bg-emerald-50 border border-emerald-100 rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6">
+      <div className="bg-amber-50 border border-amber-100 rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6">
         <h3 className="font-semibold text-base sm:text-lg mb-3 sm:mb-4 lg:mb-5">
           Payment Summary
         </h3>
-        <div className="divide-y divide-emerald-100 text-sm sm:text-[15px]">
+        <div className="divide-y divide-amber-100 text-sm sm:text-[15px]">
           {[
-            { label: 'Total Price', value: displayData.totalAmount, cls: 'text-slate-900' },
-            { label: 'Total Paid', value: displayData.totalPaid, cls: 'text-slate-900' },
+            { label: 'Total Price', value: displayData.totalAmount, cls: 'text-blue-950' },
+            { label: 'Total Paid', value: displayData.totalPaid, cls: 'text-blue-950' },
             { label: 'Remaining', value: displayData.remaining, cls: 'text-red-600' },
-            { label: 'Per Payment', value: displayData.perPayment, cls: 'text-emerald-600' },
+            { label: 'Per Payment', value: displayData.perPayment, cls: 'text-amber-600' },
           ].map(({ label, value, cls }) => (
             <div key={label} className="flex justify-between py-2.5 sm:py-3">
               <span className="text-slate-500">{label}</span>
@@ -183,7 +183,7 @@ const PackageDetail = () => {
       </div>
 
       {/* Package Items — sourced from GET /packages/:id */}
-      <div className="bg-white border border-slate-200 rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6">
+      <div className="bg-white border border-amber-200 rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6">
         <div className="flex items-center gap-2.5 sm:gap-3 mb-4">
           <div className="w-7 h-7 sm:w-8 sm:h-8 bg-amber-100 rounded-xl flex items-center justify-center text-base sm:text-xl shrink-0">
             📦
@@ -200,11 +200,11 @@ const PackageDetail = () => {
           <div className="space-y-3 sm:space-y-4">
             {items.map((item, index) => (
               <div key={item.id ?? index} className="flex gap-2.5 sm:gap-3">
-                <div className="w-6 h-6 sm:w-7 sm:h-7 bg-emerald-100 text-emerald-700 rounded-lg sm:rounded-2xl flex items-center justify-center text-xs font-medium shrink-0">
+                <div className="w-6 h-6 sm:w-7 sm:h-7 bg-amber-100 text-amber-700 rounded-lg sm:rounded-2xl flex items-center justify-center text-xs font-medium shrink-0">
                   {index + 1}
                 </div>
                 <div>
-                  <p className="font-medium text-slate-900 text-sm">{item.itemName}</p>
+                  <p className="font-medium text-blue-950 text-sm">{item.itemName}</p>
                   <p className="text-xs text-slate-500">{item.quantity}</p>
                 </div>
               </div>
@@ -214,7 +214,7 @@ const PackageDetail = () => {
       </div>
 
       {/* Payment Instructions */}
-      <div className="bg-white border border-slate-200 rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6">
+      <div className="bg-white border border-amber-200 rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6">
         <div className="flex items-center gap-2.5 sm:gap-3 mb-3">
           <div className="w-7 h-7 sm:w-8 sm:h-8 bg-amber-100 rounded-xl flex items-center justify-center shrink-0">
             <span className="text-amber-600 text-base sm:text-xl">ℹ︎</span>
@@ -228,9 +228,9 @@ const PackageDetail = () => {
       </div>
 
       {/* Terms & Conditions */}
-      <div className="bg-white border border-slate-200 rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6">
+      <div className="bg-white border border-amber-200 rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6">
         <div className="flex items-center gap-2.5 sm:gap-3 mb-3 sm:mb-4">
-          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-emerald-100 rounded-xl flex items-center justify-center text-base shrink-0">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-amber-100 rounded-xl flex items-center justify-center text-base shrink-0">
             📋
           </div>
           <h3 className="font-semibold text-sm sm:text-base">Terms &amp; Conditions</h3>
@@ -244,14 +244,14 @@ const PackageDetail = () => {
             'A well detailed delivery address must be provided during registration.',
           ].map((term) => (
             <li key={term} className="flex gap-2 leading-relaxed">
-              <span className="text-emerald-500 mt-0.5 shrink-0">•</span>
+              <span className="text-amber-500 mt-0.5 shrink-0">•</span>
               {term}
             </li>
           ))}
         </ul>
         <Link
           to="/terms"
-          className="inline-block mt-3 text-emerald-600 hover:text-emerald-700 text-xs font-medium underline"
+          className="inline-block mt-3 text-amber-600 hover:text-amber-700 text-xs font-medium underline"
         >
           View full terms and conditions
         </Link>
@@ -265,11 +265,11 @@ const PackageDetail = () => {
     <div className="min-h-screen bg-[#f8fafc]">
 
       {/* Sticky top bar */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-50">
+      <div className="bg-white border-b border-amber-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-4">
           <button
             onClick={() => navigate('/dashboard/customer')}
-            className="flex items-center gap-1.5 sm:gap-2 text-slate-500 hover:text-slate-900 transition-colors"
+            className="flex items-center gap-1.5 sm:gap-2 text-slate-500 hover:text-blue-950 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="font-medium text-sm sm:text-base">Back to Dashboard</span>
@@ -284,11 +284,11 @@ const PackageDetail = () => {
           <div className="lg:col-span-8 space-y-4 sm:space-y-6 lg:space-y-8">
 
             {/* Header card */}
-            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-slate-200">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-amber-200">
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-4 sm:mb-5 lg:mb-6">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 leading-tight">
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-950 leading-tight">
                       {displayData.title}
                     </h1>
                     <span
@@ -308,7 +308,7 @@ const PackageDetail = () => {
                   <p className="text-slate-500 mt-1.5 text-sm sm:text-base">{displayData.subtitle}</p>
                 </div>
                 <div className="sm:text-right shrink-0">
-                  <p className="text-2xl sm:text-3xl font-bold text-emerald-600">
+                  <p className="text-2xl sm:text-3xl font-bold text-amber-600">
                     {displayData.totalAmount}
                   </p>
                   <p className="text-xs sm:text-sm text-slate-400 mt-0.5">{displayData.category}</p>
@@ -320,14 +320,14 @@ const PackageDetail = () => {
                 {metrics.map(({ icon: Icon, label, value, green }) => (
                   <div key={label} className="bg-slate-50 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-5">
                     <div
-                      className={`flex items-center gap-1.5 mb-1 text-xs sm:text-sm ${green ? 'text-emerald-600' : 'text-slate-400'
+                      className={`flex items-center gap-1.5 mb-1 text-xs sm:text-sm ${green ? 'text-amber-600' : 'text-slate-400'
                         }`}
                     >
                       <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
                       <span>{label}</span>
                     </div>
                     <p
-                      className={`font-semibold text-sm sm:text-base ${green ? 'text-emerald-600' : 'text-slate-900'
+                      className={`font-semibold text-sm sm:text-base ${green ? 'text-amber-600' : 'text-blue-950'
                         }`}
                     >
                       {value}
@@ -338,7 +338,7 @@ const PackageDetail = () => {
             </div>
 
             {/* Financial Summary */}
-            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-slate-200">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-amber-200">
               <h2 className="text-base sm:text-lg lg:text-xl font-semibold mb-4 sm:mb-5 lg:mb-6">
                 Financial Summary
               </h2>
@@ -351,11 +351,11 @@ const PackageDetail = () => {
                 ].map(({ label, value, red }) => (
                   <div
                     key={label}
-                    className="bg-emerald-50 p-3 sm:p-4 rounded-xl text-center col-span-1 last:col-span-2 md:last:col-span-1"
+                    className="bg-amber-50 p-3 sm:p-4 rounded-xl text-center col-span-1 last:col-span-2 md:last:col-span-1"
                   >
                     <p className="text-slate-500 text-xs sm:text-sm">{label}</p>
                     <p
-                      className={`text-lg sm:text-xl lg:text-2xl font-bold mt-1.5 ${red ? 'text-red-600' : 'text-slate-900'
+                      className={`text-lg sm:text-xl lg:text-2xl font-bold mt-1.5 ${red ? 'text-red-600' : 'text-blue-950'
                         }`}
                     >
                       {value}
@@ -367,11 +367,11 @@ const PackageDetail = () => {
               <div className="mb-5 sm:mb-6 lg:mb-8">
                 <div className="flex justify-between text-xs sm:text-sm mb-2">
                   <span className="text-slate-500">Overall Progress</span>
-                  <span className="font-semibold text-emerald-600">{displayData.progress}%</span>
+                  <span className="font-semibold text-amber-600">{displayData.progress}%</span>
                 </div>
                 <div className="h-2.5 sm:h-3 bg-slate-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-emerald-600 rounded-full transition-all duration-500"
+                    className="h-full bg-amber-600 rounded-full transition-all duration-500"
                     style={{ width: `${displayData.progress}%` }}
                   />
                 </div>
@@ -388,7 +388,7 @@ const PackageDetail = () => {
                       },
                     })
                   }
-                  className="bg-emerald-600 hover:bg-emerald-700 w-[50%] cursor-pointer transition-colors
+                  className="bg-amber-600 hover:bg-amber-700 w-[50%] cursor-pointer transition-colors
                              text-white font-semibold py-3 sm:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl
                              flex items-center justify-center gap-2 text-sm sm:text-base active:scale-[0.985]"
                 >
@@ -396,8 +396,8 @@ const PackageDetail = () => {
                 </button>
                 <button
                   onClick={() => setShowUploadModal(true)}
-                  className="border-2 border-emerald-600 text-emerald-600 w-[50%] cursor-pointer
-                             hover:bg-emerald-50 font-semibold py-3 sm:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl
+                  className="border-2 border-amber-600 text-amber-600 w-[50%] cursor-pointer
+                             hover:bg-amber-50 font-semibold py-3 sm:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl
                              flex items-center justify-center gap-2 text-sm sm:text-base transition-colors active:scale-[0.985]"
                 >
                   Upload Receipt
@@ -406,7 +406,7 @@ const PackageDetail = () => {
             </div>
 
             {/* Contribution History */}
-            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-slate-200">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-amber-200">
               <div className="flex items-center justify-between mb-4 sm:mb-5 lg:mb-6">
                 <h2 className="text-base sm:text-lg lg:text-xl font-semibold">
                   Contribution History
@@ -414,7 +414,7 @@ const PackageDetail = () => {
                 <button
                   onClick={handleRefresh}
                   disabled={isRefreshing}
-                  className="flex items-center gap-1.5 text-sm text-emerald-600 hover:text-emerald-700 disabled:opacity-50 transition-colors cursor-pointer"
+                  className="flex items-center gap-1.5 text-sm text-amber-600 hover:text-amber-700 disabled:opacity-50 transition-colors cursor-pointer"
                 >
                   <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
                   Refresh

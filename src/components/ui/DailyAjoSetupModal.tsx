@@ -79,7 +79,7 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
           >
             <X className="w-5 h-5" />
           </button>
-          <h2 className="text-lg font-semibold text-slate-900">Start Daily Ajo</h2>
+          <h2 className="text-lg font-semibold text-blue-950">Start Daily Ajo</h2>
           <div className="w-8" />
         </div>
 
@@ -87,7 +87,7 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
         <div className="px-5 py-4 sm:px-7">
           <p className="text-slate-500 text-sm text-center mb-4">
             How much would you like to save daily?{' '}
-            <span className="font-medium text-emerald-700">5% monthly service fee</span> applies.
+            <span className="font-medium text-amber-700">5% monthly service fee</span> applies.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-3.5">
@@ -104,7 +104,7 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
                   onChange={(e) => { setDailyAmount(e.target.value); setError(null); }}
                   placeholder="500"
                   disabled={isPending}
-                  className="w-full pl-9 pr-5 py-3 border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 text-base font-medium placeholder:text-slate-400 disabled:opacity-50"
+                  className="w-full pl-9 pr-5 py-3 border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 text-base font-medium placeholder:text-slate-400 disabled:opacity-50"
                   min="100"
                   required
                 />
@@ -122,13 +122,13 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
                 onChange={(e) => setDescription(e.target.value)}
                 disabled={isPending}
                 placeholder="e.g. School fees, business capital, emergency fund..."
-                className="w-full px-4 py-3 border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 h-20 resize-none text-sm leading-relaxed disabled:opacity-50"
+                className="w-full px-4 py-3 border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 h-20 resize-none text-sm leading-relaxed disabled:opacity-50"
               />
             </div>
 
             {/* Example Note */}
-            <div className="bg-emerald-50 border border-emerald-100 rounded-2xl px-4 py-3 text-sm">
-              <span className="text-emerald-700 font-medium">Example: </span>
+            <div className="bg-amber-50 border border-amber-100 rounded-2xl px-4 py-3 text-sm">
+              <span className="text-amber-700 font-medium">Example: </span>
               <span className="text-slate-600">₦500/day = ₦15,000/month → ₦750 fee → You keep ₦14,250</span>
             </div>
 
@@ -139,7 +139,7 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
             )}
 
             {success && (
-              <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm rounded-2xl px-4 py-3 font-medium">
+              <div className="bg-amber-50 border border-amber-200 text-amber-700 text-sm rounded-2xl px-4 py-3 font-medium">
                 🎉 Daily Ajo activated! Redirecting...
               </div>
             )}
@@ -147,7 +147,7 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
             <button
               type="submit"
               disabled={isPending || success}
-              className="cursor-pointer w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985]
+              className="cursor-pointer w-full bg-amber-600 hover:bg-amber-700 active:scale-[0.985]
                 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-2xl
                 text-sm transition-all duration-200 flex items-center justify-center gap-2"
             >

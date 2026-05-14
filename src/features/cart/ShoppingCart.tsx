@@ -122,11 +122,11 @@ const ShoppingCart = () => {
       <div className="min-h-screen bg-[#f8fafc]">
         <CustomerNavbar />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20 text-center">
-          <div className="mx-auto w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-emerald-50 flex items-center justify-center mb-6">
-            <ShoppingBag className="w-10 h-10 sm:w-12 sm:h-12 text-emerald-600" />
+          <div className="mx-auto w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-amber-50 flex items-center justify-center mb-6">
+            <ShoppingBag className="w-10 h-10 sm:w-12 sm:h-12 text-amber-600" />
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-3">
+          <h2 className="text-2xl sm:text-3xl font-bold text-blue-950 mb-3">
             Your cart is empty
           </h2>
           <p className="text-sm sm:text-base text-slate-600 mb-8 max-w-md mx-auto">
@@ -135,7 +135,7 @@ const ShoppingCart = () => {
 
           <button
             onClick={() => navigate('/browse')}
-            className="w-full sm:w-auto bg-emerald-600 text-white px-6 sm:px-8 py-3.5 rounded-2xl font-semibold hover:bg-emerald-700 transition-colors"
+            className="w-full sm:w-auto bg-amber-600 text-white px-6 sm:px-8 py-3.5 rounded-2xl font-semibold hover:bg-amber-700 transition-colors"
           >
             Continue Shopping
           </button>
@@ -152,13 +152,13 @@ const ShoppingCart = () => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
           <button
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors w-fit"
+            className="inline-flex items-center gap-2 text-slate-600 hover:text-blue-950 transition-colors w-fit"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="text-sm sm:text-base">Back</span>
           </button>
 
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
+          <h1 className="text-2xl sm:text-3xl font-bold text-blue-950">
             Shopping Cart
           </h1>
         </div>
@@ -191,12 +191,12 @@ const ShoppingCart = () => {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xs bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full">
+                      <span className="text-xs bg-amber-100 text-amber-700 px-3 py-1 rounded-full">
                         {item.type === 'product' ? 'Product' : 'Package'}
                       </span>
                     </div>
 
-                    <h3 className="font-semibold text-base sm:text-lg text-slate-900 leading-tight mb-1">
+                    <h3 className="font-semibold text-base sm:text-lg text-blue-950 leading-tight mb-1">
                       {item.title}
                     </h3>
 
@@ -229,7 +229,7 @@ const ShoppingCart = () => {
 
                       <div className="flex items-center justify-between sm:justify-end gap-4">
                         <div className="text-right">
-                          <div className="font-bold text-emerald-600 text-lg sm:text-xl">
+                          <div className="font-bold text-amber-600 text-lg sm:text-xl">
                             {formatCurrency(safePrice * safeQty, 'NGN')}
                           </div>
                           <div className="text-xs text-slate-600 font-medium">
@@ -290,10 +290,10 @@ const ShoppingCart = () => {
                 </div>
               </div>
 
-              <div className="border-t border-slate-200 pt-5 sm:pt-6 mb-6 sm:mb-8">
+              <div className="border-t border-amber-200 pt-5 sm:pt-6 mb-6 sm:mb-8">
                 <div className="flex justify-between text-base sm:text-lg mb-2">
                   <span className="font-semibold">Total</span>
-                  <span className="font-bold text-emerald-600">
+                  <span className="font-bold text-amber-600">
                     {formatCurrency(total, 'NGN')}
                   </span>
                 </div>
@@ -305,18 +305,18 @@ const ShoppingCart = () => {
 
               <button
                 onClick={() => navigate('/checkout')}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 transition-colors mb-4"
+                className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 transition-colors mb-4"
               >
                 Proceed to Checkout →
               </button>
 
-              <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 sm:p-5 text-sm text-emerald-800 mb-4 sm:mb-6">
+              <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4 sm:p-5 text-sm text-amber-800 mb-4 sm:mb-6">
                 <strong>Note:</strong> You'll need to sign up or log in to complete your purchase.
               </div>
 
               <button
                 onClick={() => navigate('/browse')}
-                className="w-full border-2 border-emerald-600 text-emerald-600 font-semibold py-4 rounded-2xl hover:bg-emerald-50 transition-colors"
+                className="w-full border-2 border-amber-600 text-amber-600 font-semibold py-4 rounded-2xl hover:bg-amber-50 transition-colors"
               >
                 Continue Shopping
               </button>

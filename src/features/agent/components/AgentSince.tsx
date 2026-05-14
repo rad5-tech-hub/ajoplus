@@ -53,10 +53,10 @@ const AgentSince = () => {
   return (
     <div className="bg-white border border-slate-100 rounded-3xl p-8">
       <div className="flex items-center gap-3">
-        <Calendar className="w-6 h-6 text-emerald-600" />
+        <Calendar className="w-6 h-6 text-amber-600" />
         <div>
           <p className="text-sm text-slate-500">Agent Since</p>
-          <p className="font-semibold text-slate-900">{displayDate}</p>
+          <p className="font-semibold text-blue-950">{displayDate}</p>
         </div>
       </div>
     </div>

@@ -23,7 +23,7 @@ const AjoSetupBlockModal = ({ isOpen, onClose }: AjoSetupBlockModalProps) => {
           <Clock className="w-8 h-8 text-amber-600" />
         </div>
 
-        <h2 className="text-xl font-bold text-slate-900 mb-2">Registration Fee Required</h2>
+        <h2 className="text-xl font-bold text-blue-950 mb-2">Registration Fee Required</h2>
 
         <p className="text-slate-500 text-sm mb-6">
           Your registration fee payment is pending admin approval. You will be able to set up Ajo once your payment is approved.
@@ -36,7 +36,7 @@ const AjoSetupBlockModal = ({ isOpen, onClose }: AjoSetupBlockModalProps) => {
 
         <button
           onClick={onClose}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-2xl text-sm transition-all active:scale-[0.985] cursor-pointer"
+          className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-2xl text-sm transition-all active:scale-[0.985] cursor-pointer"
         >
           Got it
         </button>

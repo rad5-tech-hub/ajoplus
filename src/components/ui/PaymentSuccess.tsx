@@ -54,13 +54,13 @@ const PaymentSuccess = ({
 
           {/* Animated check icon */}
           <div className="relative mx-auto w-20 h-20 mb-6">
-            <div className="absolute inset-0 bg-emerald-100 rounded-full animate-ping opacity-30" />
-            <div className="relative w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center">
-              <CheckCircle className="w-10 h-10 text-emerald-600" strokeWidth={2.5} />
+            <div className="absolute inset-0 bg-amber-100 rounded-full animate-ping opacity-30" />
+            <div className="relative w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center">
+              <CheckCircle className="w-10 h-10 text-amber-600" strokeWidth={2.5} />
             </div>
           </div>
 
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">Receipt Submitted!</h1>
+          <h1 className="text-2xl font-bold text-blue-950 mb-2">Receipt Submitted!</h1>
           <p className="text-slate-500 text-sm leading-relaxed">
             {meta.description}
           </p>
@@ -73,7 +73,7 @@ const PaymentSuccess = ({
             <div className="flex items-center gap-3">
               <span className="text-2xl">{meta.emoji}</span>
               <div className="text-left">
-                <p className="font-semibold text-slate-900">{meta.label}</p>
+                <p className="font-semibold text-blue-950">{meta.label}</p>
                 {packageName && (
                   <p className="text-sm text-slate-500 mt-0.5">{packageName}</p>
                 )}
@@ -89,7 +89,7 @@ const PaymentSuccess = ({
           {parsedAmount && parsedAmount > 0 && (
             <div className="px-6 py-4 border-b border-slate-100">
               <p className="text-xs text-slate-400 mb-1">Amount Submitted</p>
-              <p className="text-2xl font-bold text-emerald-600">
+              <p className="text-2xl font-bold text-amber-600">
                 {formatCurrency(parsedAmount, 'NGN')}
               </p>
               <p className="text-xs text-slate-400 mt-0.5">
@@ -101,11 +101,11 @@ const PaymentSuccess = ({
           {/* Timeline */}
           <div className="px-6 py-4">
             <div className="flex items-start gap-3">
-              <div className="w-7 h-7 bg-emerald-100 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
-                <Receipt className="w-3.5 h-3.5 text-emerald-600" />
+              <div className="w-7 h-7 bg-amber-100 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+                <Receipt className="w-3.5 h-3.5 text-amber-600" />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-900">Receipt received</p>
+                <p className="text-sm font-medium text-blue-950">Receipt received</p>
                 <p className="text-xs text-slate-400 mt-0.5">Just now</p>
               </div>
             </div>
@@ -117,7 +117,7 @@ const PaymentSuccess = ({
                 <Clock className="w-3.5 h-3.5 text-slate-400" />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-900">Admin review</p>
+                <p className="text-sm font-medium text-blue-950">Admin review</p>
                 <p className="text-xs text-slate-400 mt-0.5">Within 24 hours</p>
               </div>
             </div>
@@ -129,7 +129,7 @@ const PaymentSuccess = ({
                 <CheckCircle className="w-3.5 h-3.5 text-slate-400" />
               </div>
               <div>
-                <p className="text-sm font-medium text-slate-900">Payment approved</p>
+                <p className="text-sm font-medium text-blue-950">Payment approved</p>
                 <p className="text-xs text-slate-400 mt-0.5">You'll get a notification</p>
               </div>
             </div>
@@ -139,7 +139,7 @@ const PaymentSuccess = ({
         {/* CTA */}
         <button
           onClick={handleBack}
-          className="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] transition-all text-white font-semibold py-4 rounded-2xl text-base cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 active:scale-[0.985] transition-all text-white font-semibold py-4 rounded-2xl text-base cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Dashboard

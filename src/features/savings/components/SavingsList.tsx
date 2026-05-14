@@ -13,7 +13,7 @@ const SavingsList = ({ plans, isLoading, onSetupClick, onWithdraw }: SavingsList
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm animate-pulse">
+        <div className="bg-white border border-amber-200 rounded-3xl p-5 shadow-sm animate-pulse">
           <div className="h-48 bg-slate-100 rounded-2xl" />
         </div>
       </div>
@@ -22,18 +22,18 @@ const SavingsList = ({ plans, isLoading, onSetupClick, onWithdraw }: SavingsList
 
   if (plans.length === 0) {
     return (
-      <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+      <div className="bg-white border border-amber-200 rounded-3xl p-6 shadow-sm">
         <div className="text-center py-6">
-          <div className="mx-auto w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center mb-4">
-            <PiggyBank className="w-7 h-7 text-emerald-600" />
+          <div className="mx-auto w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center mb-4">
+            <PiggyBank className="w-7 h-7 text-amber-600" />
           </div>
-          <h3 className="font-semibold text-slate-900 text-base mb-1">No Active Savings Plans</h3>
+          <h3 className="font-semibold text-blue-950 text-base mb-1">No Active Savings Plans</h3>
           <p className="text-slate-500 text-sm max-w-xs mx-auto leading-snug mb-5">
             Start saving daily and build your emergency fund with just ₦500 per day.
           </p>
           <button
             onClick={onSetupClick}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-2xl text-sm transition-all active:scale-[0.985] cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 px-6 rounded-2xl text-sm transition-all active:scale-[0.985] cursor-pointer"
           >
             <PiggyBank className="w-4 h-4" />
             Start Saving Now

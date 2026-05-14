@@ -106,7 +106,7 @@ const PackagesSection = () => {
     <section id="packages" className="py-24 bg-[#f8fafc]">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 text-emerald-700 text-sm font-medium tracking-widest">
+          <span className="inline-block px-4 py-1.5 text-amber-700 text-sm font-medium tracking-widest">
             INSTALLMENT SAVINGS
           </span>
           <h2 className="mt-4 text-2xl md:text-4xl font-bold tracking-tighter text-slate-950">
@@ -123,17 +123,17 @@ const PackagesSection = () => {
             return (
               <div
                 key={index}
-                className="bg-white border border-slate-100 hover:border-emerald-200 rounded-3xl p-8 flex flex-col h-full transition-all duration-300 hover:shadow-xl group"
+                className="bg-white border border-slate-100 hover:border-amber-200 rounded-3xl p-8 flex flex-col h-full transition-all duration-300 hover:shadow-xl group"
               >
-                <div className="inline-block px-4 py-1 bg-emerald-100/40 text-emerald-500 text-xs font-medium rounded-2xl mb-6 w-fit">
+                <div className="inline-block px-4 py-1 bg-amber-100/40 text-amber-500 text-xs font-medium rounded-2xl mb-6 w-fit">
                   {pkg.category}
                 </div>
 
-                <h3 className="text-xl font-semibold text-slate-900 mb-3 tracking-tight">
+                <h3 className="text-xl font-semibold text-blue-950 mb-3 tracking-tight">
                   {pkg.name}
                 </h3>
 
-                <div className="text-2xl font-bold text-emerald-600 mb-8">
+                <div className="text-2xl font-bold text-amber-600 mb-8">
                   {pkg.amount}
                 </div>
 
@@ -153,7 +153,7 @@ const PackagesSection = () => {
                   <div className="mb-6">
                     <button
                       onClick={() => setExpanded(isExpanded ? null : `pkg-${index}`)}
-                      className="flex items-center gap-1.5 text-xs text-emerald-600 hover:text-emerald-700 font-medium transition-colors cursor-pointer"
+                      className="flex items-center gap-1.5 text-xs text-amber-600 hover:text-amber-700 font-medium transition-colors cursor-pointer"
                     >
                       {pkg.items.length} item{pkg.items.length !== 1 ? 's' : ''} included
                       <ChevronRight className={`w-3.5 h-3.5 transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`} />
@@ -178,7 +178,7 @@ const PackagesSection = () => {
                 <div className="mt-auto">
                   <Link
                     to="/signup"
-                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.985]"
+                    className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.985]"
                   >
                     <PackageIcon className="w-5 h-5" />
                     Join Package
@@ -195,7 +195,7 @@ const PackagesSection = () => {
               variant="outline"
               size="lg"
               showArrow
-              className="font-medium text-base tracking-wide rounded-3xl cursor-pointer hover:bg-emerald-600 hover:text-white hover:border-emerald-700"
+              className="font-medium text-base tracking-wide rounded-3xl cursor-pointer hover:bg-amber-600 hover:text-white hover:border-amber-700"
             >
               View All Packages
             </Button>

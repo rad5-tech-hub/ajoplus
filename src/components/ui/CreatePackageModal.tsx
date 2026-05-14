@@ -170,10 +170,10 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
         {/* ── Header ── */}
         <div className="flex items-center justify-between px-5 py-4 md:px-6 md:py-5 border-b border-slate-100 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 md:w-9 md:h-9 bg-emerald-100 rounded-2xl flex items-center justify-center text-lg">
+            <div className="w-8 h-8 md:w-9 md:h-9 bg-amber-100 rounded-2xl flex items-center justify-center text-lg">
               📦
             </div>
-            <h2 className="text-xl md:text-2xl font-semibold text-slate-900">{modalTitle}</h2>
+            <h2 className="text-xl md:text-2xl font-semibold text-blue-950">{modalTitle}</h2>
           </div>
           <button
             onClick={handleClose}
@@ -208,7 +208,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
                 value={formData.name}
                 onChange={handleInputChange}
                 disabled={isSaving}
-                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 disabled:bg-slate-50"
+                className="w-full px-4 py-3 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 disabled:bg-slate-50"
               />
             </div>
 
@@ -221,7 +221,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
                 value={formData.categoryId}
                 onChange={handleInputChange}
                 disabled={isSaving || categoriesLoading}
-                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white disabled:bg-slate-50"
+                className="w-full px-4 py-3 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 bg-white disabled:bg-slate-50"
               >
                 <option value="">
                   {categoriesLoading ? 'Loading…' : 'Select category'}
@@ -248,7 +248,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
                   }))
                 }
                 disabled={isSaving}
-                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 bg-white disabled:bg-slate-50"
+                className="w-full px-4 py-3 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 bg-white disabled:bg-slate-50"
               >
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
@@ -271,7 +271,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
                 value={formData.totalPrice}
                 onChange={handleInputChange}
                 disabled={isSaving}
-                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 disabled:bg-slate-50"
+                className="w-full px-4 py-3 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 disabled:bg-slate-50"
               />
             </div>
             <div>
@@ -286,7 +286,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
                 value={formData.duration}
                 onChange={handleInputChange}
                 disabled={isSaving}
-                className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 disabled:bg-slate-50"
+                className="w-full px-4 py-3 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 disabled:bg-slate-50"
               />
             </div>
           </div>
@@ -303,7 +303,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
               value={formData.description}
               onChange={handleInputChange}
               disabled={isSaving}
-              className="w-full px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 resize-y disabled:bg-slate-50"
+              className="w-full px-4 py-3 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 resize-y disabled:bg-slate-50"
             />
           </div>
 
@@ -311,7 +311,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
           <div>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className="font-medium text-slate-900">
+                <p className="font-medium text-blue-950">
                   Package Items{' '}
                   <span className="text-slate-400 font-normal">(Optional)</span>
                 </p>
@@ -320,7 +320,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
               <button
                 onClick={addItem}
                 disabled={isSaving}
-                className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2.5 rounded-2xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="flex items-center gap-1.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium px-4 py-2.5 rounded-2xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 <Plus className="w-4 h-4" /> Add Item
               </button>
@@ -329,7 +329,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
             <div className="space-y-3">
               {packageItems.map((item, index) => (
                 <div key={item.id} className="flex flex-col sm:flex-row gap-3 items-start">
-                  <div className="w-7 h-7 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-sm font-semibold shrink-0 mt-3">
+                  <div className="w-7 h-7 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center text-sm font-semibold shrink-0 mt-3">
                     {index + 1}
                   </div>
                   <input
@@ -338,7 +338,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
                     value={item.itemName}
                     onChange={(e) => updateItem(item.id, 'itemName', e.target.value)}
                     disabled={isSaving}
-                    className="flex-1 px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 disabled:bg-slate-50"
+                    className="flex-1 px-4 py-3 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 disabled:bg-slate-50"
                   />
                   <input
                     type="text"
@@ -346,7 +346,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
                     value={item.quantity}
                     onChange={(e) => updateItem(item.id, 'quantity', e.target.value)}
                     disabled={isSaving}
-                    className="w-full sm:w-44 px-4 py-3 text-base border border-slate-200 rounded-2xl focus:outline-none focus:border-emerald-600 disabled:bg-slate-50"
+                    className="w-full sm:w-44 px-4 py-3 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 disabled:bg-slate-50"
                   />
                   <button
                     onClick={() => removeItem(item.id)}
@@ -374,7 +374,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
           <button
             onClick={handleSubmit}
             disabled={isSaving}
-            className="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] transition-all text-white font-semibold rounded-2xl flex items-center justify-center gap-2 disabled:bg-emerald-400 disabled:cursor-not-allowed cursor-pointer"
+            className="flex-1 py-4 bg-amber-600 hover:bg-amber-700 active:scale-[0.985] transition-all text-white font-semibold rounded-2xl flex items-center justify-center gap-2 disabled:bg-amber-400 disabled:cursor-not-allowed cursor-pointer"
           >
             {isSaving ? (
               <>

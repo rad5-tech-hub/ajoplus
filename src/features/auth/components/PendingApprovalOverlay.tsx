@@ -25,7 +25,7 @@ const PendingApprovalOverlay = () => {
           <Clock className="w-8 h-8 text-amber-600" />
         </div>
 
-        <h2 className="text-xl font-bold text-slate-900 mb-2">
+        <h2 className="text-xl font-bold text-blue-950 mb-2">
           {status === 'rejected' ? 'Payment Rejected' : 'Payment Pending Approval'}
         </h2>
 
@@ -48,27 +48,27 @@ const PendingApprovalOverlay = () => {
         )}
 
         {fee && status !== 'rejected' && (
-          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-left text-sm space-y-2 mb-6">
+          <div className="bg-slate-50 border border-amber-200 rounded-2xl p-4 text-left text-sm space-y-2 mb-6">
             <p className="text-slate-500">Submitted on: <span className="font-medium text-slate-700">{new Date(fee.createdAt).toLocaleDateString()}</span></p>
             <p className="text-slate-500">Amount: <span className="font-medium text-slate-700">₦{fee.amount.toLocaleString()}</span></p>
             {fee.proofFile && (
               <a href={fee.proofFile} target="_blank" rel="noopener noreferrer"
-                className="text-emerald-600 hover:text-emerald-700 underline font-medium inline-block">
+                className="text-amber-600 hover:text-amber-700 underline font-medium inline-block">
                 View Receipt
               </a>
             )}
           </div>
         )}
 
-        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-sm text-slate-600 mb-6">
+        <div className="bg-slate-50 border border-amber-200 rounded-2xl p-4 text-sm text-slate-600 mb-6">
           <p className="font-medium text-slate-700 mb-1">Need help?</p>
-          <p>Contact support at <span className="text-emerald-600 font-medium">support@abagold.com</span></p>
+          <p>Contact support at <span className="text-amber-600 font-medium">support@abagold.com</span></p>
         </div>
 
         <button
           onClick={() => refetch()}
           disabled={isFetching}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-semibold py-3 rounded-2xl text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+          className="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-amber-400 text-white font-semibold py-3 rounded-2xl text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
           {isFetching ? 'Checking...' : 'Refresh Status'}

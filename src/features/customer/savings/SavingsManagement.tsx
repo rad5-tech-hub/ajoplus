@@ -31,21 +31,21 @@ const SavingsManagement = () => {
       <div className="max-w-2xl mx-auto px-4 py-8">
         <button
           onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 bg-white border border-slate-200 rounded-2xl px-4 py-2 text-sm transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-slate-600 hover:text-blue-950 bg-white border border-amber-200 rounded-2xl px-4 py-2 text-sm transition-colors mb-6"
         >
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
 
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">My Savings Plans</h1>
+            <h1 className="text-2xl font-bold text-blue-950">My Savings Plans</h1>
             <p className="text-slate-500 text-sm mt-0.5">
               {plans.length} plan{plans.length !== 1 ? 's' : ''} active
             </p>
           </div>
           <button
             onClick={() => setShowCreate(true)}
-            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-2xl text-sm transition-all active:scale-[0.985]"
+            className="flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold px-4 py-2.5 rounded-2xl text-sm transition-all active:scale-[0.985]"
           >
             <Plus className="w-4 h-4" />
             New Plan
@@ -53,15 +53,15 @@ const SavingsManagement = () => {
         </div>
 
         {plans.length === 0 && !showCreate ? (
-          <div className="bg-white border border-slate-200 rounded-3xl p-12 text-center">
-            <div className="mx-auto w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center mb-4">
-              <PiggyBank className="w-8 h-8 text-emerald-600" />
+          <div className="bg-white border border-amber-200 rounded-3xl p-12 text-center">
+            <div className="mx-auto w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center mb-4">
+              <PiggyBank className="w-8 h-8 text-amber-600" />
             </div>
-            <p className="font-semibold text-slate-900 mb-1">No savings plans yet</p>
+            <p className="font-semibold text-blue-950 mb-1">No savings plans yet</p>
             <p className="text-slate-500 text-sm mb-6">Create your first plan to start saving daily.</p>
             <button
               onClick={() => setShowCreate(true)}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3 rounded-2xl text-sm transition-all"
+              className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-6 py-3 rounded-2xl text-sm transition-all"
             >
               Create Plan
             </button>
@@ -69,10 +69,10 @@ const SavingsManagement = () => {
         ) : (
           <div className="space-y-4">
             {plans.map((plan) => (
-              <div key={plan.id} className="bg-white border border-slate-200 rounded-3xl p-5 shadow-sm">
+              <div key={plan.id} className="bg-white border border-amber-200 rounded-3xl p-5 shadow-sm">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <p className="font-semibold text-slate-900">
+                    <p className="font-semibold text-blue-950">
                       {plan.name}
                     </p>
                     <p className="text-xs text-slate-400 mt-0.5">
@@ -81,7 +81,7 @@ const SavingsManagement = () => {
                       })}
                     </p>
                   </div>
-                  <span className="bg-emerald-100 text-emerald-700 text-xs font-medium px-3 py-1 rounded-full">
+                  <span className="bg-amber-100 text-amber-700 text-xs font-medium px-3 py-1 rounded-full">
                     {plan.status}
                   </span>
                 </div>
@@ -89,19 +89,19 @@ const SavingsManagement = () => {
                 <div className="grid grid-cols-3 gap-3 bg-slate-50 rounded-2xl p-4 mb-4">
                   <div>
                     <p className="text-xs text-slate-500">Daily Amount</p>
-                    <p className="font-semibold text-slate-900 mt-0.5 text-sm">
+                    <p className="font-semibold text-blue-950 mt-0.5 text-sm">
                       {formatCurrency(plan.dailyAmount)}
                     </p>
                   </div>
                   <div>
                     <p className="text-xs text-slate-500">Total Saved</p>
-                    <p className="font-semibold text-slate-900 mt-0.5 text-sm">
+                    <p className="font-semibold text-blue-950 mt-0.5 text-sm">
                       {formatCurrency(plan.totalSaved)}
                     </p>
                   </div>
                   <div>
                     <p className="text-xs text-slate-500">Balance</p>
-                    <p className="font-semibold text-emerald-600 mt-0.5 text-sm">
+                    <p className="font-semibold text-amber-600 mt-0.5 text-sm">
                       {formatCurrency(plan.availableBalance)}
                     </p>
                   </div>
@@ -116,13 +116,13 @@ const SavingsManagement = () => {
                         savingPlanId: plan.id,
                       },
                     })}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 rounded-2xl text-sm transition-all active:scale-[0.985]"
+                    className="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2.5 rounded-2xl text-sm transition-all active:scale-[0.985]"
                   >
                     Add to Plan
                   </button>
                   <button
                     onClick={() => setWithdrawPlanId(plan.id)}
-                    className="flex-1 border border-emerald-600 text-emerald-600 hover:bg-emerald-50 font-semibold py-2.5 rounded-2xl text-sm transition-colors"
+                    className="flex-1 border border-amber-600 text-amber-600 hover:bg-amber-50 font-semibold py-2.5 rounded-2xl text-sm transition-colors"
                   >
                     Withdraw
                   </button>
@@ -172,8 +172,8 @@ const CreatePlanInline = ({ onClose }: { onClose: () => void }) => {
   };
 
   return (
-    <div className="mt-6 bg-white border border-emerald-200 rounded-3xl p-6">
-      <h3 className="font-semibold text-slate-900 mb-4">Create New Plan</h3>
+    <div className="mt-6 bg-white border border-amber-200 rounded-3xl p-6">
+      <h3 className="font-semibold text-blue-950 mb-4">Create New Plan</h3>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1.5">Daily Amount</label>
@@ -183,7 +183,7 @@ const CreatePlanInline = ({ onClose }: { onClose: () => void }) => {
               type="number" value={amount} min="100"
               onChange={(e) => { setAmount(e.target.value); setError(null); }}
               placeholder="500" disabled={isPending}
-              className="w-full pl-9 pr-4 py-3 border border-slate-200 focus:border-emerald-600 rounded-2xl focus:outline-none text-base disabled:opacity-50"
+              className="w-full pl-9 pr-4 py-3 border border-amber-200 focus:border-amber-600 rounded-2xl focus:outline-none text-base disabled:opacity-50"
             />
           </div>
           <p className="text-xs text-slate-400 mt-1">Minimum ₦100/day</p>
@@ -196,7 +196,7 @@ const CreatePlanInline = ({ onClose }: { onClose: () => void }) => {
             type="text" value={desc}
             onChange={(e) => setDesc(e.target.value)}
             placeholder="e.g. School fees, emergency fund..." disabled={isPending}
-            className="w-full px-4 py-3 border border-slate-200 focus:border-emerald-600 rounded-2xl focus:outline-none text-sm disabled:opacity-50"
+            className="w-full px-4 py-3 border border-amber-200 focus:border-amber-600 rounded-2xl focus:outline-none text-sm disabled:opacity-50"
           />
         </div>
         {error && (
@@ -211,7 +211,7 @@ const CreatePlanInline = ({ onClose }: { onClose: () => void }) => {
           </button>
           <button
             type="submit" disabled={isPending}
-            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-2xl text-sm disabled:opacity-50 cursor-pointer"
+            className="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-2xl text-sm disabled:opacity-50 cursor-pointer"
           >
             {isPending ? 'Creating…' : 'Create Plan'}
           </button>

@@ -76,7 +76,7 @@ const PlatformSettings = () => {
 	if (settingsLoading) {
 		return (
 			<div className="flex items-center justify-center py-12">
-				<Loader2 className="w-6 h-6 animate-spin text-emerald-600" />
+				<Loader2 className="w-6 h-6 animate-spin text-amber-600" />
 			</div>
 		);
 	}
@@ -86,10 +86,10 @@ const PlatformSettings = () => {
 			{/* Ajo Commission Rate */}
 			<div className="bg-white border border-slate-100 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8">
 				<div className="flex items-center gap-3 mb-5 sm:mb-6">
-					<div className="w-8 h-8 bg-emerald-100 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 text-base">
+					<div className="w-8 h-8 bg-amber-100 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 text-base">
 						⚙️
 					</div>
-					<h3 className="text-xl sm:text-2xl font-semibold text-slate-900">Ajo Commission Rate</h3>
+					<h3 className="text-xl sm:text-2xl font-semibold text-blue-950">Ajo Commission Rate</h3>
 				</div>
 
 				<div className="flex items-center gap-4 sm:gap-8 mb-5 sm:mb-6">
@@ -101,9 +101,9 @@ const PlatformSettings = () => {
 						value={commissionRate}
 						onChange={(e) => setCommissionRate(parseFloat(e.target.value))}
 						disabled={updatePending}
-						className="flex-1 accent-emerald-600 h-2 disabled:opacity-50"
+						className="flex-1 accent-amber-600 h-2 disabled:opacity-50"
 					/>
-					<span className="text-3xl sm:text-4xl font-bold text-emerald-600 shrink-0 w-16 text-right">
+					<span className="text-3xl sm:text-4xl font-bold text-amber-600 shrink-0 w-16 text-right">
 						{commissionRate.toFixed(1)}%
 					</span>
 				</div>
@@ -116,7 +116,7 @@ const PlatformSettings = () => {
 				<button
 					onClick={handleSaveCommissionRate}
 					disabled={updatePending}
-					className="mt-6 sm:mt-8 cursor-pointer bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 active:scale-95 transition-all text-white px-6 sm:px-10 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base w-full sm:w-auto flex items-center justify-center gap-2"
+					className="mt-6 sm:mt-8 cursor-pointer bg-amber-600 hover:bg-amber-700 disabled:opacity-50 active:scale-95 transition-all text-white px-6 sm:px-10 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base w-full sm:w-auto flex items-center justify-center gap-2"
 				>
 					{updatePending ? (
 						<>
@@ -131,7 +131,7 @@ const PlatformSettings = () => {
 
 			{/* Bank Account Details */}
 			<div className="bg-white border border-slate-100 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8">
-				<h3 className="text-xl sm:text-2xl font-semibold text-slate-900 mb-5 sm:mb-8">
+				<h3 className="text-xl sm:text-2xl font-semibold text-blue-950 mb-5 sm:mb-8">
 					Bank Account Details
 				</h3>
 
@@ -146,7 +146,7 @@ const PlatformSettings = () => {
 							value={bankName}
 							onChange={(e) => setBankName(e.target.value)}
 							disabled={updatePending}
-							className="w-full px-4 sm:px-5 py-3 sm:py-4 border border-slate-200 rounded-xl sm:rounded-2xl focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none text-sm sm:text-base transition-colors disabled:opacity-50"
+							className="w-full px-4 sm:px-5 py-3 sm:py-4 border border-amber-200 rounded-xl sm:rounded-2xl focus:border-amber-600 focus:ring-2 focus:ring-amber-100 outline-none text-sm sm:text-base transition-colors disabled:opacity-50"
 						/>
 					</div>
 					<div>
@@ -159,7 +159,7 @@ const PlatformSettings = () => {
 							value={accountNumber}
 							onChange={(e) => setAccountNumber(e.target.value)}
 							disabled={updatePending}
-							className="w-full px-4 sm:px-5 py-3 sm:py-4 border border-slate-200 rounded-xl sm:rounded-2xl focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none text-sm sm:text-base transition-colors disabled:opacity-50"
+							className="w-full px-4 sm:px-5 py-3 sm:py-4 border border-amber-200 rounded-xl sm:rounded-2xl focus:border-amber-600 focus:ring-2 focus:ring-amber-100 outline-none text-sm sm:text-base transition-colors disabled:opacity-50"
 						/>
 					</div>
 					<div>
@@ -172,7 +172,7 @@ const PlatformSettings = () => {
 							value={accountName}
 							onChange={(e) => setAccountName(e.target.value)}
 							disabled={updatePending}
-							className="w-full px-4 sm:px-5 py-3 sm:py-4 border border-slate-200 rounded-xl sm:rounded-2xl focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none text-sm sm:text-base transition-colors disabled:opacity-50"
+							className="w-full px-4 sm:px-5 py-3 sm:py-4 border border-amber-200 rounded-xl sm:rounded-2xl focus:border-amber-600 focus:ring-2 focus:ring-amber-100 outline-none text-sm sm:text-base transition-colors disabled:opacity-50"
 						/>
 					</div>
 				</div>
@@ -180,7 +180,7 @@ const PlatformSettings = () => {
 				<button
 					onClick={handleUpdateBankDetails}
 					disabled={updatePending}
-					className="mt-6 sm:mt-10 cursor-pointer bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 active:scale-95 transition-all text-white px-6 sm:px-10 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base w-full sm:w-auto flex items-center justify-center gap-2"
+					className="mt-6 sm:mt-10 cursor-pointer bg-amber-600 hover:bg-amber-700 disabled:opacity-50 active:scale-95 transition-all text-white px-6 sm:px-10 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base w-full sm:w-auto flex items-center justify-center gap-2"
 				>
 					{updatePending ? (
 						<>

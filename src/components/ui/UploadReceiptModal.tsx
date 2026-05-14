@@ -90,7 +90,7 @@ const UploadReceiptModal = ({
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-xl">
         <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b">
-          <h2 className="text-2xl font-semibold text-slate-900">Upload Receipt</h2>
+          <h2 className="text-2xl font-semibold text-blue-950">Upload Receipt</h2>
           <button
             onClick={onClose}
             disabled={isPending}
@@ -116,19 +116,19 @@ const UploadReceiptModal = ({
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={() => !isPending && fileInputRef.current?.click()}
-                className={`border-2 border-dashed border-emerald-400 rounded-2xl p-10 text-center
+                className={`border-2 border-dashed border-amber-400 rounded-2xl p-10 text-center
                   transition-all cursor-pointer min-h-44 flex flex-col items-center justify-center
-                  ${isDragging ? 'bg-emerald-50 border-emerald-600' : 'hover:border-emerald-500'}
+                  ${isDragging ? 'bg-amber-50 border-amber-600' : 'hover:border-amber-500'}
                   ${isPending ? 'opacity-50 pointer-events-none' : ''}`}
               >
-                <Upload className="w-12 h-12 text-emerald-500 mb-4" />
+                <Upload className="w-12 h-12 text-amber-500 mb-4" />
                 <p className="font-medium text-slate-700">Click to upload receipt</p>
                 <p className="text-xs text-slate-500 mt-1">PNG, JPG or PDF up to 5MB</p>
               </div>
             ) : (
-              <div className="border-2 border-emerald-200 bg-emerald-50 rounded-2xl p-6 text-center">
-                <div className="text-emerald-600 mb-2 font-medium">✓ File selected</div>
-                <p className="text-sm text-slate-900 break-all">{file.name}</p>
+              <div className="border-2 border-amber-200 bg-amber-50 rounded-2xl p-6 text-center">
+                <div className="text-amber-600 mb-2 font-medium">✓ File selected</div>
+                <p className="text-sm text-blue-950 break-all">{file.name}</p>
                 <button
                   onClick={removeFile}
                   disabled={isPending}
@@ -158,7 +158,7 @@ const UploadReceiptModal = ({
               }}
               placeholder="Enter amount"
               disabled={isPending}
-              className="w-full border border-slate-200 focus:border-emerald-500 rounded-2xl px-5 py-4
+              className="w-full border border-amber-200 focus:border-amber-500 rounded-2xl px-5 py-4
                 text-lg focus:outline-none transition-colors disabled:opacity-50"
             />
             <p className="text-xs text-slate-500 mt-2">Recommended: {recommendedAmount}</p>
@@ -180,7 +180,7 @@ const UploadReceiptModal = ({
             className={`flex-1 font-semibold py-3.5 rounded-2xl flex items-center justify-center gap-2
               transition-all ${
                 canSubmit
-                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                  ? 'bg-amber-600 hover:bg-amber-700 text-white'
                   : 'bg-slate-200 text-slate-400 cursor-not-allowed'
               }`}
           >

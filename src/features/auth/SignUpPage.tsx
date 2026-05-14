@@ -184,12 +184,12 @@ const SignupPage = () => {
   };
 
   const inputCls =
-    'w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none transition-all';
+    'w-full px-4 py-4 bg-slate-50 border border-amber-200 rounded-2xl focus:border-amber-600 focus:ring-2 focus:ring-amber-100 outline-none transition-all';
   const iconInputCls =
-    'w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none transition-all';
+    'w-full pl-11 pr-4 py-4 bg-slate-50 border border-amber-200 rounded-2xl focus:border-amber-600 focus:ring-2 focus:ring-amber-100 outline-none transition-all';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-600 to-emerald-700 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-amber-600 to-amber-700 flex items-center justify-center p-6">
       <RegistrationFeeModal
         isOpen={showFeeModal}
         userName={formData.fullName}
@@ -219,7 +219,7 @@ const SignupPage = () => {
               {([1, 2, 3, 4, 5] as Step[]).map((s) => (
                 <div
                   key={s}
-                  className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${s <= step ? 'bg-emerald-600' : 'bg-slate-200'}`}
+                  className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${s <= step ? 'bg-amber-600' : 'bg-slate-200'}`}
                 />
               ))}
             </div>
@@ -228,7 +228,7 @@ const SignupPage = () => {
             </p>
           </div>
 
-          <h1 className="text-3xl font-bold text-slate-900 mb-1">Create Account</h1>
+          <h1 className="text-3xl font-bold text-blue-950 mb-1">Create Account</h1>
           <p className="text-slate-500 mb-6">Join thousands of smart savers</p>
 
           {(error || localError) && (
@@ -260,7 +260,7 @@ const SignupPage = () => {
                         <img
                           src={formData.profilePreview}
                           alt="Profile preview"
-                          className="w-20 h-20 rounded-2xl object-cover border-2 border-emerald-200 shadow-sm"
+                          className="w-20 h-20 rounded-2xl object-cover border-2 border-amber-200 shadow-sm"
                         />
                         <button
                           type="button"
@@ -276,7 +276,7 @@ const SignupPage = () => {
                         <button
                           type="button"
                           onClick={clearProfileImage}
-                          className="text-emerald-600 hover:text-emerald-700 font-medium mt-1 cursor-pointer"
+                          className="text-amber-600 hover:text-amber-700 font-medium mt-1 cursor-pointer"
                         >
                           Change photo
                         </button>
@@ -287,12 +287,12 @@ const SignupPage = () => {
                       <button
                         type="button"
                         onClick={() => cameraInputRef.current?.click()}
-                        className="flex-1 flex flex-col items-center gap-2 p-4 border-2 border-dashed border-slate-200 rounded-2xl hover:border-emerald-400 hover:bg-emerald-50 transition-all group"
+                        className="flex-1 flex flex-col items-center gap-2 p-4 border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 hover:bg-amber-50 transition-all group"
                       >
-                        <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
-                          <Camera className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition-colors" />
+                        <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-amber-100 flex items-center justify-center transition-colors">
+                          <Camera className="w-5 h-5 text-slate-400 group-hover:text-amber-600 transition-colors" />
                         </div>
-                        <span className="text-xs font-medium text-slate-500 group-hover:text-emerald-600 transition-colors">
+                        <span className="text-xs font-medium text-slate-500 group-hover:text-amber-600 transition-colors">
                           Take Photo
                         </span>
                       </button>
@@ -300,12 +300,12 @@ const SignupPage = () => {
                       <button
                         type="button"
                         onClick={() => uploadInputRef.current?.click()}
-                        className="flex-1 flex flex-col items-center gap-2 p-4 border-2 border-dashed border-slate-200 rounded-2xl hover:border-emerald-400 hover:bg-emerald-50 transition-all group"
+                        className="flex-1 flex flex-col items-center gap-2 p-4 border-2 border-dashed border-amber-200 rounded-2xl hover:border-amber-400 hover:bg-amber-50 transition-all group"
                       >
-                        <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-emerald-100 flex items-center justify-center transition-colors">
-                          <Upload className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition-colors" />
+                        <div className="w-10 h-10 rounded-xl bg-slate-100 group-hover:bg-amber-100 flex items-center justify-center transition-colors">
+                          <Upload className="w-5 h-5 text-slate-400 group-hover:text-amber-600 transition-colors" />
                         </div>
-                        <span className="text-xs font-medium text-slate-500 group-hover:text-emerald-600 transition-colors">
+                        <span className="text-xs font-medium text-slate-500 group-hover:text-amber-600 transition-colors">
                           Upload Photo
                         </span>
                       </button>
@@ -383,7 +383,7 @@ const SignupPage = () => {
                 <button
                   type="button"
                   onClick={nextStep}
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
+                  className="w-full bg-amber-600 hover:bg-amber-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
                 >
                   Next <ArrowRight className="w-5 h-5" />
                 </button>
@@ -394,7 +394,7 @@ const SignupPage = () => {
             {step === 2 && (
               <div className="space-y-5">
                 <div className="flex items-center gap-2 text-sm text-slate-500 bg-slate-50 rounded-2xl px-4 py-3 mb-2">
-                  <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <MapPin className="w-4 h-4 text-amber-600 shrink-0" />
                   <span>This address will be used for product deliveries and your profile.</span>
                 </div>
 
@@ -405,7 +405,7 @@ const SignupPage = () => {
                   <textarea
                     rows={2}
                     placeholder="12 Adeola Odeku Street, Victoria Island"
-                    className="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none transition-all resize-none"
+                    className="w-full px-4 py-4 bg-slate-50 border border-amber-200 rounded-2xl focus:border-amber-600 focus:ring-2 focus:ring-amber-100 outline-none transition-all resize-none"
                     value={formData.streetAddress}
                     onChange={(e) => setFormData({ ...formData, streetAddress: e.target.value })}
                     required
@@ -457,7 +457,7 @@ const SignupPage = () => {
                   <button
                     type="button"
                     onClick={nextStep}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
+                    className="flex-1 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
                   >
                     Next <ArrowRight className="w-5 h-5" />
                   </button>
@@ -539,7 +539,7 @@ const SignupPage = () => {
                         : formData.accountName &&
                           formData.accountName.trim().toLowerCase() ===
                           formData.fullName.trim().toLowerCase()
-                          ? 'border-emerald-300 bg-emerald-50 focus:border-emerald-500'
+                          ? 'border-amber-300 bg-amber-50 focus:border-amber-500'
                           : ''
                         }`}
                       value={formData.accountName}
@@ -550,7 +550,7 @@ const SignupPage = () => {
                       <div className="absolute right-4 top-1/2 -translate-y-1/2">
                         {formData.accountName.trim().toLowerCase() ===
                           formData.fullName.trim().toLowerCase() ? (
-                          <Check className="w-5 h-5 text-emerald-500" />
+                          <Check className="w-5 h-5 text-amber-500" />
                         ) : (
                           <X className="w-5 h-5 text-red-400" />
                         )}
@@ -577,7 +577,7 @@ const SignupPage = () => {
                   <button
                     type="button"
                     onClick={nextStep}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
+                    className="flex-1 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
                   >
                     Next <ArrowRight className="w-5 h-5" />
                   </button>
@@ -599,8 +599,8 @@ const SignupPage = () => {
                         type="button"
                         onClick={() => setFormData({ ...formData, accountType: type })}
                         className={`py-4 px-3 rounded-2xl border-2 font-medium text-sm transition-all active:scale-95 ${formData.accountType === type
-                          ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
-                          : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                          ? 'border-amber-600 bg-amber-50 text-amber-700'
+                          : 'border-amber-200 text-slate-600 hover:border-slate-300'
                           }`}
                       >
                         {type === 'customer' ? (
@@ -646,7 +646,7 @@ const SignupPage = () => {
                   <button
                     type="button"
                     onClick={nextStep}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
+                    className="flex-1 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
                   >
                     Next <ArrowRight className="w-5 h-5" />
                   </button>
@@ -666,7 +666,7 @@ const SignupPage = () => {
                     <input
                       type={showPassword ? 'text' : 'password'}
                       placeholder="At least 6 characters"
-                      className="w-full pl-11 pr-12 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 outline-none transition-all"
+                      className="w-full pl-11 pr-12 py-4 bg-slate-50 border border-amber-200 rounded-2xl focus:border-amber-600 focus:ring-2 focus:ring-amber-100 outline-none transition-all"
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                       required
@@ -689,7 +689,7 @@ const SignupPage = () => {
                               ? 'bg-red-400'
                               : i === 2
                                 ? 'bg-amber-400'
-                                : 'bg-emerald-500'
+                                : 'bg-amber-500'
                             : 'bg-slate-200'
                             }`}
                         />
@@ -709,7 +709,7 @@ const SignupPage = () => {
                       placeholder="Re-enter password"
                       className={`w-full pl-11 pr-12 py-4 bg-slate-50 border rounded-2xl focus:ring-2 outline-none transition-all ${formData.confirmPassword && formData.confirmPassword !== formData.password
                         ? 'border-red-300 focus:border-red-400 focus:ring-red-100'
-                        : 'border-slate-200 focus:border-emerald-600 focus:ring-emerald-100'
+                        : 'border-amber-200 focus:border-amber-600 focus:ring-amber-100'
                         }`}
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
@@ -734,12 +734,12 @@ const SignupPage = () => {
                     type="checkbox"
                     checked={formData.agreeTerms}
                     onChange={(e) => setFormData({ ...formData, agreeTerms: e.target.checked })}
-                    className="mt-0.5 w-4 h-4 accent-emerald-600 shrink-0"
+                    className="mt-0.5 w-4 h-4 accent-amber-600 shrink-0"
                   />
                   <span className="text-slate-600 leading-relaxed">
                     I agree to the{' '}
-                    <span className="text-emerald-600 font-medium">Terms of Service</span> and{' '}
-                    <span className="text-emerald-600 font-medium">Privacy Policy</span>
+                    <span className="text-amber-600 font-medium">Terms of Service</span> and{' '}
+                    <span className="text-amber-600 font-medium">Privacy Policy</span>
                   </span>
                 </label>
 
@@ -754,7 +754,7 @@ const SignupPage = () => {
                   <button
                     type="submit"
                     disabled={isLoading || !formData.agreeTerms}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 disabled:cursor-not-allowed active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
+                    className="flex-1 bg-amber-600 hover:bg-amber-700 disabled:bg-amber-300 disabled:cursor-not-allowed active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
                   >
                     {isLoading ? (
                       <>
@@ -787,7 +787,7 @@ const SignupPage = () => {
             Already have an account?{' '}
             <Link
               to="/login"
-              className="text-emerald-600 font-semibold hover:text-emerald-700 transition-colors"
+              className="text-amber-600 font-semibold hover:text-amber-700 transition-colors"
             >
               Sign in
             </Link>

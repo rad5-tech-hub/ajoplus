@@ -5,18 +5,18 @@ const QuickActions = () => {
 const navigate = useNavigate();
   return (
     <div className="bg-white border border-slate-300 shadow-lg rounded-3xl p-6">
-      <h3 className="font-semibold text-slate-900 mb-5">Quick Actions</h3>
+      <h3 className="font-semibold text-blue-950 mb-5">Quick Actions</h3>
 
       <div className="space-y-3">
         <button
           onClick={() => navigate(`/dashboard/customer/payment`)}
-          className="w-full cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-4 rounded-2xl transition-all active:scale-[0.985]"
+          className="w-full cursor-pointer bg-amber-600 hover:bg-amber-700 text-white font-semibold py-4 rounded-2xl transition-all active:scale-[0.985]"
         >
           Make Payment
         </button>
 
         <button 
-          onClick={() => navigate(`/browse`)} className="w-full cursor-pointer border border-emerald-600 text-emerald-600 font-semibold py-4 rounded-2xl hover:bg-emerald-50 transition-all">
+          onClick={() => navigate(`/browse`)} className="w-full cursor-pointer border border-amber-600 text-amber-600 font-semibold py-4 rounded-2xl hover:bg-amber-50 transition-all">
           Browse Packages
         </button>
 
