@@ -5,12 +5,12 @@ import HeroSection from './sections/HeroSection';
 import HowItWorksSection from './sections/HowItWorksSection';
 import PackagesSection from './sections/PackagesSection';
 import ProductsSection from './sections/ProductsSection';
-import DailyAjoSection from './sections/DailyAjoSection';
+// import DailyAjoSection from './sections/DailyAjoSection';
 import ReferralSection from './sections/ReferralSection';
-import WhyChooseAbaGold from './sections/ChooseAjo';
+// import WhyChooseAbaGold from './sections/ChooseAjo';
 // import Testimonies from './sections/Testimonies';
 import Faq from './sections/Faq';
-import ReadyToStartSaving from './sections/CtaSection';
+// import ReadyToStartSaving from './sections/CtaSection';
 import Footer from './components/Footer';
 
 import Modal from '@/components/ui/GeneralModal';
@@ -28,11 +28,11 @@ const LandingPage = () => {
 
       <PackagesSection />
       <ProductsSection />
-      <DailyAjoSection />
+      {/* <DailyAjoSection /> */}
       <ReferralSection />
-      <WhyChooseAbaGold />
+      {/* <WhyChooseAbaGold /> */}
       <Faq />
-      <ReadyToStartSaving />
+      {/* <ReadyToStartSaving /> */}
       <Footer />
 
       {/* Global modal — must stay at root of page */}

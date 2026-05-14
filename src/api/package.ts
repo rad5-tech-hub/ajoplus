@@ -24,7 +24,7 @@ export interface Package {
 	id: string;
 	name: string;
 	categoryId: string | null;
-	category?: Category | null;
+	category?: string | Category | null;
 	totalPrice: number | string;
 	duration: number;
 	paymentFrequency: 'daily' | 'weekly' | 'monthly';
@@ -33,6 +33,17 @@ export interface Package {
 	createdBy: string;
 	createdAt: string;
 	updatedAt: string;
+}
+
+export function getPackageCategoryName(pkg: Package): string {
+	if (!pkg.category) return 'Package';
+	if (typeof pkg.category === 'string') return pkg.category;
+	return pkg.category.name;
+}
+
+export function formatPackagePrice(price: number | string): string {
+	const num = parseFloat(String(price));
+	return isNaN(num) ? '₦0' : `₦${num.toLocaleString()}`;
 }
 
 export interface UserPackage {

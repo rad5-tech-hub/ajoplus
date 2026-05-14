@@ -16,7 +16,7 @@ function toPackageCardItem(pkg: Package) {
     id: pkg.id,
     title: pkg.name,
     price: typeof pkg.totalPrice === 'string' ? parseFloat(pkg.totalPrice) : pkg.totalPrice,
-    category: pkg.category?.name ?? 'Package',
+    category: typeof pkg.category === 'string' ? pkg.category : pkg.category?.name ?? 'Package',
     type: 'package' as const,
     duration: `${pkg.duration} month${pkg.duration !== 1 ? 's' : ''}`,
     frequency: pkg.paymentFrequency.charAt(0).toUpperCase() + pkg.paymentFrequency.slice(1),
