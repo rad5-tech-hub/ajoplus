@@ -139,7 +139,7 @@ const PaymentSuccess = ({
         {/* CTA */}
         <button
           onClick={handleBack}
-          className="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] transition-all text-white font-semibold py-4 rounded-2xl text-base"
+          className="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] transition-all text-white font-semibold py-4 rounded-2xl text-base cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Dashboard

@@ -16,7 +16,7 @@ const ReceiptPreviewModal = ({ isOpen, onClose, receiptId }: ReceiptPreviewModal
           <h3 className="font-semibold text-lg md:text-xl">Receipt Preview</h3>
           <button 
             onClick={onClose} 
-            className="text-3xl leading-none text-slate-400 hover:text-slate-600"
+            className="text-3xl leading-none text-slate-400 hover:text-slate-600 cursor-pointer"
           >
             ×
           </button>
@@ -31,11 +31,11 @@ const ReceiptPreviewModal = ({ isOpen, onClose, receiptId }: ReceiptPreviewModal
         <div className="p-5 md:p-6 flex gap-3 border-t">
           <button 
             onClick={onClose} 
-            className="flex-1 py-4 border border-slate-300 rounded-2xl font-medium hover:bg-slate-50 text-base"
+            className="flex-1 py-4 border border-slate-300 rounded-2xl font-medium hover:bg-slate-50 text-base cursor-pointer"
           >
             Close
           </button>
-          <button className="flex-1 py-4 bg-emerald-600 text-white rounded-2xl font-semibold flex items-center justify-center gap-2 text-base">
+          <button className="flex-1 py-4 bg-emerald-600 text-white rounded-2xl font-semibold flex items-center justify-center gap-2 text-base cursor-pointer">
             <Download className="w-5 h-5" /> Download
           </button>
         </div>

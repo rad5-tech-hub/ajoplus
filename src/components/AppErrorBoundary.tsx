@@ -57,14 +57,14 @@ function ErrorFallback({ error, onReset }: ErrorFallbackProps) {
 				<div className="space-y-3">
 					<button
 						onClick={onReset}
-						className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 text-white rounded-2xl font-medium hover:bg-emerald-700 transition-colors active:scale-95"
+						className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 text-white rounded-2xl font-medium hover:bg-emerald-700 transition-colors active:scale-95 cursor-pointer"
 					>
 						<RefreshCw className="w-5 h-5" />
 						Try Again
 					</button>
 					<button
 						onClick={handleGoHome}
-						className="w-full px-4 py-3 bg-slate-200 text-slate-900 rounded-2xl font-medium hover:bg-slate-300 transition-colors active:scale-95"
+						className="w-full px-4 py-3 bg-slate-200 text-slate-900 rounded-2xl font-medium hover:bg-slate-300 transition-colors active:scale-95 cursor-pointer"
 					>
 						Go Home
 					</button>

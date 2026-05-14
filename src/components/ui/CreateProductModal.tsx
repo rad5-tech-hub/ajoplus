@@ -135,7 +135,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
           <button
             onClick={onClose}
             disabled={isSubmitting}
-            className="text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
           >
             <X className="w-5 h-5 md:w-6 md:h-6" />
           </button>
@@ -291,7 +291,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
           <button
             onClick={onClose}
             disabled={isSubmitting}
-            className="md:flex-1 w-full mb-2 md:mb-0 py-4 border-2 border-emerald-600 text-emerald-600 font-semibold rounded-2xl hover:bg-emerald-50 transition-colors text-base disabled:opacity-50 disabled:cursor-not-allowed"
+            className="md:flex-1 w-full mb-2 md:mb-0 py-4 border-2 border-emerald-600 text-emerald-600 font-semibold rounded-2xl hover:bg-emerald-50 transition-colors text-base disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             Cancel
           </button>

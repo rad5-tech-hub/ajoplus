@@ -33,7 +33,7 @@ const SavingsList = ({ plans, isLoading, onSetupClick, onWithdraw }: SavingsList
           </p>
           <button
             onClick={onSetupClick}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-2xl text-sm transition-all active:scale-[0.985]"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-2xl text-sm transition-all active:scale-[0.985] cursor-pointer"
           >
             <PiggyBank className="w-4 h-4" />
             Start Saving Now

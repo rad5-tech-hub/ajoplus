@@ -94,7 +94,7 @@ const UploadReceiptModal = ({
           <button
             onClick={onClose}
             disabled={isPending}
-            className="text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-50"
+            className="text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-50 cursor-pointer"
           >
             <X className="w-6 h-6" />
           </button>
@@ -132,7 +132,7 @@ const UploadReceiptModal = ({
                 <button
                   onClick={removeFile}
                   disabled={isPending}
-                  className="text-red-600 text-sm mt-3 hover:underline disabled:opacity-50"
+                  className="text-red-600 text-sm mt-3 hover:underline disabled:opacity-50 cursor-pointer"
                 >
                   Remove
                 </button>
@@ -170,7 +170,7 @@ const UploadReceiptModal = ({
             onClick={onClose}
             disabled={isPending}
             className="flex-1 border-2 border-slate-300 hover:bg-slate-100 font-medium py-3.5
-              rounded-2xl transition-colors disabled:opacity-50"
+              rounded-2xl transition-colors disabled:opacity-50 cursor-pointer"
           >
             Cancel
           </button>

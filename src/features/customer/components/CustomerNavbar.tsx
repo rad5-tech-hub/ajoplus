@@ -97,7 +97,7 @@ const CustomerNavbar = () => {
             {/* Logout Button */}
             <button
               onClick={logout}
-              className="flex items-center gap-2 px-4 py-2 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-colors text-sm font-medium"
+              className="flex items-center gap-2 px-4 py-2 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-colors text-sm font-medium cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
               <span className="hidden sm:block">Logout</span>

@@ -144,7 +144,7 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-semibold py-4 rounded-2xl text-lg transition-all active:scale-[0.985] flex items-center justify-center gap-2"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-semibold py-4 rounded-2xl text-lg transition-all active:scale-[0.985] flex items-center justify-center gap-2 cursor-pointer"
             >
               {isLoading ? 'Signing in...' : 'Sign In'}
               {!isLoading && <span className="text-xl">→</span>}

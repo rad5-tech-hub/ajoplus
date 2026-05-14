@@ -199,7 +199,7 @@ const PaymentUploadReceipt = ({
               </div>
               <p className="text-slate-600 font-medium">Click to upload or drag and drop</p>
               <p className="text-xs text-slate-500 mt-1">PNG, JPG or PDF (max. 5MB)</p>
-              <button type="button" className="mt-8 bg-slate-900 hover:bg-slate-800 transition-colors text-white px-8 py-3 rounded-2xl font-medium text-sm">
+              <button type="button" className="mt-8 bg-slate-900 hover:bg-slate-800 transition-colors text-white px-8 py-3 rounded-2xl font-medium text-sm cursor-pointer">
                 Choose File
               </button>
             </div>
@@ -211,7 +211,7 @@ const PaymentUploadReceipt = ({
                 </svg>
               </div>
               <p className="font-medium text-slate-900">{file.name}</p>
-              <button onClick={removeFile} disabled={isSubmitting} className="text-red-600 hover:text-red-700 text-sm mt-3 font-medium disabled:opacity-50">
+              <button onClick={removeFile} disabled={isSubmitting} className="text-red-600 hover:text-red-700 text-sm mt-3 font-medium disabled:opacity-50 cursor-pointer">
                 Remove
               </button>
             </div>
@@ -232,7 +232,7 @@ const PaymentUploadReceipt = ({
         <button
           onClick={onBack}
           disabled={isSubmitting}
-          className="flex-1 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-2xl transition-colors"
+          className="flex-1 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-2xl transition-colors cursor-pointer"
         >
           Back
         </button>

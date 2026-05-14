@@ -8,13 +8,19 @@ import ProductManagement from '../components/ProductManagement';
 import PaymentApprovals from '../components/PaymentApprovals';
 import WithdrawalRequests from '../components/WithdrawalRequests';
 import PlatformSettings from '../components/PlatformSettings';
+import PendingRegistrationFees from '../components/PendingRegistrationFees';
+import ExpiredRegistrations from '../components/ExpiredRegistrations';
+import BannerAdManager from '../components/BannerAdManager';
 
-type Tab = 'packages' | 'products' | 'approvals' | 'withdrawals' | 'settings';
+type Tab = 'packages' | 'products' | 'approvals' | 'registrationFees' | 'expiredRegs' | 'banner' | 'withdrawals' | 'settings';
 
 const TABS: { key: Tab; label: string; shortLabel: string }[] = [
   { key: 'packages', label: 'Package Management', shortLabel: 'Packages' },
   { key: 'products', label: 'Product Management', shortLabel: 'Products' },
   { key: 'approvals', label: 'Payment Approvals', shortLabel: 'Approvals' },
+  { key: 'registrationFees', label: 'Registration Fees', shortLabel: 'Reg. Fees' },
+  { key: 'expiredRegs', label: 'Expired Registrations', shortLabel: 'Expired' },
+  { key: 'banner', label: 'Promotional Banner', shortLabel: 'Banner' },
   { key: 'withdrawals', label: 'Withdrawals', shortLabel: 'Withdrawals' },
   { key: 'settings', label: 'Settings', shortLabel: 'Settings' },
 ];
@@ -82,6 +88,9 @@ const AdminDashboard = () => {
           {activeTab === 'packages' && <PackageManagement />}
           {activeTab === 'products' && <ProductManagement />}
           {activeTab === 'approvals' && <PaymentApprovals />}
+          {activeTab === 'registrationFees' && <PendingRegistrationFees />}
+          {activeTab === 'expiredRegs' && <ExpiredRegistrations />}
+          {activeTab === 'banner' && <BannerAdManager />}
           {activeTab === 'withdrawals' && <WithdrawalRequests />}
           {activeTab === 'settings' && <PlatformSettings />}
         </div>

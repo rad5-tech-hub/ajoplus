@@ -38,7 +38,7 @@ const Modal = () => {
 
         <button
           onClick={closeModal}
-          className="ml-auto text-current opacity-70 hover:opacity-100 p-1 -mr-1 transition-opacity"
+          className="ml-auto text-current opacity-70 hover:opacity-100 p-1 -mr-1 transition-opacity cursor-pointer"
           aria-label="Close notification"
         >
           <X className="w-4 h-4" />

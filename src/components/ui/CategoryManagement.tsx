@@ -32,7 +32,7 @@ const EmptyState = ({ onAdd }: { onAdd: () => void }) => (
     </p>
     <button
       onClick={onAdd}
-      className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-2xl transition-all flex items-center gap-2"
+      className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-2xl transition-all flex items-center gap-2 cursor-pointer"
     >
       <Plus className="w-4 h-4" /> Add First Category
     </button>
@@ -119,7 +119,7 @@ const CategoryManagement = ({ isOpen, onClose }: CategoryManagementProps) => {
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 transition-colors p-1"
+            className="text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
           >
             <X className="w-5 h-5 md:w-6 md:h-6" />
           </button>
@@ -158,14 +158,14 @@ const CategoryManagement = ({ isOpen, onClose }: CategoryManagementProps) => {
               <div className="flex gap-3">
                 <button
                   onClick={handleCancel}
-                  className="flex-1 py-2.5 border border-emerald-300 text-emerald-600 font-medium rounded-2xl hover:bg-emerald-100 transition-colors"
+                  className="flex-1 py-2.5 border border-emerald-300 text-emerald-600 font-medium rounded-2xl hover:bg-emerald-100 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleAdd}
                   disabled={!newCategory.name.trim() || addMutation.isPending}
-                  className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:pointer-events-none text-white font-medium rounded-2xl transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:pointer-events-none text-white font-medium rounded-2xl transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {addMutation.isPending ? (
                     <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
@@ -219,7 +219,7 @@ const CategoryManagement = ({ isOpen, onClose }: CategoryManagementProps) => {
         <div className="border-t border-slate-100 p-5 md:p-6">
           <button
             onClick={onClose}
-            className="w-full py-4 border-2 border-emerald-600 text-emerald-600 font-semibold rounded-2xl hover:bg-emerald-50 transition-colors text-base"
+            className="w-full py-4 border-2 border-emerald-600 text-emerald-600 font-semibold rounded-2xl hover:bg-emerald-50 transition-colors text-base cursor-pointer"
           >
             Close
           </button>

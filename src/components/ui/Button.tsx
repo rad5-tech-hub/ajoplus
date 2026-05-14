@@ -20,7 +20,7 @@ export default function Button({
   return (
     <button
       className={cn(
-        "group relative inline-flex items-center justify-center font-semibold rounded-3xl transition-all duration-300 active:scale-[0.985]",
+        "group relative inline-flex items-center justify-center font-semibold rounded-3xl transition-all duration-300 active:scale-[0.985] cursor-pointer",
 
         // Size
         size === 'lg' && "px-10 py-4 text-base",

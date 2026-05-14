@@ -6,14 +6,14 @@ import { formatCurrency } from '@/lib/currency';
 const PAYMENT_TYPE_LABELS: Record<string, string> = {
   package: 'Package payment',
   product: 'Cart payment',
-  saving:  'Savings deposit',
+  saving: 'Savings deposit',
 };
 
 const PendingActivityBanner = () => {
-  const pendingWithdrawals  = useWithdrawalStore((s) => s.pending);
-  const pendingPayments     = usePendingPaymentStore((s) => s.pending);
-  const removePendingW      = useWithdrawalStore((s) => s.removePending);
-  const removePendingP      = usePendingPaymentStore((s) => s.removePending);
+  const pendingWithdrawals = useWithdrawalStore((s) => s.pending);
+  const pendingPayments = usePendingPaymentStore((s) => s.pending);
+  const removePendingW = useWithdrawalStore((s) => s.removePending);
+  const removePendingP = usePendingPaymentStore((s) => s.removePending);
 
   const hasActivity =
     pendingPayments.length > 0 || pendingWithdrawals.length > 0;
@@ -45,7 +45,7 @@ const PendingActivityBanner = () => {
             </span>
             <button
               onClick={() => removePendingP(payment.id)}
-              className="text-yellow-400 hover:text-yellow-600 transition-colors"
+              className="text-yellow-400 cursor-pointer hover:text-yellow-600 transition-colors"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -74,7 +74,7 @@ const PendingActivityBanner = () => {
             </span>
             <button
               onClick={() => removePendingW(withdrawal.id)}
-              className="text-blue-400 hover:text-blue-600 transition-colors"
+              className="text-blue-400 cursor-pointer hover:text-blue-600 transition-colors"
             >
               <X className="w-3.5 h-3.5" />
             </button>

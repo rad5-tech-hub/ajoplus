@@ -39,7 +39,7 @@ const RejectPaymentModal = ({ isOpen, onClose, onConfirm, customerName, amount }
         <div className="border-t p-5 md:p-6 flex gap-3">
           <button 
             onClick={onClose} 
-            className="flex-1 py-4 border border-slate-300 rounded-2xl font-medium hover:bg-slate-50 text-base"
+            className="flex-1 py-4 border border-slate-300 rounded-2xl font-medium hover:bg-slate-50 text-base cursor-pointer"
           >
             Cancel
           </button>

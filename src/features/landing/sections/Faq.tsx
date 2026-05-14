@@ -67,7 +67,7 @@ const FAQAccordionItem: React.FC<{
   >
     <button
       onClick={onToggle}
-      className="w-full flex items-center justify-between text-left px-7 py-6 gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
+      className="w-full flex items-center justify-between text-left px-7 py-6 gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 cursor-pointer"
       aria-expanded={isOpen}
     >
       <span

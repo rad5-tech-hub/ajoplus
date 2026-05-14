@@ -180,7 +180,7 @@ const Checkout = () => {
             </button>
             <button
               onClick={handleProceedToPayment}
-              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 transition-colors"
+              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 transition-colors cursor-pointer"
             >
               Proceed to Payment →
             </button>

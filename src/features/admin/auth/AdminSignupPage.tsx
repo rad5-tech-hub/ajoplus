@@ -227,7 +227,7 @@ const AdminSignupPage = () => {
 								<button
 									type="button"
 									onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-									className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-400"
+									className="absolute cursor-pointer right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-400"
 								>
 									{showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
 								</button>
@@ -238,7 +238,7 @@ const AdminSignupPage = () => {
 						<button
 							type="submit"
 							disabled={isLoading || !passwordValid}
-							className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-all active:scale-[0.98] mt-8"
+							className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-all active:scale-[0.98] mt-8 cursor-pointer"
 						>
 							{isLoading ? 'Creating Account...' : 'Create Admin Account'}
 						</button>

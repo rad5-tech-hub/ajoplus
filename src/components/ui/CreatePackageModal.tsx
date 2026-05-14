@@ -178,7 +178,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
           <button
             onClick={handleClose}
             disabled={isSaving}
-            className="text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40"
+            className="text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40 cursor-pointer"
             aria-label="Close modal"
           >
             <X className="w-5 h-5 md:w-6 md:h-6" />
@@ -320,7 +320,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
               <button
                 onClick={addItem}
                 disabled={isSaving}
-                className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2.5 rounded-2xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2.5 rounded-2xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 <Plus className="w-4 h-4" /> Add Item
               </button>
@@ -367,14 +367,14 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
           <button
             onClick={handleClose}
             disabled={isSaving}
-            className="flex-1 py-4 border-2 border-slate-300 text-slate-700 font-semibold rounded-2xl hover:bg-slate-50 transition-colors disabled:opacity-50"
+            className="flex-1 py-4 border-2 border-slate-300 text-slate-700 font-semibold rounded-2xl hover:bg-slate-50 transition-colors disabled:opacity-50 cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={isSaving}
-            className="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] transition-all text-white font-semibold rounded-2xl flex items-center justify-center gap-2 disabled:bg-emerald-400 disabled:cursor-not-allowed"
+            className="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] transition-all text-white font-semibold rounded-2xl flex items-center justify-center gap-2 disabled:bg-emerald-400 disabled:cursor-not-allowed cursor-pointer"
           >
             {isSaving ? (
               <>

@@ -4,10 +4,12 @@ export interface User {
   id: string;
   fullName: string;
   email: string;
-  phoneNumber: string;       // API returns `phoneNumber`, not `phone`
+  phoneNumber: string;
   role: 'customer' | 'agent' | 'admin';
-  agentId?: string;          // Only present for agents
-  accountStatus: 'active' | 'inactive' | 'suspended';
+  agentId?: string;
+  accountStatus: 'pending' | 'active' | 'inactive' | 'suspended';
+  registrationFeeStatus?: 'not_submitted' | 'pending' | 'approved' | 'rejected';
+  renewalDate?: string;
 }
 
 export interface LoginCredentials {

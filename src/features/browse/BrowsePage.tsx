@@ -179,7 +179,7 @@ const BrowsePage = () => {
             <p className="text-red-600 mb-4">Failed to load items. Please try again.</p>
             <button
               onClick={refetchAll}
-              className="text-sm text-red-600 underline hover:text-red-700"
+              className="text-sm text-red-600 underline hover:text-red-700 cursor-pointer"
             >
               Retry
             </button>

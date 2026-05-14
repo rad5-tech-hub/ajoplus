@@ -292,7 +292,7 @@ const PaymentApprovals = () => {
                       <p className="font-medium text-slate-800">Payment Receipt</p>
                     </>
                   )}
-                  <button className="absolute bottom-6 flex items-center gap-2 text-emerald-600 text-sm font-medium bg-white/90 px-3 py-1.5 rounded-xl pointer-events-none">
+                  <button className="absolute bottom-6 flex items-center gap-2 text-emerald-600 text-sm font-medium bg-white/90 px-3 py-1.5 rounded-xl pointer-events-none cursor-pointer">
                     <Eye className="w-4 h-4" /> Click to view full size
                   </button>
                 </div>

@@ -124,7 +124,7 @@ const AdminLoginPage = () => {
 						<button
 							type="submit"
 							disabled={isLoading}
-							className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-all active:scale-[0.98] mt-8"
+							className="w-full bg-red-600 hover:bg-red-700 disabled:bg-red-400 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-all active:scale-[0.98] mt-8 cursor-pointer"
 						>
 							{isLoading ? 'Signing in...' : 'Sign In'}
 						</button>

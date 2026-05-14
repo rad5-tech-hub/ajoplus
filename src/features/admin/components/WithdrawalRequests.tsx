@@ -70,7 +70,7 @@ const RejectModal = ({ withdrawal, onConfirm, onClose, isPending }: RejectModalP
           <div className="flex gap-2">
             <button
               onClick={onClose}
-              className="flex-1 py-3 rounded-2xl border border-slate-200 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors"
+              className="flex-1 py-3 rounded-2xl border border-slate-200 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors cursor-pointer"
             >
               Cancel
             </button>

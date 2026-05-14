@@ -31,7 +31,7 @@ const MailIcon = () => (
 const SocialButton: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
   <button
     aria-label={label}
-    className="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200 focus:outline-none"
+    className="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200 focus:outline-none cursor-pointer"
   >
     {children}
   </button>

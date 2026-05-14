@@ -19,7 +19,7 @@ import {
   X,
 } from 'lucide-react';
 import { useAuthStore } from '@/app/store/authStore';
-// import abaGoldLogo from '@/assets/ABAGOLD LOGO.png';
+import RegistrationFeeModal from './components/RegistrationFeeModal';
 type Step = 1 | 2 | 3 | 4 | 5;
 
 const NIGERIAN_STATES = [
@@ -46,6 +46,8 @@ const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [localError, setLocalError] = useState('');
+
+  const [showFeeModal, setShowFeeModal] = useState(false);
 
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const uploadInputRef = useRef<HTMLInputElement>(null);
@@ -174,7 +176,7 @@ const SignupPage = () => {
         accountType: formData.accountType,
         referralCode: formData.referralCode || undefined,
       });
-      navigate('/dashboard/customer');
+      setShowFeeModal(true);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to create account';
       setLocalError(message);
@@ -188,6 +190,11 @@ const SignupPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-600 to-emerald-700 flex items-center justify-center p-6">
+      <RegistrationFeeModal
+        isOpen={showFeeModal}
+        userName={formData.fullName}
+        onComplete={() => navigate('/login')}
+      />
       <div className="w-full max-w-md">
         <Link to="/" className="flex items-center gap-2 text-white/80 hover:text-white mb-8 transition-colors">
           <ArrowLeft className="w-5 h-5" />
@@ -258,7 +265,7 @@ const SignupPage = () => {
                         <button
                           type="button"
                           onClick={clearProfileImage}
-                          className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-600 transition-colors"
+                          className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-red-600 transition-colors cursor-pointer"
                         >
                           <X className="w-3.5 h-3.5" />
                         </button>
@@ -269,7 +276,7 @@ const SignupPage = () => {
                         <button
                           type="button"
                           onClick={clearProfileImage}
-                          className="text-emerald-600 hover:text-emerald-700 font-medium mt-1"
+                          className="text-emerald-600 hover:text-emerald-700 font-medium mt-1 cursor-pointer"
                         >
                           Change photo
                         </button>
@@ -376,7 +383,7 @@ const SignupPage = () => {
                 <button
                   type="button"
                   onClick={nextStep}
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
                 >
                   Next <ArrowRight className="w-5 h-5" />
                 </button>
@@ -443,14 +450,14 @@ const SignupPage = () => {
                   <button
                     type="button"
                     onClick={prevStep}
-                    className="flex-1 border border-slate-300 text-slate-700 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all active:scale-95"
+                    className="flex-1 border border-slate-300 text-slate-700 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all active:scale-95 cursor-pointer"
                   >
                     Back
                   </button>
                   <button
                     type="button"
                     onClick={nextStep}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
                   >
                     Next <ArrowRight className="w-5 h-5" />
                   </button>
@@ -563,14 +570,14 @@ const SignupPage = () => {
                   <button
                     type="button"
                     onClick={prevStep}
-                    className="flex-1 border border-slate-300 text-slate-700 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all active:scale-95"
+                    className="flex-1 border border-slate-300 text-slate-700 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all active:scale-95 cursor-pointer"
                   >
                     Back
                   </button>
                   <button
                     type="button"
                     onClick={nextStep}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
                   >
                     Next <ArrowRight className="w-5 h-5" />
                   </button>
@@ -632,14 +639,14 @@ const SignupPage = () => {
                   <button
                     type="button"
                     onClick={prevStep}
-                    className="flex-1 border border-slate-300 text-slate-700 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all active:scale-95"
+                    className="flex-1 border border-slate-300 text-slate-700 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all active:scale-95 cursor-pointer"
                   >
                     Back
                   </button>
                   <button
                     type="button"
                     onClick={nextStep}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
                   >
                     Next <ArrowRight className="w-5 h-5" />
                   </button>
@@ -740,14 +747,14 @@ const SignupPage = () => {
                   <button
                     type="button"
                     onClick={prevStep}
-                    className="flex-1 border border-slate-300 text-slate-700 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all active:scale-95"
+                    className="flex-1 border border-slate-300 text-slate-700 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all active:scale-95 cursor-pointer"
                   >
                     Back
                   </button>
                   <button
                     type="submit"
                     disabled={isLoading || !formData.agreeTerms}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 disabled:cursor-not-allowed active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 disabled:cursor-not-allowed active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
                   >
                     {isLoading ? (
                       <>

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LogOut, User, Menu, X, ShieldCheck, ShoppingCart } from 'lucide-react';
 import { useAuthStore } from '@/app/store/authStore';
+import { useAdminAuthStore } from '@/app/store/adminAuthStore';
 import { useCartStore } from '@/app/store/CartStore';
 import abaGoldLogo from '@/assets/ABAGOLD LOGO.png';
 
@@ -12,7 +13,8 @@ const NAV_LINKS = [
 ];
 
 const AgentNavbar = () => {
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
+  const { logout: adminLogout } = useAdminAuthStore();
   const { getCount } = useCartStore();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -97,8 +99,8 @@ const AgentNavbar = () => {
 
             {/* Logout Button */}
             <button
-              onClick={logout}
-              className="flex items-center gap-2 px-4 py-2 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-colors text-sm font-medium"
+              onClick={adminLogout}
+              className="flex items-center gap-2 px-4 py-2 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-colors text-sm font-medium cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
               <span className="hidden sm:block">Logout</span>
@@ -151,7 +153,7 @@ const AgentNavbar = () => {
             <button
               onClick={() => {
                 setMenuOpen(false);
-                logout();
+                adminLogout();
               }}
               className="flex items-center gap-3 px-5 py-4 rounded-2xl text-[15px] font-medium text-slate-600 hover:bg-red-50 hover:text-red-600 transition-all w-full text-left"
             >

@@ -259,7 +259,7 @@ const ShoppingCart = () => {
             <div className="flex justify-center sm:justify-end">
               <button
                 onClick={handleClearCart}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 text-red-600 hover:text-red-700 font-medium px-5 py-3 rounded-2xl border border-red-200 hover:border-red-300 transition-colors"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 text-red-600 hover:text-red-700 font-medium px-5 py-3 rounded-2xl border border-red-200 hover:border-red-300 transition-colors cursor-pointer"
               >
                 <Trash2 className="w-4 h-4" />
                 Clear Cart

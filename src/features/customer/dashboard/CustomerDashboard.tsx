@@ -1,5 +1,5 @@
 import { useAuthStore } from '@/app/store/authStore';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/CustomerNavbar';
 import OverviewCards from '../components/OverviewCards';
@@ -9,25 +9,48 @@ import RecentTransactions from '../components/RecentTransactions';
 import NeedHelp from '../components/NeedHelp';
 import PaymentStatusBanner from '@/components/ui/PaymentStatusBanner';
 import DailyAjoSetupModal from '@/components/ui/DailyAjoSetupModal';
+import AjoSetupBlockModal from '@/features/auth/components/AjoSetupBlockModal';
+import { useRegistrationFeeStatus } from '@/app/store/RegistrationFeeStore';
 
 const CustomerDashboard = () => {
   const { user } = useAuthStore();
+  const { data: feeStatus } = useRegistrationFeeStatus();
   const [searchParams] = useSearchParams();
   const [showDailyAjoModal, setShowDailyAjoModal] = useState(false);
+  const [showBlockModal, setShowBlockModal] = useState(false);
+
+  const isFeeApproved = feeStatus?.user?.registrationFeeStatus === 'approved';
 
   useEffect(() => {
     if (searchParams.get('openDailyAjo') === 'true') {
-      setShowDailyAjoModal(true);
+      if (isFeeApproved) {
+        setShowDailyAjoModal(true);
+      } else {
+        setShowBlockModal(true);
+      }
     }
-  }, [searchParams]);
+  }, [searchParams, isFeeApproved]);
 
   const closeDailyAjoModal = () => setShowDailyAjoModal(false);
+
+  const handleOpenAjoSetup = useMemo(() => () => {
+    if (isFeeApproved) {
+      setShowDailyAjoModal(true);
+    } else {
+      setShowBlockModal(true);
+    }
+  }, [isFeeApproved]);
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       <DailyAjoSetupModal
         isOpen={showDailyAjoModal}
         onClose={closeDailyAjoModal}
+      />
+
+      <AjoSetupBlockModal
+        isOpen={showBlockModal}
+        onClose={() => setShowBlockModal(false)}
       />
 
       <Navbar />
@@ -62,7 +85,7 @@ const CustomerDashboard = () => {
           </div>
 
           <div className="lg:col-span-4 space-y-9">
-            <AjoDailySavings onOpenDailyModal={() => setShowDailyAjoModal(true)} />
+            <AjoDailySavings onOpenDailyModal={handleOpenAjoSetup} />
             <NeedHelp />
           </div>
         </div>

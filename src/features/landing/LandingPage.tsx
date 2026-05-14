@@ -14,7 +14,7 @@ import ReadyToStartSaving from './sections/CtaSection';
 import Footer from './components/Footer';
 
 import Modal from '@/components/ui/GeneralModal';
-import { AdSlot } from './components/AdSlot';
+import PromotionalBanner from '@/components/ui/PromotionalBanner';
 
 const LandingPage = () => {
   return (
@@ -23,39 +23,14 @@ const LandingPage = () => {
       <HeroSection />
       <HowItWorksSection />
 
-      {/* Ad slot 1 — shown between "How It Works" and "Packages" */}
-      <AdSlot
-        slotId="landing_after_how_it_works"
-        className="px-4 sm:px-6 py-2"
-      />
+      {/* Single promotional banner — managed via admin panel */}
+      <PromotionalBanner />
 
       <PackagesSection />
       <ProductsSection />
-
-      {/* Ad slot 2 — shown between "Products" and "Daily Ajo" */}
-      <AdSlot
-        slotId="landing_after_products"
-        className="px-4 sm:px-6 py-2"
-      />
-
       <DailyAjoSection />
       <ReferralSection />
-
-      {/* Ad slot 3 — shown between "Referral" and "Why Choose AbaGold" */}
-      <AdSlot
-        slotId="landing_after_referral"
-        className="px-4 sm:px-6 py-2"
-      />
-
       <WhyChooseAbaGold />
-      {/* <Testimonies /> */}
-
-      {/* Ad slot 4 — shown just before "FAQ" */}
-      <AdSlot
-        slotId="landing_before_faq"
-        className="px-4 sm:px-6 py-2"
-      />
-
       <Faq />
       <ReadyToStartSaving />
       <Footer />

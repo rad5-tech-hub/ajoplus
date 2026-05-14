@@ -37,7 +37,7 @@ const PackageMemberList = () => {
 						<h1 className="text-2xl sm:text-3xl font-bold text-slate-900">{headerLabel}</h1>
 						<p className="text-sm text-slate-500">Member list and package revenue details</p>
 					</div>
-					<div className="rounded-3xl border border-slate-200 bg-white p-5 text-center min-w-[200px]">
+					<div className="rounded-3xl border border-slate-200 bg-white p-5 text-center min-w-50">
 						<p className="text-sm text-slate-500">Total Revenue</p>
 						<p className="mt-2 text-2xl font-bold text-emerald-600">{formatCurrency(totalRevenue)}</p>
 					</div>

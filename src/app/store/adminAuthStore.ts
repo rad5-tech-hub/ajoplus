@@ -110,6 +110,11 @@ export const useAdminAuthStore = create<AdminAuthStore>()(
 				adminAPI.logoutAdmin().catch((err) => {
 					console.warn('[adminAuthStore.logout] logout API failed', err);
 				});
+
+				// Force navigation to admin login — store change alone won't
+				// trigger re-render in AdminProtectedRoute because the app
+				// may already be on an admin page that doesn't re-check.
+				window.location.href = '/admin/login';
 			},
 
 			clearError: () => set({ error: null }),

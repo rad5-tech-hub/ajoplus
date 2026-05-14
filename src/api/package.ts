@@ -52,6 +52,8 @@ export interface UserPackage {
 	remainingBalance: number;
 	progress: number;
 	progressLabel: string;
+	claimCode: string | null;
+	claimIssuedAt: string | null;
 }
 
 // ─── Shared response wrapper ──────────────────────────────────────────────────

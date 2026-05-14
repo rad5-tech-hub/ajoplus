@@ -145,7 +145,7 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 
 							<button
 								onClick={handleClose}
-								className="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] text-white font-semibold py-3 rounded-2xl text-sm transition-all"
+								className="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] text-white font-semibold py-3 rounded-2xl text-sm transition-all cursor-pointer"
 							>
 								Done
 							</button>
@@ -217,7 +217,7 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 								<button
 									type="submit"
 									disabled={!isValid || isPending}
-									className="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 text-white font-semibold py-3 rounded-2xl text-sm transition-all duration-200 flex items-center justify-center gap-2"
+									className="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.985] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 text-white font-semibold py-3 rounded-2xl text-sm transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
 								>
 									{isPending ? (
 										<>

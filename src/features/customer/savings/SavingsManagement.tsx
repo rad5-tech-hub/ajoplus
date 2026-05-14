@@ -205,13 +205,13 @@ const CreatePlanInline = ({ onClose }: { onClose: () => void }) => {
         <div className="flex gap-3">
           <button
             type="button" onClick={onClose} disabled={isPending}
-            className="flex-1 border border-slate-300 text-slate-700 font-semibold py-3 rounded-2xl text-sm hover:bg-slate-50 disabled:opacity-50"
+            className="flex-1 border border-slate-300 text-slate-700 font-semibold py-3 rounded-2xl text-sm hover:bg-slate-50 disabled:opacity-50 cursor-pointer"
           >
             Cancel
           </button>
           <button
             type="submit" disabled={isPending}
-            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-2xl text-sm disabled:opacity-50"
+            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-2xl text-sm disabled:opacity-50 cursor-pointer"
           >
             {isPending ? 'Creating…' : 'Create Plan'}
           </button>

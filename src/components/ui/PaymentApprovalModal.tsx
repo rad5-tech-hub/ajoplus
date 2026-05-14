@@ -20,7 +20,7 @@ const PaymentApprovedModal = ({ isOpen, onClose }: PaymentApprovedModalProps) =>
         </p>
         <button
           onClick={onClose}
-          className="mt-8 w-full py-4 text-base bg-emerald-600 text-white font-semibold rounded-2xl active:scale-95 transition-all"
+          className="mt-8 w-full py-4 text-base bg-emerald-600 text-white font-semibold rounded-2xl active:scale-95 transition-all cursor-pointer"
         >
           Done
         </button>

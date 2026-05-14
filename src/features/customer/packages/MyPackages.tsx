@@ -1,50 +1,18 @@
-// src/features/customer/dashboard/components/MyPackages.tsx
-import { Calendar, ChevronRight, Package as PackageIcon } from 'lucide-react';
+import { Package as PackageIcon, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useUserPackages } from '@/app/store/PackageStore';
-
-interface Package {
-  id: string;
-  title: string;
-  subtitle: string;
-  status: 'active' | 'inactive' | 'completed' | 'suspended';
-  totalPaid: string;
-  remaining: string;
-  progress: number;
-  duration: string;
-  nextDue: string;
-  amount: string;
-  frequency: string;
-}
+import UserPackageCard from '../components/UserPackageCard';
 
 const MyPackages = () => {
   const navigate = useNavigate();
   const { data: userPackages, isLoading, error } = useUserPackages();
 
-  const packages: Package[] = (userPackages ?? []).map((pkg) => ({
-    // ✅ Use pkg.packageId (the actual Package ID) — not pkg.id (the UserPackage/subscription ID).
-    // PackageDetail searches userPackages.find(p => p.packageId === packageId),
-    // so the URL param must be the Package ID or the find will never match.
-    id: pkg.packageId,
-    title: pkg.package.name,
-    subtitle: pkg.package.description,
-    status: pkg.status,
-    totalPaid: `₦${parseFloat(pkg.totalPaid).toLocaleString('en-NG', { minimumFractionDigits: 2 })}`,
-    remaining: `₦${pkg.remainingBalance.toLocaleString()}`,
-    progress: pkg.progress,
-    duration: `${pkg.duration} months`,
-    nextDue: new Date(pkg.nextPaymentDate).toLocaleDateString('en-GB'),
-    amount: `₦${parseFloat(pkg.package.totalPrice as string).toLocaleString()}`,
-    frequency: pkg.paymentFrequency,
-  }));
-
-  const handlePackageClick = (packageId: string) => {
-    navigate(`/dashboard/customer/package/${packageId}`);
-  };
-
-  const handleJoinPackage = () => {
-    navigate('/browse');
-  };
+  const sortedPackages = [...(userPackages ?? [])].sort((a, b) => {
+    const order = { active: 0, pending: 1, completed: 2, inactive: 3, suspended: 4 };
+    const statusDiff = (order[a.status] ?? 1) - (order[b.status] ?? 1);
+    if (statusDiff !== 0) return statusDiff;
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
 
   if (isLoading) {
     return (
@@ -70,7 +38,7 @@ const MyPackages = () => {
         <p className="text-red-600 mb-4">Failed to load packages</p>
         <button
           onClick={() => window.location.reload()}
-          className="text-red-600 underline text-sm hover:text-red-700"
+          className="text-red-600 underline text-sm hover:text-red-700 cursor-pointer"
         >
           Retry
         </button>
@@ -78,7 +46,7 @@ const MyPackages = () => {
     );
   }
 
-  if (packages.length === 0) {
+  if (sortedPackages.length === 0) {
     return (
       <div className="bg-white border border-slate-200 rounded-3xl p-12 text-center">
         <div className="mx-auto w-20 h-20 bg-emerald-100 rounded-3xl flex items-center justify-center mb-6">
@@ -89,7 +57,7 @@ const MyPackages = () => {
           Browse and join exciting Ajo packages to start saving towards your goals — phones, laptops, appliances, and more.
         </p>
         <button
-          onClick={handleJoinPackage}
+          onClick={() => navigate('/browse')}
           className="inline-flex cursor-pointer items-center gap-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-4 rounded-2xl transition-all active:scale-[0.985]"
         >
           Join a Package
@@ -101,73 +69,8 @@ const MyPackages = () => {
 
   return (
     <div className="space-y-6">
-      {packages.map((pkg) => (
-        <div
-          key={pkg.id}
-          onClick={() => handlePackageClick(pkg.id)}
-          className="bg-white border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all duration-200 rounded-3xl p-6 cursor-pointer group"
-        >
-          <div className="flex items-start justify-between mb-6">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 flex-wrap">
-                <h3 className="text-lg font-semibold text-slate-900 group-hover:text-emerald-700 transition-colors">
-                  {pkg.title}
-                </h3>
-                {pkg.status === 'active' ? (
-                  <span className="inline-flex items-center px-3 py-1 bg-blue-100 border border-blue-200 text-blue-700 text-xs font-medium rounded-2xl whitespace-nowrap">
-                    <span className="w-2 h-2 bg-blue-700 rounded-full mr-1.5" />
-                    Active
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center px-3 py-1 bg-emerald-100 border border-emerald-200 text-emerald-700 text-xs font-medium rounded-2xl whitespace-nowrap">
-                    <span className="w-2 h-2 bg-emerald-600 rounded-full mr-1.5" />
-                    Completed
-                  </span>
-                )}
-              </div>
-              <p className="text-slate-600 text-sm mt-1 line-clamp-2">{pkg.subtitle}</p>
-            </div>
-            <div className="text-right shrink-0 ml-4 flex items-center gap-2">
-              <div>
-                <p className="text-2xl font-bold text-emerald-600">{pkg.amount}</p>
-                <p className="text-xs text-slate-500">{pkg.frequency}</p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition-colors" />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-4 mb-6 bg-slate-50 p-4 rounded-2xl">
-            <div>
-              <p className="text-xs text-slate-500">Total Paid</p>
-              <p className="font-semibold text-slate-900 mt-1">{pkg.totalPaid}</p>
-            </div>
-            <div>
-              <p className="text-xs text-slate-500">Remaining</p>
-              <p className={`font-semibold mt-1 ${pkg.remaining === '₦0' ? 'text-emerald-600' : 'text-red-600'}`}>
-                {pkg.remaining}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-slate-500">Progress</p>
-              <p className="font-semibold text-emerald-600 mt-1">{pkg.progress}%</p>
-            </div>
-          </div>
-
-          <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden mb-4">
-            <div
-              className="h-full bg-emerald-600 rounded-full transition-all duration-300"
-              style={{ width: `${pkg.progress}%` }}
-            />
-          </div>
-
-          <div className="flex items-center justify-between text-sm text-slate-500">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              <span>{pkg.duration}</span>
-            </div>
-            <div>Next due: {pkg.nextDue}</div>
-          </div>
-        </div>
+      {sortedPackages.map((pkg) => (
+        <UserPackageCard key={pkg.id} pkg={pkg} />
       ))}
     </div>
   );
