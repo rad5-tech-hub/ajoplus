@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import * as bannerAPI from '@/api/banner';
+import * as adsAPI from '@/api/ads';
 import { APIError } from '@/api/client';
 
 const smartRetry = (failureCount: number, error: unknown): boolean => {
@@ -7,31 +7,42 @@ const smartRetry = (failureCount: number, error: unknown): boolean => {
   return failureCount < 2;
 };
 
-export const useBanner = () =>
+export const useActiveAdvert = () =>
   useQuery({
-    queryKey: ['banner'],
-    queryFn: bannerAPI.getBanner,
+    queryKey: ['ads', 'active'],
+    queryFn: adsAPI.getActiveAdvert,
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: true,
     retry: smartRetry,
   });
 
-export const useUpdateBanner = () => {
+export const useAllAdverts = () =>
+  useQuery({
+    queryKey: ['ads', 'all'],
+    queryFn: adsAPI.getAllAdverts,
+    staleTime: 60 * 1000,
+    refetchOnWindowFocus: true,
+    retry: smartRetry,
+  });
+
+export const useCreateAdvert = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (data: Partial<bannerAPI.BannerAd>) => bannerAPI.updateBanner(data),
+    mutationFn: ({ data, imageFile }: { data: Partial<adsAPI.Advert>; imageFile?: File }) =>
+      adsAPI.createAdvert(data, imageFile),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['banner'] });
+      qc.invalidateQueries({ queryKey: ['ads'] });
     },
   });
 };
 
-export const useUploadBannerImage = () => {
+export const useUpdateAdvert = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (file: File) => bannerAPI.uploadBannerImage(file),
+    mutationFn: ({ id, data, imageFile }: { id: string; data: Partial<adsAPI.Advert>; imageFile?: File }) =>
+      adsAPI.updateAdvert(id, data, imageFile),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['banner'] });
+      qc.invalidateQueries({ queryKey: ['ads'] });
     },
   });
 };
