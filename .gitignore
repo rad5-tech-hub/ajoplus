@@ -28,4 +28,4 @@ dist-ssr
 AGENTS.md
 
 # GitHub workflows
-.github/
+.github/dist.zip
