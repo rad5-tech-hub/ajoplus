@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import { useSubmitRegistrationFee } from '@/app/store/RegistrationFeeStore';
+import { useGetAjoSettings } from '@/app/store/SettingsStore';
 
 interface RegistrationFeeModalProps {
   isOpen: boolean;
@@ -20,6 +21,7 @@ const RegistrationFeeModal = ({ isOpen, userName, onComplete }: RegistrationFeeM
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { mutate: submitFee, isPending } = useSubmitRegistrationFee();
+  const { data: bankSettings, isLoading: bankLoading } = useGetAjoSettings();
 
   if (!isOpen) return null;
 
@@ -123,17 +125,23 @@ const RegistrationFeeModal = ({ isOpen, userName, onComplete }: RegistrationFeeM
 
               <div className="bg-white border border-amber-200 rounded-3xl p-5 space-y-4">
                 <h3 className="font-semibold text-blue-950">Bank Details</h3>
-                {[
-                  { label: 'Bank Name', value: 'AbaGold Microfinance Bank' },
-                  { label: 'Account Number', value: '0123456789' },
-                  { label: 'Account Name', value: 'AbaGold Payments Ltd' },
-                  { label: 'Amount', value: `₦${REGISTRATION_FEE.toLocaleString()}` },
-                ].map(({ label, value }) => (
-                  <div key={label} className="flex justify-between items-center py-2 border-b border-slate-100 last:border-0">
-                    <p className="text-sm text-slate-500">{label}</p>
-                    <p className="text-sm font-semibold text-blue-950">{value}</p>
+                {bankLoading ? (
+                  <div className="space-y-3 animate-pulse">
+                    {[1, 2, 3].map((i) => <div key={i} className="h-5 bg-slate-200 rounded w-3/4" />)}
                   </div>
-                ))}
+                ) : (
+                  [
+                    { label: 'Bank Name', value: bankSettings?.bankName || '—' },
+                    { label: 'Account Number', value: bankSettings?.accountNumber || '—' },
+                    { label: 'Account Name', value: bankSettings?.accountName || '—' },
+                    { label: 'Amount', value: `₦${REGISTRATION_FEE.toLocaleString()}` },
+                  ].map(({ label, value }) => (
+                    <div key={label} className="flex justify-between items-center py-2 border-b border-slate-100 last:border-0">
+                      <p className="text-sm text-slate-500">{label}</p>
+                      <p className="text-sm font-semibold text-blue-950">{value}</p>
+                    </div>
+                  ))
+                )}
               </div>
 
               <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4 text-sm text-amber-800">

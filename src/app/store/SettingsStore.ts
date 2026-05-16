@@ -11,7 +11,7 @@ export const useGetAjoSettings = () =>
   useQuery({
     queryKey: ['ajoSettings'],
     queryFn: settingsAPI.getAjoSettings,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 60 * 1000,
     gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
     retry: smartRetry,
