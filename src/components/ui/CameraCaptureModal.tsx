@@ -14,12 +14,23 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      setPreview(null);
+      setError(null);
+      setShowCamera(false);
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((t) => t.stop());
+        streamRef.current = null;
+      }
+      return;
+    }
+
     let cancelled = false;
 
-    const start = async () => {
+    const startCamera = async () => {
       setLoading(true);
       setError(null);
       try {
@@ -29,11 +40,16 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
         if (cancelled) { stream.getTracks().forEach((t) => t.stop()); return; }
         streamRef.current = stream;
         const video = videoRef.current;
-        if (video) {
-          video.srcObject = stream;
-          video.onloadedmetadata = () => video.play().catch(() => {});
+        if (!video) { stream.getTracks().forEach((t) => t.stop()); return; }
+        video.srcObject = stream;
+        video.onloadedmetadata = () => {
+          video.play().catch(() => {});
+        };
+        if (video.readyState >= 1) {
+          video.play().catch(() => {});
         }
         setLoading(false);
+        setShowCamera(true);
       } catch (err: unknown) {
         if (cancelled) return;
         const msg = err instanceof DOMException
@@ -48,7 +64,7 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
       }
     };
 
-    start();
+    startCamera();
 
     return () => {
       cancelled = true;
@@ -59,6 +75,15 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
     };
   }, [isOpen]);
 
+  const stopAndClose = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+    }
+    setShowCamera(false);
+    onClose();
+  };
+
   const handleCapture = () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
@@ -68,24 +93,31 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     ctx.drawImage(video, 0, 0);
-    setPreview(canvas.toDataURL('image/jpeg', 0.8));
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      setPreview(url);
+    }, 'image/jpeg', 0.8);
   };
 
   const handleConfirm = () => {
     if (!preview) return;
-    canvasRef.current?.toBlob((blob) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    canvas.toBlob((blob) => {
       if (!blob) return;
       const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' });
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((t) => t.stop());
         streamRef.current = null;
       }
+      setShowCamera(false);
       onCapture(file);
       onClose();
     }, 'image/jpeg', 0.8);
   };
 
-  const handleRetake = () => setPreview(null);
+  const handleRetake = () => { setPreview(null); setShowCamera(true); };
 
   if (!isOpen) return null;
 
@@ -94,7 +126,7 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
       <div className="bg-white rounded-3xl w-full max-w-lg mx-auto shadow-2xl overflow-hidden">
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-100">
           <h2 className="text-lg font-semibold text-blue-950">Take Photo</h2>
-          <button onClick={() => { if (streamRef.current) { streamRef.current.getTracks().forEach((t) => t.stop()); streamRef.current = null; } onClose(); }}
+          <button onClick={stopAndClose}
             className="p-1 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" aria-label="Close">
             <X className="w-5 h-5" />
           </button>
@@ -114,14 +146,14 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
                 <Camera className="w-7 h-7 text-red-500" />
               </div>
               <p className="text-sm text-slate-600">{error}</p>
-              <button onClick={() => onClose()}
+              <button onClick={stopAndClose}
                 className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-5 py-2.5 rounded-2xl text-sm transition-all cursor-pointer">
                 Close
               </button>
             </div>
           )}
 
-          {!loading && !error && !preview && (
+          {showCamera && !loading && !error && (
             <div className="relative">
               <video ref={videoRef} autoPlay playsInline muted
                 className="w-full h-64 object-cover rounded-2xl bg-slate-900" />
@@ -133,7 +165,7 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
             </div>
           )}
 
-          {preview && (
+          {preview && !showCamera && (
             <div className="relative">
               <img src={preview} alt="Captured preview" className="w-full h-64 object-cover rounded-2xl bg-slate-100" />
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3">

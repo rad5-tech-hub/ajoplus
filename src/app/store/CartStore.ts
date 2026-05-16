@@ -1,7 +1,7 @@
 // src/app/store/cartStore.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import * as cartAPI from '@/api/cart';
 
 interface CartItem {
@@ -120,21 +120,14 @@ export const useCartId = () => useCartStore((state) => state.cartId);
  * React Query hook to add item to cart
  */
 export const useAddToCart = () => {
-  const queryClient = useQueryClient();
   const setCartId = useCartStore((state) => state.setCartId);
 
   return useMutation({
     mutationFn: (payload: cartAPI.AddToCartRequest) => cartAPI.addToCart(payload),
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['cart'] });
-    },
     onSuccess: (response) => {
       if (response.data.cartId) {
         setCartId(response.data.cartId);
       }
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
     onError: (error) => {
       console.error('Failed to add item to cart:', error);
@@ -146,17 +139,9 @@ export const useAddToCart = () => {
  * React Query hook to update cart item quantity
  */
 export const useUpdateCartItem = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({ itemId, quantity }: { itemId: string; quantity: number }) =>
       cartAPI.updateCartItem(itemId, { quantity }),
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['cart'] });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
-    },
     onError: (error) => {
       console.error('Failed to update cart item:', error);
     },
@@ -167,16 +152,8 @@ export const useUpdateCartItem = () => {
  * React Query hook to remove item from cart
  */
 export const useRemoveFromCart = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (itemId: string) => cartAPI.removeFromCart(itemId),
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['cart'] });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
-    },
     onError: (error) => {
       console.error('Failed to remove item from cart:', error);
     },
@@ -187,19 +164,12 @@ export const useRemoveFromCart = () => {
  * React Query hook to clear the cart
  */
 export const useClearCart = () => {
-  const queryClient = useQueryClient();
   const cartId = useCartStore((state) => state.cartId);
 
   return useMutation({
     mutationFn: () => {
       if (!cartId) throw new Error('No cart ID available');
       return cartAPI.clearCart(cartId);
-    },
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['cart'] });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
     onError: (error) => {
       console.error('Failed to clear cart:', error);
