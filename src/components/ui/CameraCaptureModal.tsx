@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Camera, Loader2, X } from 'lucide-react';
 
 interface CameraCaptureModalProps {
@@ -14,66 +14,61 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [streamReady, setStreamReady] = useState(false);
-
-  const stopCamera = useCallback(() => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((t) => t.stop());
-      streamRef.current = null;
-    }
-    setStreamReady(false);
-    setPreview(null);
-    setError(null);
-  }, []);
-
-  const startCamera = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    setStreamReady(false);
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
-      });
-      streamRef.current = stream;
-      const video = videoRef.current;
-      if (video) {
-        video.srcObject = stream;
-        await video.play();
-      }
-    } catch (err: unknown) {
-      const msg = err instanceof DOMException
-        ? err.name === 'NotAllowedError'
-          ? 'Camera permission denied. Please allow camera access in your browser settings.'
-          : err.name === 'NotFoundError'
-            ? 'No camera found on this device.'
-            : `Camera error: ${err.message}`
-        : 'Could not access camera.';
-      setError(msg);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
 
   useEffect(() => {
-    if (isOpen) {
-      startCamera();
-    } else {
-      stopCamera();
-    }
-    return () => stopCamera();
-  }, [isOpen, startCamera, stopCamera]);
+    if (!isOpen) return;
+    let cancelled = false;
+
+    const start = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+        });
+        if (cancelled) { stream.getTracks().forEach((t) => t.stop()); return; }
+        streamRef.current = stream;
+        const video = videoRef.current;
+        if (video) {
+          video.srcObject = stream;
+          video.onloadedmetadata = () => video.play().catch(() => {});
+        }
+        setLoading(false);
+      } catch (err: unknown) {
+        if (cancelled) return;
+        const msg = err instanceof DOMException
+          ? err.name === 'NotAllowedError'
+            ? 'Camera permission denied. Please allow camera access in your browser settings.'
+            : err.name === 'NotFoundError'
+              ? 'No camera found on this device.'
+              : `Camera error: ${err.message}`
+          : 'Could not access camera.';
+        setError(msg);
+        setLoading(false);
+      }
+    };
+
+    start();
+
+    return () => {
+      cancelled = true;
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((t) => t.stop());
+        streamRef.current = null;
+      }
+    };
+  }, [isOpen]);
 
   const handleCapture = () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     ctx.drawImage(video, 0, 0);
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-    setPreview(dataUrl);
+    setPreview(canvas.toDataURL('image/jpeg', 0.8));
   };
 
   const handleConfirm = () => {
@@ -81,15 +76,16 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
     canvasRef.current?.toBlob((blob) => {
       if (!blob) return;
       const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' });
-      stopCamera();
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((t) => t.stop());
+        streamRef.current = null;
+      }
       onCapture(file);
       onClose();
     }, 'image/jpeg', 0.8);
   };
 
-  const handleRetake = () => {
-    setPreview(null);
-  };
+  const handleRetake = () => setPreview(null);
 
   if (!isOpen) return null;
 
@@ -98,7 +94,7 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
       <div className="bg-white rounded-3xl w-full max-w-lg mx-auto shadow-2xl overflow-hidden">
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-100">
           <h2 className="text-lg font-semibold text-blue-950">Take Photo</h2>
-          <button onClick={() => { stopCamera(); onClose(); }}
+          <button onClick={() => { if (streamRef.current) { streamRef.current.getTracks().forEach((t) => t.stop()); streamRef.current = null; } onClose(); }}
             className="p-1 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" aria-label="Close">
             <X className="w-5 h-5" />
           </button>
@@ -118,35 +114,20 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
                 <Camera className="w-7 h-7 text-red-500" />
               </div>
               <p className="text-sm text-slate-600">{error}</p>
-              <button onClick={startCamera}
+              <button onClick={() => onClose()}
                 className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-5 py-2.5 rounded-2xl text-sm transition-all cursor-pointer">
-                Try Again
+                Close
               </button>
             </div>
           )}
 
-          {!loading && !error && !streamReady && streamRef.current && (
-            <div className="flex flex-col items-center justify-center h-64 text-slate-500 gap-3">
-              <Loader2 className="w-8 h-8 animate-spin" />
-              <p className="text-sm">Starting camera...</p>
-            </div>
-          )}
-
-          {streamReady && !loading && !error && !preview && (
+          {!loading && !error && !preview && (
             <div className="relative">
-              <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                muted
-                onCanPlay={() => setStreamReady(true)}
-                className="w-full h-64 object-cover rounded-2xl bg-slate-900"
-              />
-              <button
-                onClick={handleCapture}
+              <video ref={videoRef} autoPlay playsInline muted
+                className="w-full h-64 object-cover rounded-2xl bg-slate-900" />
+              <button onClick={handleCapture}
                 className="absolute bottom-4 left-1/2 -translate-x-1/2 w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all cursor-pointer"
-                aria-label="Capture photo"
-              >
+                aria-label="Capture photo">
                 <div className="w-10 h-10 bg-amber-600 rounded-full" />
               </button>
             </div>
@@ -169,7 +150,6 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
           )}
         </div>
       </div>
-
       <canvas ref={canvasRef} className="hidden" />
     </div>
   );

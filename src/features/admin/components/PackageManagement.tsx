@@ -94,12 +94,12 @@ const PackageManagement = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
         <h2 className="text-2xl sm:text-3xl font-bold text-blue-950">All Packages</h2>
         <div className="flex gap-3 flex-wrap">
-          <button
+          {/* <button
             onClick={() => setIsCategoryModalOpen(true)}
             className="cursor-pointer bg-slate-200 hover:bg-slate-300 active:scale-95 transition-all text-slate-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base whitespace-nowrap"
           >
             📁 Manage Categories
-          </button>
+          </button> */}
           <button
             onClick={() => setIsCreateModalOpen(true)}
             className="cursor-pointer bg-amber-600 hover:bg-amber-700 active:scale-95 transition-all text-white px-4 sm:px-8 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-semibold text-sm sm:text-base whitespace-nowrap flex items-center gap-1.5"

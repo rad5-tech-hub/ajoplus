@@ -46,7 +46,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
     false;
 
   useEffect(() => {
-    if (!isOpen) {
+    return () => {
       setImagePreview(null);
       setFormData({
         productName: '',
@@ -58,7 +58,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
         imageFile: null,
         imageUrl: '',
       });
-    }
+    };
   }, [isOpen]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
