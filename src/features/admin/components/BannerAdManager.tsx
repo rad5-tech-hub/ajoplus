@@ -89,8 +89,8 @@ const BannerAdManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white border border-amber-200 rounded-3xl p-6">
-        <h3 className="text-lg font-semibold text-blue-950 mb-5">
+      <div className="bg-white border border-brand-200 rounded-3xl p-6">
+        <h3 className="text-lg font-semibold text-brand-900 mb-5">
           {existingAd ? 'Edit Advertisement' : 'Create Advertisement'}
         </h3>
 
@@ -99,41 +99,41 @@ const BannerAdManager = () => {
             <label className="block text-sm font-medium text-slate-700 mb-1.5">Title</label>
             <input type="text" value={title} onChange={(e) => setTitle(e.target.value)}
               placeholder="Summer Sale 2026"
-              className="w-full px-4 py-3 border border-amber-200 focus:border-amber-600 rounded-2xl focus:outline-none text-sm" />
+              className="w-full px-4 py-3 border border-brand-200 focus:border-brand-600 rounded-2xl focus:outline-none text-sm" />
           </div>
 
           <div className="sm:col-span-2">
             <label className="block text-sm font-medium text-slate-700 mb-1.5">Subtitle</label>
             <input type="text" value={subtitle} onChange={(e) => setSubtitle(e.target.value)}
               placeholder="Get up to 50% off on all items"
-              className="w-full px-4 py-3 border border-amber-200 focus:border-amber-600 rounded-2xl focus:outline-none text-sm" />
+              className="w-full px-4 py-3 border border-brand-200 focus:border-brand-600 rounded-2xl focus:outline-none text-sm" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">Button Text</label>
             <input type="text" value={buttonText} onChange={(e) => setButtonText(e.target.value)}
               placeholder="Shop Now"
-              className="w-full px-4 py-3 border border-amber-200 focus:border-amber-600 rounded-2xl focus:outline-none text-sm" />
+              className="w-full px-4 py-3 border border-brand-200 focus:border-brand-600 rounded-2xl focus:outline-none text-sm" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">Button Link</label>
             <input type="text" value={buttonLink} onChange={(e) => setButtonLink(e.target.value)}
               placeholder="https://example.com/sale"
-              className="w-full px-4 py-3 border border-amber-200 focus:border-amber-600 rounded-2xl focus:outline-none text-sm" />
+              className="w-full px-4 py-3 border border-brand-200 focus:border-brand-600 rounded-2xl focus:outline-none text-sm" />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">Background (CSS gradient)</label>
             <input type="text" value={background} onChange={(e) => setBackground(e.target.value)}
               placeholder="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-              className="w-full px-4 py-3 border border-amber-200 focus:border-amber-600 rounded-2xl focus:outline-none text-sm font-mono text-xs" />
+              className="w-full px-4 py-3 border border-brand-200 focus:border-brand-600 rounded-2xl focus:outline-none text-sm font-mono text-xs" />
           </div>
 
           <div className="flex items-end pb-3">
             <label className="flex items-center gap-3 cursor-pointer">
               <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)}
-                className="w-5 h-5 accent-amber-600" />
+                className="w-5 h-5 accent-brand-600" />
               <span className="text-sm font-medium text-slate-700">Active</span>
             </label>
           </div>
@@ -142,7 +142,7 @@ const BannerAdManager = () => {
             <label className="block text-sm font-medium text-slate-700 mb-1.5">Banner Image</label>
             <div onClick={() => !isPending && fileInputRef.current?.click()}
               className={`border-2 border-dashed rounded-3xl p-6 text-center transition-colors cursor-pointer
-                ${imagePreview ? 'border-amber-200 bg-amber-50/30' : 'border-slate-300 hover:border-amber-400'}`}>
+                ${imagePreview ? 'border-brand-200 bg-brand-50/30' : 'border-slate-300 hover:border-brand-400'}`}>
               {imagePreview ? (
                 <div className="relative inline-block">
                   <img src={imagePreview} alt="Preview" className="h-28 rounded-2xl object-cover shadow-sm" />
@@ -166,7 +166,7 @@ const BannerAdManager = () => {
 
         <div className="mt-6 flex items-center justify-between">
           <div>
-            {saveMessage && <p className="text-sm text-amber-600 font-medium">{saveMessage}</p>}
+            {saveMessage && <p className="text-sm text-brand-600 font-medium">{saveMessage}</p>}
             {saveError && <p className="text-sm text-red-600 font-medium">{saveError}</p>}
           </div>
           <div className="flex gap-3">
@@ -180,7 +180,7 @@ const BannerAdManager = () => {
               </button>
             )}
             <button onClick={handleSave} disabled={isPending}
-              className="bg-amber-600 hover:bg-amber-700 disabled:bg-amber-400 text-white font-semibold px-6 py-3 rounded-2xl text-sm transition-all active:scale-[0.985] flex items-center gap-2 cursor-pointer">
+              className="bg-brand-600 hover:bg-brand-700 disabled:bg-brand-400 text-white font-semibold px-6 py-3 rounded-2xl text-sm transition-all active:scale-[0.985] flex items-center gap-2 cursor-pointer">
               {isPending ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</> : existingAd ? 'Update Advertisement' : 'Create Advertisement'}
             </button>
           </div>
@@ -188,7 +188,7 @@ const BannerAdManager = () => {
       </div>
 
       {/* Live Preview */}
-      <div className="bg-white border border-amber-200 rounded-3xl p-6">
+      <div className="bg-white border border-brand-200 rounded-3xl p-6">
         <h4 className="text-sm font-semibold text-slate-700 mb-3">Preview</h4>
         <div className="relative w-full rounded-2xl overflow-hidden shadow-sm" style={{ background: background || 'linear-gradient(135deg, #059669 0%, #10b981 100%)' }}>
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -207,7 +207,7 @@ const BannerAdManager = () => {
                 {subtitle && <p className="text-sm text-white/80 mt-1 max-w-lg">{subtitle}</p>}
               </div>
               {buttonText && (
-                <span className="flex-shrink-0 bg-white text-amber-700 font-semibold text-sm px-5 py-2.5 rounded-2xl shadow-sm">
+                <span className="flex-shrink-0 bg-white text-brand-700 font-semibold text-sm px-5 py-2.5 rounded-2xl shadow-sm">
                   {buttonText}
                 </span>
               )}

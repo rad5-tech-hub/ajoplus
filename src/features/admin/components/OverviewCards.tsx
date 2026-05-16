@@ -55,7 +55,7 @@ function buildCards(data: {
 
 function CardSkeleton() {
   return (
-    <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border border-amber-200/50 shadow-md animate-pulse">
+    <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border border-brand-200/50 shadow-md animate-pulse">
       <div className="flex justify-between items-start gap-2">
         <div className="space-y-2 flex-1">
           <div className="h-3 bg-slate-200 rounded-full w-2/3" />
@@ -75,7 +75,7 @@ function CardSkeleton() {
 
 function StatCard({ label, sub, value, change, icon: Icon }: CardConfig) {
   return (
-    <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border border-amber-200/50 shadow-md">
+    <div className="bg-white p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border border-brand-200/50 shadow-md">
       <div className="flex justify-between items-start gap-2">
         <div className="min-w-0">
           <p className="text-xs sm:text-sm text-slate-500 font-medium leading-snug truncate">
@@ -83,16 +83,16 @@ function StatCard({ label, sub, value, change, icon: Icon }: CardConfig) {
           </p>
           <p className="text-xs text-slate-400 hidden sm:block">{sub}</p>
         </div>
-        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-amber-100 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0">
-          <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />
+        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-brand-100 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0">
+          <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-brand-600" />
         </div>
       </div>
       <div className="mt-4 sm:mt-6">
-        <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-950 leading-tight truncate">
+        <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-brand-900 leading-tight truncate">
           {value}
         </p>
         {change && (
-          <p className="text-amber-600 text-xs sm:text-sm font-medium mt-1">{change}</p>
+          <p className="text-brand-600 text-xs sm:text-sm font-medium mt-1">{change}</p>
         )}
       </div>
     </div>

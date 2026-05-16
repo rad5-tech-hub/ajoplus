@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Shield, Package, Users, FileText } from 'lucide-react';
 
 const Section = ({ icon: Icon, title, children }: { icon: typeof Shield; title: string; children: React.ReactNode }) => (
-  <div className="bg-white border border-amber-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+  <div className="bg-white border border-brand-200 rounded-3xl p-6 sm:p-8 shadow-sm">
     <div className="flex items-center gap-3 mb-5">
-      <div className="w-10 h-10 bg-amber-100 rounded-2xl flex items-center justify-center">
-        <Icon className="w-5 h-5 text-amber-600" />
+      <div className="w-10 h-10 bg-brand-100 rounded-2xl flex items-center justify-center">
+        <Icon className="w-5 h-5 text-brand-600" />
       </div>
-      <h2 className="text-xl font-bold text-blue-950">{title}</h2>
+      <h2 className="text-xl font-bold text-brand-900">{title}</h2>
     </div>
     {children}
   </div>
@@ -17,21 +17,21 @@ const TermsAndConditions = () => {
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       {/* Header */}
-      <div className="bg-white border-b border-amber-200">
+      <div className="bg-white border-b border-brand-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-slate-500 hover:text-blue-950 transition-colors text-sm mb-4"
+            className="inline-flex items-center gap-2 text-slate-500 hover:text-brand-900 transition-colors text-sm mb-4"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Home
           </Link>
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center">
-              <FileText className="w-6 h-6 text-amber-600" />
+            <div className="w-12 h-12 bg-brand-100 rounded-2xl flex items-center justify-center">
+              <FileText className="w-6 h-6 text-brand-600" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-blue-950">Terms and Conditions</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-brand-900">Terms and Conditions</h1>
               <p className="text-slate-500 text-sm mt-0.5">Last updated: May 2026</p>
             </div>
           </div>
@@ -50,7 +50,7 @@ const TermsAndConditions = () => {
               'For those on global daily contributions, you are free to request for your money anytime you want but the withdrawal process will take effect on or before 3 working days of your request.',
             ].map((item) => (
               <li key={item} className="flex gap-3 text-sm text-slate-600 leading-relaxed">
-                <span className="text-amber-500 font-bold mt-0.5 shrink-0">•</span>
+                <span className="text-brand-500 font-bold mt-0.5 shrink-0">•</span>
                 {item}
               </li>
             ))}
@@ -68,7 +68,7 @@ const TermsAndConditions = () => {
               'One is allowed to register multiple packages.',
             ].map((item) => (
               <li key={item} className="flex gap-3 text-sm text-slate-600 leading-relaxed">
-                <span className="text-amber-500 font-bold mt-0.5 shrink-0">•</span>
+                <span className="text-brand-500 font-bold mt-0.5 shrink-0">•</span>
                 {item}
               </li>
             ))}
@@ -79,7 +79,7 @@ const TermsAndConditions = () => {
         <Section icon={Users} title="Agent Terms">
           <ul className="space-y-3">
             <li className="flex gap-3 text-sm text-slate-600 leading-relaxed">
-              <span className="text-amber-500 font-bold mt-0.5 shrink-0">•</span>
+              <span className="text-brand-500 font-bold mt-0.5 shrink-0">•</span>
               Agent commission is 20% of the registration fee brought by the agent.
             </li>
           </ul>
@@ -101,7 +101,7 @@ const TermsAndConditions = () => {
               'One is allowed to register multiple packages.',
             ].map((item) => (
               <li key={item} className="flex gap-3 text-sm text-slate-600 leading-relaxed">
-                <span className="text-amber-500 font-bold mt-0.5 shrink-0">•</span>
+                <span className="text-brand-500 font-bold mt-0.5 shrink-0">•</span>
                 {item}
               </li>
             ))}
@@ -109,14 +109,14 @@ const TermsAndConditions = () => {
         </Section>
 
         {/* Contact */}
-        <div className="bg-amber-50 border border-amber-100 rounded-3xl p-6 sm:p-8 text-center">
-          <h2 className="text-lg font-bold text-blue-950 mb-2">Questions?</h2>
+        <div className="bg-brand-50 border border-brand-100 rounded-3xl p-6 sm:p-8 text-center">
+          <h2 className="text-lg font-bold text-brand-900 mb-2">Questions?</h2>
           <p className="text-sm text-slate-600 mb-4">
             If you have any questions about these terms, please contact us.
           </p>
           <a
             href="mailto:support@abagold.com"
-            className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold px-6 py-3 rounded-2xl text-sm transition-all active:scale-[0.985]"
+            className="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold px-6 py-3 rounded-2xl text-sm transition-all active:scale-[0.985]"
           >
             Contact Support
           </a>

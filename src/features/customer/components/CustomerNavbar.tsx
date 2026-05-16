@@ -62,8 +62,8 @@ const CustomerNavbar = () => {
                 key={label}
                 to={to}
                 className={`transition-colors duration-150 ${isActive(to)
-                  ? 'text-amber-600 font-semibold'
-                  : 'text-slate-500 hover:text-blue-950'
+                  ? 'text-brand-600 font-semibold'
+                  : 'text-slate-500 hover:text-brand-900'
                   }`}
               >
                 {label}
@@ -77,18 +77,18 @@ const CustomerNavbar = () => {
             {/* Cart Icon with Live Count */}
             <Link
               to="/cart"
-              className="relative p-2.5 text-slate-600 hover:text-amber-600 transition-colors rounded-xl hover:bg-slate-100"
+              className="relative p-2.5 text-slate-600 hover:text-brand-600 transition-colors rounded-xl hover:bg-slate-100"
             >
               <ShoppingCart className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-[10px] font-medium w-5 h-5 flex items-center justify-center rounded-full ring-2 ring-white">
+                <span className="absolute -top-1 -right-1 bg-brand-600 text-white text-[10px] font-medium w-5 h-5 flex items-center justify-center rounded-full ring-2 ring-white">
                   {cartCount}
                 </span>
               )}
             </Link>
 
             {/* User Profile Chip */}
-            <div className="bg-amber-50 text-amber-700 px-3.5 py-2 rounded-2xl flex items-center gap-2 text-sm font-medium cursor-default select-none">
+            <div className="bg-brand-50 text-brand-700 px-3.5 py-2 rounded-2xl flex items-center gap-2 text-sm font-medium cursor-default select-none">
               <User className="w-4 h-4 shrink-0" />
               <span className="hidden md:block">{user?.fullName}</span>
               <span className="hidden sm:block md:hidden">{firstName}</span>
@@ -135,8 +135,8 @@ const CustomerNavbar = () => {
                 to={to}
                 onClick={() => setMenuOpen(false)}
                 className={`flex items-center gap-3 px-5 py-4 rounded-2xl text-[15px] font-medium transition-all ${isActive(to)
-                  ? 'bg-amber-50 text-amber-700'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-blue-950'
+                  ? 'bg-brand-50 text-brand-700'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-brand-900'
                   }`}
               >
                 {Icon && <Icon className="w-5 h-5" />}

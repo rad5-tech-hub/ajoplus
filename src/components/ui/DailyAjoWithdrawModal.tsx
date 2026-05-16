@@ -94,7 +94,7 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 					>
 						<X className="w-5 h-5" />
 					</button>
-					<h2 className="text-lg font-semibold text-blue-950">
+					<h2 className="text-lg font-semibold text-brand-900">
 						{isSuccess ? 'Withdrawal Requested' : 'Withdraw Balance'}
 					</h2>
 					<div className="w-8" />
@@ -106,13 +106,13 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 						/* ── Success State ── */
 						<div className="flex flex-col items-center text-center py-6">
 							<div className="relative mb-5">
-								<div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center">
-									<CheckCircle className="w-10 h-10 text-amber-600" />
+								<div className="w-20 h-20 bg-brand-100 rounded-full flex items-center justify-center">
+									<CheckCircle className="w-10 h-10 text-brand-600" />
 								</div>
-								<span className="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 rounded-full animate-ping opacity-60" />
+								<span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-500 rounded-full animate-ping opacity-60" />
 							</div>
 
-							<h3 className="text-xl font-bold text-blue-950 mb-1">Withdrawal Initiated!</h3>
+							<h3 className="text-xl font-bold text-brand-900 mb-1">Withdrawal Initiated!</h3>
 							<p className="text-slate-500 text-sm mb-5 max-w-xs leading-relaxed">
 								Your request for{' '}
 								<span className="font-semibold text-slate-700">
@@ -129,14 +129,14 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 									{ label: 'Sent to your bank', done: false },
 								].map(({ label, done }) => (
 									<div key={label} className="flex items-center gap-3">
-										<div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${done ? 'bg-amber-500' : 'bg-slate-200'}`}>
+										<div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${done ? 'bg-brand-500' : 'bg-slate-200'}`}>
 											{done && (
 												<svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
 													<path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
 												</svg>
 											)}
 										</div>
-										<span className={`text-sm ${done ? 'text-amber-700 font-medium' : 'text-slate-400'}`}>
+										<span className={`text-sm ${done ? 'text-brand-700 font-medium' : 'text-slate-400'}`}>
 											{label}
 										</span>
 									</div>
@@ -145,7 +145,7 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 
 							<button
 								onClick={handleClose}
-								className="w-full bg-amber-600 hover:bg-amber-700 active:scale-[0.985] text-white font-semibold py-3 rounded-2xl text-sm transition-all cursor-pointer"
+								className="w-full bg-brand-600 hover:bg-brand-700 active:scale-[0.985] text-white font-semibold py-3 rounded-2xl text-sm transition-all cursor-pointer"
 							>
 								Done
 							</button>
@@ -154,9 +154,9 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 						/* ── Form State ── */
 						<>
 							<div className="flex items-center justify-center mb-4">
-								<div className="bg-amber-50 border border-amber-100 rounded-2xl px-4 py-2 text-center">
-									<p className="text-xs text-amber-600 font-medium">Available Balance</p>
-									<p className="text-xl font-bold text-amber-700">₦{availableBalance.toLocaleString()}</p>
+								<div className="bg-brand-50 border border-brand-100 rounded-2xl px-4 py-2 text-center">
+									<p className="text-xs text-brand-600 font-medium">Available Balance</p>
+									<p className="text-xl font-bold text-brand-700">₦{availableBalance.toLocaleString()}</p>
 								</div>
 							</div>
 
@@ -168,7 +168,7 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 											type="button"
 											onClick={handleUseMax}
 											disabled={isPending}
-											className="cursor-pointer text-xs font-medium text-amber-600 hover:text-amber-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+											className="cursor-pointer text-xs font-medium text-brand-600 hover:text-brand-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
 										>
 											Use Max
 										</button>
@@ -183,7 +183,7 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 											disabled={isPending}
 											className={`w-full pl-9 pr-5 py-3 border rounded-2xl focus:outline-none text-base font-medium placeholder:text-slate-400 transition-colors disabled:bg-slate-50 disabled:cursor-not-allowed ${isExceeding
 												? 'border-red-400 focus:border-red-500 bg-red-50'
-												: 'border-amber-200 focus:border-amber-600'
+												: 'border-brand-200 focus:border-brand-600'
 												}`}
 											min="100"
 											required
@@ -205,11 +205,11 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 										onChange={(e) => setDescription(e.target.value)}
 										placeholder="e.g. Paying school fees, business expenses..."
 										disabled={isPending}
-										className="w-full px-4 py-3 border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 h-20 resize-none text-sm leading-relaxed disabled:bg-slate-50 disabled:cursor-not-allowed"
+										className="w-full px-4 py-3 border border-brand-200 rounded-2xl focus:outline-none focus:border-brand-600 h-20 resize-none text-sm leading-relaxed disabled:bg-slate-50 disabled:cursor-not-allowed"
 									/>
 								</div>
 
-								<div className="bg-slate-50 border border-amber-200 rounded-2xl px-4 py-3 text-sm">
+								<div className="bg-slate-50 border border-brand-200 rounded-2xl px-4 py-3 text-sm">
 									<span className="text-slate-700 font-medium">Note: </span>
 									<span className="text-slate-500">Withdrawals are processed within 24 hours to your linked bank account.</span>
 								</div>
@@ -217,7 +217,7 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 								<button
 									type="submit"
 									disabled={!isValid || isPending}
-									className="w-full bg-amber-600 hover:bg-amber-700 active:scale-[0.985] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 text-white font-semibold py-3 rounded-2xl text-sm transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+									className="w-full bg-brand-600 hover:bg-brand-700 active:scale-[0.985] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 text-white font-semibold py-3 rounded-2xl text-sm transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
 								>
 									{isPending ? (
 										<>

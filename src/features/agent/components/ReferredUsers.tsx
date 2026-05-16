@@ -37,8 +37,8 @@ const SkeletonRow = () => (
 /* ── Empty state ── */
 const EmptyState = () => (
   <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-    <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mb-4">
-      <Users className="w-8 h-8 text-amber-400" />
+    <div className="w-16 h-16 bg-brand-50 rounded-2xl flex items-center justify-center mb-4">
+      <Users className="w-8 h-8 text-brand-400" />
     </div>
     <p className="font-semibold text-slate-800 text-base mb-1">No referrals yet</p>
     <p className="text-sm text-slate-400 max-w-xs leading-relaxed">
@@ -51,11 +51,11 @@ const EmptyState = () => (
 const UserRow = ({ user }: { user: ReferredUser }) => (
   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 py-3.5 sm:py-4 border-b border-slate-100 last:border-b-0 last:pb-0">
     <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-      <div className="w-9 h-9 sm:w-10 sm:h-10 bg-amber-100 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 text-amber-700 text-xs font-bold">
+      <div className="w-9 h-9 sm:w-10 sm:h-10 bg-brand-100 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 text-brand-700 text-xs font-bold">
         {getInitials(user.fullName)}
       </div>
       <div className="min-w-0">
-        <p className="font-semibold text-blue-950 text-sm sm:text-base truncate">{user.fullName}</p>
+        <p className="font-semibold text-brand-900 text-sm sm:text-base truncate">{user.fullName}</p>
         <p className="text-xs sm:text-sm text-slate-400 truncate">{user.email}</p>
       </div>
     </div>
@@ -63,15 +63,15 @@ const UserRow = ({ user }: { user: ReferredUser }) => (
     <div className="grid grid-cols-3 sm:flex sm:gap-6 lg:gap-8 bg-slate-50 sm:bg-transparent rounded-xl sm:rounded-none px-3 py-2 sm:p-0 text-xs sm:text-sm shrink-0">
       <div className="sm:text-right">
         <p className="text-slate-400 text-[10px] sm:text-xs">Packages</p>
-        <p className="font-medium text-blue-950 mt-0.5">{user.packages}</p>
+        <p className="font-medium text-brand-900 mt-0.5">{user.packages}</p>
       </div>
       <div className="sm:text-right">
         <p className="text-slate-400 text-[10px] sm:text-xs">Earnings</p>
-        <p className="font-semibold text-amber-600 mt-0.5">₦{user.earnings.toLocaleString()}</p>
+        <p className="font-semibold text-brand-600 mt-0.5">₦{user.earnings.toLocaleString()}</p>
       </div>
       <div className="sm:text-right">
         <p className="text-slate-400 text-[10px] sm:text-xs">Joined</p>
-        <p className="font-medium text-blue-950 mt-0.5 whitespace-nowrap">{formatDate(user.joinedAt)}</p>
+        <p className="font-medium text-brand-900 mt-0.5 whitespace-nowrap">{formatDate(user.joinedAt)}</p>
       </div>
     </div>
   </div>
@@ -90,7 +90,7 @@ const ReferredUsers = () => {
   return (
     <div className="bg-white border border-slate-100 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
       <div className="flex items-center justify-between mb-5 sm:mb-6 lg:mb-8">
-        <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-blue-950">Referred Users</h3>
+        <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-brand-900">Referred Users</h3>
         {!isLoading && (
           <span className="text-xs sm:text-sm text-slate-400">{users.length} total</span>
         )}

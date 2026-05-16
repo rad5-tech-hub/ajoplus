@@ -58,36 +58,36 @@ const CategorySelect = ({ value, onChange, disabled, error }: CategorySelectProp
         type="button"
         onClick={() => { if (!disabled) setOpen(!open); }}
         disabled={disabled || catLoading}
-        className={`w-full flex items-center justify-between px-4 py-3 text-base border rounded-2xl focus:outline-none focus:border-amber-600 bg-white disabled:bg-slate-50 transition-colors cursor-pointer
-          ${error ? 'border-red-400' : 'border-amber-200'}`}
+        className={`w-full flex items-center justify-between px-4 py-3 text-base border rounded-2xl focus:outline-none focus:border-brand-600 bg-white disabled:bg-slate-50 transition-colors cursor-pointer
+          ${error ? 'border-red-400' : 'border-brand-200'}`}
       >
-        <span className={value ? 'text-blue-950' : 'text-slate-400'}>
+        <span className={value ? 'text-brand-900' : 'text-slate-400'}>
           {catLoading ? 'Loading…' : selected ? selected.name : 'Select category'}
         </span>
         <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open && (
-        <div className="absolute z-20 mt-1 w-full bg-white border border-amber-200 rounded-2xl shadow-lg max-h-60 overflow-y-auto">
+        <div className="absolute z-20 mt-1 w-full bg-white border border-brand-200 rounded-2xl shadow-lg max-h-60 overflow-y-auto">
           {categories.map((cat) => (
             <button
               key={cat.id}
               type="button"
               onClick={() => { onChange(cat.id); setOpen(false); }}
-              className={`w-full text-left px-4 py-3 text-sm hover:bg-amber-50 transition-colors flex items-center justify-between cursor-pointer
-                ${cat.id === value ? 'bg-amber-50 text-amber-700 font-medium' : 'text-slate-700'}`}
+              className={`w-full text-left px-4 py-3 text-sm hover:bg-brand-50 transition-colors flex items-center justify-between cursor-pointer
+                ${cat.id === value ? 'bg-brand-50 text-brand-700 font-medium' : 'text-slate-700'}`}
             >
               {cat.name}
-              {cat.id === value && <Check className="w-4 h-4 text-amber-600" />}
+              {cat.id === value && <Check className="w-4 h-4 text-brand-600" />}
             </button>
           ))}
 
-          <div className="border-t border-amber-100">
+          <div className="border-t border-brand-100">
             {!showCreate ? (
               <button
                 type="button"
                 onClick={() => setShowCreate(true)}
-                className="w-full text-left px-4 py-3 text-sm text-amber-600 hover:bg-amber-50 font-medium flex items-center gap-2 transition-colors cursor-pointer"
+                className="w-full text-left px-4 py-3 text-sm text-brand-600 hover:bg-brand-50 font-medium flex items-center gap-2 transition-colors cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 Create new category
@@ -100,7 +100,7 @@ const CategorySelect = ({ value, onChange, disabled, error }: CategorySelectProp
                   onChange={(e) => { setNewName(e.target.value); setCreateError(''); }}
                   placeholder="Category name"
                   disabled={creating}
-                  className="w-full px-3 py-2 text-sm border border-amber-200 rounded-xl focus:outline-none focus:border-amber-600 disabled:bg-slate-50"
+                  className="w-full px-3 py-2 text-sm border border-brand-200 rounded-xl focus:outline-none focus:border-brand-600 disabled:bg-slate-50"
                   autoFocus
                   onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleCreate(); } }}
                 />
@@ -118,7 +118,7 @@ const CategorySelect = ({ value, onChange, disabled, error }: CategorySelectProp
                     type="button"
                     onClick={handleCreate}
                     disabled={creating || !newName.trim()}
-                    className="flex-1 px-3 py-1.5 bg-amber-600 text-white text-xs rounded-xl hover:bg-amber-700 disabled:bg-amber-400 transition-colors flex items-center justify-center gap-1 disabled:cursor-not-allowed cursor-pointer"
+                    className="flex-1 px-3 py-1.5 bg-brand-600 text-white text-xs rounded-xl hover:bg-brand-700 disabled:bg-brand-400 transition-colors flex items-center justify-center gap-1 disabled:cursor-not-allowed cursor-pointer"
                   >
                     {creating ? <Loader2 className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
                     Create

@@ -117,7 +117,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
         {/* ── Full-modal loading overlay while submitting ── */}
         {isSubmitting && (
           <div className="absolute inset-0 bg-white/70 backdrop-blur-sm z-10 flex flex-col items-center justify-center gap-3 rounded-3xl">
-            <Loader2 className="w-10 h-10 text-amber-600 animate-spin" />
+            <Loader2 className="w-10 h-10 text-brand-600 animate-spin" />
             <p className="text-slate-700 font-semibold text-base">Creating product…</p>
           </div>
         )}
@@ -125,10 +125,10 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 md:px-6 md:py-5 border-b border-slate-100">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 md:w-9 md:h-9 bg-amber-100 rounded-2xl flex items-center justify-center">
-              <div className="w-5 h-5 md:w-6 md:h-6 bg-amber-600 rounded-xl flex items-center justify-center text-base">🛍️</div>
+            <div className="w-8 h-8 md:w-9 md:h-9 bg-brand-100 rounded-2xl flex items-center justify-center">
+              <div className="w-5 h-5 md:w-6 md:h-6 bg-brand-600 rounded-xl flex items-center justify-center text-base">🛍️</div>
             </div>
-            <h2 className="text-xl md:text-2xl font-semibold text-blue-950">Create New Product</h2>
+            <h2 className="text-xl md:text-2xl font-semibold text-brand-900">Create New Product</h2>
           </div>
           <button
             onClick={onClose}
@@ -147,7 +147,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
                 Product Image <span className="text-red-500">*</span>
               </label>
               <div
-                className="border-2 border-dashed border-amber-200 rounded-2xl p-6 text-center hover:border-amber-400 transition-colors cursor-pointer h-[calc(100%-2rem)]"
+                className="border-2 border-dashed border-brand-200 rounded-2xl p-6 text-center hover:border-brand-400 transition-colors cursor-pointer h-[calc(100%-2rem)]"
                 onClick={() => !isSubmitting && document.getElementById('image-input')?.click()}
               >
                 {imagePreview ? (
@@ -194,7 +194,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
                   value={formData.productName}
                   disabled={isSubmitting}
                   onChange={(e) => setFormData((p) => ({ ...p, productName: e.target.value }))}
-                  className="w-full px-4 py-3 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 disabled:bg-slate-50 disabled:text-slate-400"
+                  className="w-full px-4 py-3 text-base border border-brand-200 rounded-2xl focus:outline-none focus:border-brand-600 disabled:bg-slate-50 disabled:text-slate-400"
                 />
               </div>
 
@@ -220,7 +220,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
                     value={formData.price}
                     disabled={isSubmitting}
                     onChange={(e) => setFormData((p) => ({ ...p, price: e.target.value }))}
-                    className="w-full px-4 py-3 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 disabled:bg-slate-50 disabled:text-slate-400"
+                    className="w-full px-4 py-3 text-base border border-brand-200 rounded-2xl focus:outline-none focus:border-brand-600 disabled:bg-slate-50 disabled:text-slate-400"
                   />
                 </div>
 
@@ -234,7 +234,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
                     value={formData.dollarPrice}
                     disabled={isSubmitting}
                     onChange={(e) => setFormData((p) => ({ ...p, dollarPrice: e.target.value }))}
-                    className="w-full px-4 py-3 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 disabled:bg-slate-50 disabled:text-slate-400"
+                    className="w-full px-4 py-3 text-base border border-brand-200 rounded-2xl focus:outline-none focus:border-brand-600 disabled:bg-slate-50 disabled:text-slate-400"
                   />
                 </div>
                 <div>
@@ -247,7 +247,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
                     value={formData.quantity}
                     disabled={isSubmitting}
                     onChange={(e) => setFormData((p) => ({ ...p, quantity: e.target.value }))}
-                    className="w-full px-4 py-3 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 disabled:bg-slate-50 disabled:text-slate-400"
+                    className="w-full px-4 py-3 text-base border border-brand-200 rounded-2xl focus:outline-none focus:border-brand-600 disabled:bg-slate-50 disabled:text-slate-400"
                   />
                 </div>
               </div>
@@ -266,7 +266,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
                   disabled={isSubmitting}
                   onClick={() => setFormData((p) => ({ ...p, status }))}
                   className={`py-3 px-4 rounded-2xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${formData.status === status
-                      ? 'bg-amber-600 text-white'
+                      ? 'bg-brand-600 text-white'
                       : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                     }`}
                 >
@@ -286,7 +286,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
               disabled={isSubmitting}
               onChange={(e) => setFormData((p) => ({ ...p, description: e.target.value }))}
               rows={4}
-              className="w-full px-4 py-3 text-base border border-amber-200 rounded-3xl focus:outline-none focus:border-amber-600 resize-none disabled:bg-slate-50 disabled:text-slate-400"
+              className="w-full px-4 py-3 text-base border border-brand-200 rounded-3xl focus:outline-none focus:border-brand-600 resize-none disabled:bg-slate-50 disabled:text-slate-400"
             />
           </div>
         </div>
@@ -296,14 +296,14 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
           <button
             onClick={onClose}
             disabled={isSubmitting}
-            className="md:flex-1 w-full mb-2 md:mb-0 py-4 border-2 border-amber-600 text-amber-600 font-semibold rounded-2xl hover:bg-amber-50 transition-colors text-base disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="md:flex-1 w-full mb-2 md:mb-0 py-4 border-2 border-brand-600 text-brand-600 font-semibold rounded-2xl hover:bg-brand-50 transition-colors text-base disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="md:flex-1 py-4 w-full cursor-pointer bg-amber-600 hover:bg-amber-700 active:scale-[0.985] transition-all text-white font-semibold rounded-2xl flex items-center justify-center gap-2 text-base disabled:opacity-70 disabled:cursor-not-allowed disabled:active:scale-100"
+            className="md:flex-1 py-4 w-full cursor-pointer bg-brand-600 hover:bg-brand-700 active:scale-[0.985] transition-all text-white font-semibold rounded-2xl flex items-center justify-center gap-2 text-base disabled:opacity-70 disabled:cursor-not-allowed disabled:active:scale-100"
           >
             {isSubmitting ? (
               <>

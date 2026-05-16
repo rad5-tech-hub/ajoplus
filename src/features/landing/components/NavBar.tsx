@@ -74,7 +74,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0">
             <img src={abaGoldLogo} alt="ABAGOLD Logo" className="h-9 w-auto border border-gray-300 rounded-lg" />
-            <span className="font-bold text-[19px] tracking-tight text-blue-950">
+            <span className="font-bold text-[19px] tracking-tight text-brand-900">
               AbaGold
             </span>
           </Link>
@@ -86,7 +86,7 @@ const Navbar = () => {
                 key={href}
                 href={href}
                 onClick={(e) => handleAnchor(e, href)}
-                className="hover:text-blue-950 transition-colors duration-150"
+                className="hover:text-brand-900 transition-colors duration-150"
               >
                 {label}
               </a>
@@ -99,12 +99,12 @@ const Navbar = () => {
             {/* Cart Icon with Count */}
             <Link
               to="/cart"
-              className="relative p-3 text-slate-600 hover:text-amber-600 transition-colors rounded-xl hover:bg-amber-50 group"
+              className="relative p-3 text-slate-600 hover:text-brand-600 transition-colors rounded-xl hover:bg-brand-50 group"
               aria-label="View Cart"
             >
               <ShoppingCart className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-[10px] font-medium min-w-4.5 h-4.5 flex items-center justify-center rounded-full ring-2 ring-white">
+                <span className="absolute -top-1 -right-1 bg-brand-600 text-white text-[10px] font-medium min-w-4.5 h-4.5 flex items-center justify-center rounded-full ring-2 ring-white">
                   {cartCount}
                 </span>
               )}
@@ -113,13 +113,13 @@ const Navbar = () => {
             {/* Auth Buttons */}
             <Link
               to="/login"
-              className="px-5 py-2 text-[14px] font-medium text-slate-600 hover:text-blue-950 transition-colors duration-150 rounded-xl"
+              className="px-5 py-2 text-[14px] font-medium text-slate-600 hover:text-brand-900 transition-colors duration-150 rounded-xl"
             >
               Login
             </Link>
             <Link
               to="/signup"
-              className="px-5 py-2 bg-amber-600 hover:bg-amber-700 active:scale-[0.97] text-white text-[14px] font-semibold rounded-xl transition-all duration-150"
+              className="px-5 py-2 bg-brand-600 hover:bg-brand-700 active:scale-[0.97] text-white text-[14px] font-semibold rounded-xl transition-all duration-150"
             >
               Get Started
             </Link>
@@ -131,11 +131,11 @@ const Navbar = () => {
             {/* Mobile Cart */}
             <Link
               to="/cart"
-              className="relative p-2 text-slate-600 hover:text-amber-600 transition-colors"
+              className="relative p-2 text-slate-600 hover:text-brand-600 transition-colors"
             >
               <ShoppingCart className="w-5 h-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-[10px] font-medium w-5 h-5 flex items-center justify-center rounded-full">
+                <span className="absolute -top-1 -right-1 bg-brand-600 text-white text-[10px] font-medium w-5 h-5 flex items-center justify-center rounded-full">
                   {cartCount}
                 </span>
               )}
@@ -144,7 +144,7 @@ const Navbar = () => {
             {/* Login Button */}
             <Link
               to="/login"
-              className="px-4 py-1.5 text-[13px] font-medium text-slate-600 hover:text-blue-950 transition-colors"
+              className="px-4 py-1.5 text-[13px] font-medium text-slate-600 hover:text-brand-900 transition-colors"
             >
               Login
             </Link>
@@ -192,7 +192,7 @@ const Navbar = () => {
                 key={href}
                 href={href}
                 onClick={(e) => handleAnchor(e, href)}
-                className="px-4 py-4 text-[15px] font-medium text-slate-600 hover:text-blue-950 hover:bg-amber-50 rounded-2xl transition-colors"
+                className="px-4 py-4 text-[15px] font-medium text-slate-600 hover:text-brand-900 hover:bg-brand-50 rounded-2xl transition-colors"
               >
                 {label}
               </a>
@@ -204,12 +204,12 @@ const Navbar = () => {
             <Link
               to="/cart"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 px-4 py-4 text-[15px] font-medium text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded-2xl transition-colors"
+              className="flex items-center gap-3 px-4 py-4 text-[15px] font-medium text-slate-600 hover:text-brand-600 hover:bg-brand-50 rounded-2xl transition-colors"
             >
               <ShoppingCart className="w-5 h-5" />
               Cart
               {cartCount > 0 && (
-                <span className="ml-auto bg-amber-600 text-white text-xs px-2.5 py-0.5 rounded-full">
+                <span className="ml-auto bg-brand-600 text-white text-xs px-2.5 py-0.5 rounded-full">
                   {cartCount} items
                 </span>
               )}
@@ -218,7 +218,7 @@ const Navbar = () => {
             <Link
               to="/signup"
               onClick={() => setMenuOpen(false)}
-              className="mt-2 w-full text-center px-5 py-3.5 bg-amber-600 hover:bg-amber-700 text-white text-[15px] font-semibold rounded-2xl transition-colors"
+              className="mt-2 w-full text-center px-5 py-3.5 bg-brand-600 hover:bg-brand-700 text-white text-[15px] font-semibold rounded-2xl transition-colors"
             >
               Get Started Free
             </Link>

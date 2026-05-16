@@ -40,7 +40,7 @@ const RejectModal = ({ withdrawal, onConfirm, onClose, isPending }: RejectModalP
           >
             <X className="w-5 h-5" />
           </button>
-          <h2 className="text-base font-semibold text-blue-950">Reject Withdrawal</h2>
+          <h2 className="text-base font-semibold text-brand-900">Reject Withdrawal</h2>
           <div className="w-8" />
         </div>
 
@@ -62,7 +62,7 @@ const RejectModal = ({ withdrawal, onConfirm, onClose, isPending }: RejectModalP
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               placeholder="e.g. Insufficient balance, invalid account details..."
-              className="w-full px-4 py-3 border border-amber-200 rounded-2xl focus:outline-none focus:border-red-400 h-24 resize-none text-sm leading-relaxed"
+              className="w-full px-4 py-3 border border-brand-200 rounded-2xl focus:outline-none focus:border-red-400 h-24 resize-none text-sm leading-relaxed"
               autoFocus
             />
           </div>
@@ -70,7 +70,7 @@ const RejectModal = ({ withdrawal, onConfirm, onClose, isPending }: RejectModalP
           <div className="flex gap-2">
             <button
               onClick={onClose}
-              className="flex-1 py-3 rounded-2xl border border-amber-200 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors cursor-pointer"
+              className="flex-1 py-3 rounded-2xl border border-brand-200 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -149,7 +149,7 @@ const WithdrawalRequests = () => {
     <>
       <div className="flex items-start justify-between mb-1 sm:mb-2">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-blue-950">Withdrawal Requests</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-brand-900">Withdrawal Requests</h2>
           <p className="text-slate-600 mt-1 text-sm sm:text-base">
             {data?.count ?? 0} pending requests
           </p>
@@ -157,7 +157,7 @@ const WithdrawalRequests = () => {
         <button
           onClick={() => refetch()}
           disabled={isFetching}
-          className="p-2.5 rounded-2xl border border-amber-200 text-slate-500 hover:bg-slate-50 transition-colors disabled:opacity-50"
+          className="p-2.5 rounded-2xl border border-brand-200 text-slate-500 hover:bg-slate-50 transition-colors disabled:opacity-50"
         >
           <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
         </button>
@@ -179,11 +179,11 @@ const WithdrawalRequests = () => {
               >
                 {/* Left */}
                 <div className="flex items-center gap-3 sm:gap-4 min-w-0 sm:flex-1">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-100 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 text-lg">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-brand-100 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 text-lg">
                     👤
                   </div>
                   <div className="min-w-0">
-                    <p className="font-semibold text-blue-950 text-sm sm:text-base truncate">
+                    <p className="font-semibold text-brand-900 text-sm sm:text-base truncate">
                       {w.user.fullName}
                     </p>
                     <span className="inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
@@ -203,7 +203,7 @@ const WithdrawalRequests = () => {
                 {/* Amount + Date + Actions */}
                 <div className="flex items-center justify-between sm:contents gap-3">
                   <div className="text-left sm:text-right sm:mx-6 sm:flex-1">
-                    <p className="text-lg sm:text-xl font-bold text-amber-600 leading-tight">
+                    <p className="text-lg sm:text-xl font-bold text-brand-600 leading-tight">
                       {formatCurrency(parseFloat(w.amount))}
                     </p>
                     <p className="text-xs text-slate-500">
@@ -226,7 +226,7 @@ const WithdrawalRequests = () => {
                         <button
                           onClick={() => handleApprove(w.id)}
                           disabled={isApprovingThis}
-                          className="bg-amber-600 hover:bg-amber-700 active:scale-95 transition-all text-white px-3 sm:px-5 py-2 sm:py-3 rounded-xl sm:rounded-2xl flex items-center gap-1.5 text-sm font-medium disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
+                          className="bg-brand-600 hover:bg-brand-700 active:scale-95 transition-all text-white px-3 sm:px-5 py-2 sm:py-3 rounded-xl sm:rounded-2xl flex items-center gap-1.5 text-sm font-medium disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
                         >
                           <Check className="w-4 h-4 shrink-0" />
                           <span className="hidden xs:inline">
@@ -244,7 +244,7 @@ const WithdrawalRequests = () => {
                     ) : (
                       <span
                         className={`px-4 sm:px-6 py-2 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-medium whitespace-nowrap ${w.status === 'approved'
-                          ? 'bg-amber-100 text-amber-700'
+                          ? 'bg-brand-100 text-brand-700'
                           : 'bg-red-100 text-red-700'
                           }`}
                       >

@@ -102,7 +102,7 @@ const PaymentApprovals = () => {
   };
 
   const getCardBg = (status: string) => {
-    if (status === 'approved') return 'bg-amber-50/80 border-amber-100';
+    if (status === 'approved') return 'bg-brand-50/80 border-brand-100';
     if (status === 'rejected') return 'bg-red-50/80 border-red-100';
     return 'bg-white border-slate-100';
   };
@@ -145,7 +145,7 @@ const PaymentApprovals = () => {
     <div className="px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="mb-8">
-        <h2 className="text-2xl sm:text-3xl font-bold text-blue-950">Payment Approvals</h2>
+        <h2 className="text-2xl sm:text-3xl font-bold text-brand-900">Payment Approvals</h2>
         <p className="text-slate-600 mt-1 text-sm sm:text-base">
           Review and approve customer payment receipts
         </p>
@@ -161,7 +161,7 @@ const PaymentApprovals = () => {
               setSelectedFilter('all');
             }}
             className={`px-5 py-2 rounded-full text-sm font-medium transition-all capitalize ${activeTab === tab
-              ? 'bg-amber-600 text-white'
+              ? 'bg-brand-600 text-white'
               : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
               }`}
           >
@@ -181,7 +181,7 @@ const PaymentApprovals = () => {
             key={option.value}
             onClick={() => setSelectedFilter(option.value)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${selectedFilter === option.value
-              ? 'bg-amber-600 text-white'
+              ? 'bg-brand-600 text-white'
               : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
               }`}
           >
@@ -192,7 +192,7 @@ const PaymentApprovals = () => {
 
       {/* Empty State */}
       {filteredPayments.length === 0 && (
-        <div className="bg-white border border-amber-200 rounded-3xl p-12 text-center">
+        <div className="bg-white border border-brand-200 rounded-3xl p-12 text-center">
           <p className="text-slate-500 text-lg font-medium">No pending payments</p>
           <p className="text-slate-400 text-sm mt-1">All receipts have been reviewed.</p>
         </div>
@@ -217,16 +217,16 @@ const PaymentApprovals = () => {
               {/* Left — Payment Info */}
               <div className="lg:col-span-4">
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-10 h-10 sm:w-11 sm:h-11 bg-amber-100 rounded-2xl flex items-center justify-center text-2xl shrink-0">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 bg-brand-100 rounded-2xl flex items-center justify-center text-2xl shrink-0">
                     👤
                   </div>
                   <div>
-                    <p className="font-semibold text-lg sm:text-xl text-blue-950">
+                    <p className="font-semibold text-lg sm:text-xl text-brand-900">
                       {payment.user.fullName}
                     </p>
                     <span
                       className={`inline-block mt-1.5 px-4 py-1 text-xs font-medium rounded-full capitalize
-                        ${status === 'approved' ? 'bg-amber-100 text-amber-700' :
+                        ${status === 'approved' ? 'bg-brand-100 text-brand-700' :
                           status === 'rejected' ? 'bg-red-100 text-red-700' :
                             'bg-yellow-100 text-yellow-700'}`}
                     >
@@ -238,25 +238,25 @@ const PaymentApprovals = () => {
                 <div className="space-y-4 rounded-2xl bg-slate-100/70 p-5 text-sm">
                   <div>
                     <p className="text-xs text-slate-500">Payment Type</p>
-                    <p className="font-medium text-blue-950 mt-0.5 capitalize">
+                    <p className="font-medium text-brand-900 mt-0.5 capitalize">
                       {payment.paymentType.replace('_', ' ')}
                     </p>
                   </div>
                   <div>
                     <p className="text-xs text-slate-500">Amount Paid</p>
-                    <p className="text-xl sm:text-2xl font-bold text-amber-600 mt-0.5">
+                    <p className="text-xl sm:text-2xl font-bold text-brand-600 mt-0.5">
                       {formatCurrency(parseFloat(payment.amountPaid))}
                     </p>
                   </div>
                   <div>
                     <p className="text-xs text-slate-500">Expected Amount</p>
-                    <p className="font-medium text-blue-950 mt-0.5">
+                    <p className="font-medium text-brand-900 mt-0.5">
                       {formatCurrency(parseFloat(payment.expectedAmount))}
                     </p>
                   </div>
                   <div>
                     <p className="text-xs text-slate-500">Payment ID</p>
-                    <p className="font-medium text-blue-950 mt-0.5 text-xs break-all">
+                    <p className="font-medium text-brand-900 mt-0.5 text-xs break-all">
                       #{payment.id}
                     </p>
                   </div>
@@ -274,8 +274,8 @@ const PaymentApprovals = () => {
                 <p className="text-slate-500 text-sm mb-3">Receipt Preview</p>
                 <div
                   onClick={() => openReceipt(payment)}
-                  className="bg-slate-100 border-2 border-amber-200 rounded-3xl h-64 sm:h-72 lg:h-80 cursor-pointer
-                    flex flex-col items-center justify-center relative hover:border-amber-300
+                  className="bg-slate-100 border-2 border-brand-200 rounded-3xl h-64 sm:h-72 lg:h-80 cursor-pointer
+                    flex flex-col items-center justify-center relative hover:border-brand-300
                     transition-all active:scale-[0.985] overflow-hidden"
                 >
                   {payment.receiptUrl ? (
@@ -292,7 +292,7 @@ const PaymentApprovals = () => {
                       <p className="font-medium text-slate-800">Payment Receipt</p>
                     </>
                   )}
-                  <button className="absolute bottom-6 flex items-center gap-2 text-amber-600 text-sm font-medium bg-white/90 px-3 py-1.5 rounded-xl pointer-events-none cursor-pointer">
+                  <button className="absolute bottom-6 flex items-center gap-2 text-brand-600 text-sm font-medium bg-white/90 px-3 py-1.5 rounded-xl pointer-events-none cursor-pointer">
                     <Eye className="w-4 h-4" /> Click to view full size
                   </button>
                 </div>
@@ -307,7 +307,7 @@ const PaymentApprovals = () => {
                       href={payment.receiptUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="border border-amber-600 text-amber-600 py-3.5 rounded-2xl flex items-center justify-center gap-2 hover:bg-amber-50 transition-colors text-sm sm:text-base font-medium"
+                      className="border border-brand-600 text-brand-600 py-3.5 rounded-2xl flex items-center justify-center gap-2 hover:bg-brand-50 transition-colors text-sm sm:text-base font-medium"
                     >
                       <Eye className="w-4 h-4" /> View Full Receipt
                     </a>
@@ -315,7 +315,7 @@ const PaymentApprovals = () => {
                     <a
                       href={payment.receiptUrl}
                       download
-                      className="border border-amber-600 text-amber-600 py-3.5 rounded-2xl flex items-center justify-center gap-2 hover:bg-amber-50 transition-colors text-sm sm:text-base font-medium"
+                      className="border border-brand-600 text-brand-600 py-3.5 rounded-2xl flex items-center justify-center gap-2 hover:bg-brand-50 transition-colors text-sm sm:text-base font-medium"
                     >
                       <Download className="w-4 h-4" /> Download
                     </a>
@@ -327,7 +327,7 @@ const PaymentApprovals = () => {
                     <button
                       onClick={() => handleApprove(payment)}
                       disabled={isApprovingThis}
-                      className="mt-4 bg-amber-600 hover:bg-amber-700 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-95 text-sm sm:text-base disabled:bg-amber-400 disabled:cursor-not-allowed"
+                      className="mt-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-95 text-sm sm:text-base disabled:bg-brand-400 disabled:cursor-not-allowed"
                     >
                       {isApprovingThis ? (
                         <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
@@ -360,7 +360,7 @@ const PaymentApprovals = () => {
                     </button>
                   </>
                 ) : status === 'approved' ? (
-                  <div className="mt-8 flex flex-col items-center text-amber-600">
+                  <div className="mt-8 flex flex-col items-center text-brand-600">
                     <Check className="w-12 h-12" />
                     <p className="font-semibold mt-3 text-lg">Approved</p>
                   </div>

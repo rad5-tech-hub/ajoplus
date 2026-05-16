@@ -28,13 +28,13 @@ export default function Button({
 
         // Variants
         variant === 'primary' && [
-          "bg-amber-600 text-white hover:bg-amber-700 shadow-lg shadow-amber-200",
-          "hover:shadow-xl hover:shadow-amber-300"
+          "bg-brand-600 text-white hover:bg-brand-700 shadow-lg shadow-brand-200",
+          "hover:shadow-xl hover:shadow-brand-300"
         ],
 
         variant === 'outline' && [
-          "border-2 border-amber-600 text-amber-600 hover:bg-amber-50",
-          "hover:text-amber-700 hover:border-amber-700"
+          "border-2 border-brand-600 text-brand-600 hover:bg-brand-50",
+          "hover:text-brand-700 hover:border-brand-700"
         ],
 
         className

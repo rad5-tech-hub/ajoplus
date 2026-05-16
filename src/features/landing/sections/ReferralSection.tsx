@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const ReferralSection = () => {
   return (
-    <section className="py-24 bg-amber-600">
+    <section className="py-24 bg-brand-600">
       <div className="max-w-4xl mx-auto px-6 text-center">
         {/* Gift Icon */}
         <div className="mx-auto mb-8 w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center">
@@ -23,7 +23,7 @@ const ReferralSection = () => {
         </p>
 
         {/* CTA Button */}
-        <Link to="/signup" className="group inline-flex items-center gap-3 cursor-pointer bg-white hover:bg-white/95 text-amber-700 font-semibold text-lg px-10 py-4 rounded-2xl transition-all active:scale-[0.985]">
+        <Link to="/signup" className="group inline-flex items-center gap-3 cursor-pointer bg-white hover:bg-white/95 text-brand-700 font-semibold text-lg px-10 py-4 rounded-2xl transition-all active:scale-[0.985]">
           <UserPlus className="w-6 h-6 " strokeWidth={2.5} />
           Become an Agent
         </Link>

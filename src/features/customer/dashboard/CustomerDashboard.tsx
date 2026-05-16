@@ -58,7 +58,7 @@ const CustomerDashboard = () => {
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex justify-between items-start mb-10">
           <div>
-            <h1 className="text-xl md:text-4xl font-bold tracking-tight text-blue-950">
+            <h1 className="text-xl md:text-4xl font-bold tracking-tight text-brand-900">
               Welcome back, {user?.fullName?.split(' ')[0]}!
             </h1>
             <p className="text-slate-600 mt-1">Here's your financial overview</p>
@@ -73,10 +73,10 @@ const CustomerDashboard = () => {
         <div className="grid lg:grid-cols-11 gap-8 mt-10">
           <div className="lg:col-span-7 space-y-8">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold text-blue-950">My Packages</h2>
+              <h2 className="text-2xl font-semibold text-brand-900">My Packages</h2>
 
               <a href="/browse"
-                className="px-4 py-2 border-2 cursor-pointer border-amber-600 text-amber-600 rounded-2xl hover:bg-amber-50 transition-colors text-sm font-medium">
+                className="px-4 py-2 border-2 cursor-pointer border-brand-600 text-brand-600 rounded-2xl hover:bg-brand-50 transition-colors text-sm font-medium">
 
                 View All
               </a>
@@ -92,8 +92,8 @@ const CustomerDashboard = () => {
 
         <div className="mt-12">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-semibold text-blue-950">Recent Transactions</h2>
-            <button className="px-6 py-2 border cursor-pointer border-amber-600 text-amber-600 rounded-2xl hover:bg-amber-50 transition-colors text-sm font-medium">
+            <h2 className="text-2xl font-semibold text-brand-900">Recent Transactions</h2>
+            <button className="px-6 py-2 border cursor-pointer border-brand-600 text-brand-600 rounded-2xl hover:bg-brand-50 transition-colors text-sm font-medium">
               View All
             </button>
           </div>

@@ -17,8 +17,8 @@ const BrowseTabs = ({ activeTab, onTabChange }: BrowseTabsProps) => {
           onClick={() => onTabChange('all')}
           className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-medium text-sm whitespace-nowrap transition-all active:scale-95
             ${activeTab === 'all'
-              ? 'bg-amber-600 text-white shadow-md shadow-amber-100'
-              : 'bg-white text-slate-600 hover:bg-slate-100 border border-amber-200'
+              ? 'bg-brand-600 text-white shadow-md shadow-brand-100'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-brand-200'
             }`}
         >
           <Grid3X3 className="w-4 h-4" />
@@ -29,8 +29,8 @@ const BrowseTabs = ({ activeTab, onTabChange }: BrowseTabsProps) => {
           onClick={() => onTabChange('packages')}
           className={`flex cursor-pointer items-center gap-2 px-5 py-3 rounded-2xl font-medium text-sm whitespace-nowrap transition-all active:scale-95
             ${activeTab === 'packages'
-              ? 'bg-amber-600 text-white shadow-md shadow-amber-100'
-              : 'bg-white text-slate-600 hover:bg-slate-100 border border-amber-200'
+              ? 'bg-brand-600 text-white shadow-md shadow-brand-100'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-brand-200'
             }`}
         >
           <Package className="w-4 h-4" />
@@ -42,8 +42,8 @@ const BrowseTabs = ({ activeTab, onTabChange }: BrowseTabsProps) => {
           onClick={() => onTabChange('products')}
           className={`flex items-center cursor-pointer gap-2 px-5 py-3 rounded-2xl font-medium text-sm whitespace-nowrap transition-all active:scale-95
             ${activeTab === 'products'
-              ? 'bg-amber-600 text-white shadow-md shadow-amber-100'
-              : 'bg-white text-slate-600 hover:bg-slate-100 border border-amber-200'
+              ? 'bg-brand-600 text-white shadow-md shadow-brand-100'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-brand-200'
             }`}
         >
           <ShoppingBag className="w-4 h-4" />

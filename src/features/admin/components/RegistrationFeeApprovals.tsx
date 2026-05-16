@@ -42,7 +42,7 @@ const RegistrationFeeApprovals = () => {
   };
 
   const renderTable = (submissions: RegistrationFeeSubmission[], isHistory: boolean) => (
-    <div className="overflow-hidden rounded-3xl border border-amber-200 bg-white">
+    <div className="overflow-hidden rounded-3xl border border-brand-200 bg-white">
       <table className="w-full text-left">
         <thead className="bg-slate-50">
           <tr>
@@ -58,23 +58,23 @@ const RegistrationFeeApprovals = () => {
         <tbody>
           {submissions.map((sub) => (
             <tr key={sub.id} className="border-t border-slate-100 hover:bg-slate-50 transition-colors">
-              <td className="py-5 px-5 font-medium text-blue-950">{sub.fullName}</td>
+              <td className="py-5 px-5 font-medium text-brand-900">{sub.fullName}</td>
               <td className="py-5 px-5 text-slate-500 text-sm">{sub.email}</td>
-              <td className="py-5 px-5 text-amber-600 font-semibold">{formatCurrency(sub.amount)}</td>
+              <td className="py-5 px-5 text-brand-600 font-semibold">{formatCurrency(sub.amount)}</td>
               <td className="py-5 px-5 text-slate-500 text-sm">
                 {new Date(sub.paymentDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
               </td>
               <td className="py-5 px-5">
                 <a href={sub.proofUrl} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-700 text-xs underline">
+                  className="inline-flex items-center gap-1 text-brand-600 hover:text-brand-700 text-xs underline">
                   <ExternalLink className="w-3 h-3" /> View
                 </a>
               </td>
               <td className="py-5 px-5">
                 <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium
-                  ${sub.status === 'approved' ? 'bg-amber-100 text-amber-700' : ''}
+                  ${sub.status === 'approved' ? 'bg-brand-100 text-brand-700' : ''}
                   ${sub.status === 'rejected' ? 'bg-red-100 text-red-700' : ''}
-                  ${sub.status === 'pending' ? 'bg-amber-100 text-amber-700' : ''}
+                  ${sub.status === 'pending' ? 'bg-brand-100 text-brand-700' : ''}
                 `}>
                   {sub.status}
                 </span>
@@ -85,7 +85,7 @@ const RegistrationFeeApprovals = () => {
                     <button
                       onClick={() => handleApprove(sub.id)}
                       disabled={approveMutation.isPending}
-                      className="p-2 bg-amber-100 text-amber-600 hover:bg-amber-200 rounded-xl transition-colors disabled:opacity-50"
+                      className="p-2 bg-brand-100 text-brand-600 hover:bg-brand-200 rounded-xl transition-colors disabled:opacity-50"
                       title="Approve"
                     >
                       <Check className="w-4 h-4" />
@@ -105,7 +105,7 @@ const RegistrationFeeApprovals = () => {
                         value={rejectReason}
                         onChange={(e) => setRejectReason(e.target.value)}
                         placeholder="Rejection reason..."
-                        className="flex-1 px-3 py-1.5 border border-amber-200 rounded-xl text-xs focus:outline-none focus:border-red-400"
+                        className="flex-1 px-3 py-1.5 border border-brand-200 rounded-xl text-xs focus:outline-none focus:border-red-400"
                       />
                       <button
                         onClick={() => handleReject(sub.id)}
@@ -130,17 +130,17 @@ const RegistrationFeeApprovals = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex gap-4 border-b border-amber-200">
+      <div className="flex gap-4 border-b border-brand-200">
         <button
           onClick={() => setActiveTab('pending')}
-          className={`pb-3 font-medium text-sm transition-colors border-b-2 ${activeTab === 'pending' ? 'border-amber-600 text-amber-600' : 'border-transparent text-slate-500'
+          className={`pb-3 font-medium text-sm transition-colors border-b-2 ${activeTab === 'pending' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500'
             }`}
         >
-          Pending {pending.length > 0 && <span className="ml-1.5 px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full text-xs">{pending.length}</span>}
+          Pending {pending.length > 0 && <span className="ml-1.5 px-2 py-0.5 bg-brand-100 text-brand-700 rounded-full text-xs">{pending.length}</span>}
         </button>
         <button
           onClick={() => setActiveTab('history')}
-          className={`pb-3 font-medium text-sm transition-colors border-b-2 ${activeTab === 'history' ? 'border-amber-600 text-amber-600' : 'border-transparent text-slate-500'
+          className={`pb-3 font-medium text-sm transition-colors border-b-2 ${activeTab === 'history' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500'
             }`}
         >
           History

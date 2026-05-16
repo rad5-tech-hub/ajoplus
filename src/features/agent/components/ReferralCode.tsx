@@ -55,19 +55,19 @@ const ReferralCode = () => {
   }
 
   return (
-    <div className="bg-amber-50 border border-amber-100 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8">
-      <h3 className="text-base sm:text-lg font-semibold text-blue-950 mb-1.5 sm:mb-2">
+    <div className="bg-brand-50 border border-brand-100 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8">
+      <h3 className="text-base sm:text-lg font-semibold text-brand-900 mb-1.5 sm:mb-2">
         Your Referral Code
       </h3>
       <p className="text-xs sm:text-sm text-slate-500 mb-4 sm:mb-5 lg:mb-6">
         Users can enter this code during signup
       </p>
 
-      <div className="bg-white border border-amber-200 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 lg:p-5 text-center mb-4 sm:mb-5 lg:mb-6 min-h-[60px] flex items-center justify-center">
+      <div className="bg-white border border-brand-200 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 lg:p-5 text-center mb-4 sm:mb-5 lg:mb-6 min-h-[60px] flex items-center justify-center">
         {isLoading ? (
-          <div className="h-7 w-40 bg-amber-100 rounded-full animate-pulse" />
+          <div className="h-7 w-40 bg-brand-100 rounded-full animate-pulse" />
         ) : (
-          <p className="text-lg sm:text-2xl font-bold tracking-widest text-amber-700">
+          <p className="text-lg sm:text-2xl font-bold tracking-widest text-brand-700">
             {referralCode || 'AGENT-XXXX-XXXX'}
           </p>
         )}
@@ -76,7 +76,7 @@ const ReferralCode = () => {
       <button
         onClick={copyCode}
         disabled={isLoading || !referralCode}
-        className="w-full border cursor-pointer border-amber-600 text-amber-600 hover:bg-amber-100 disabled:opacity-50 disabled:pointer-events-none font-semibold py-3 sm:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 text-sm sm:text-[15px] transition-all active:scale-95"
+        className="w-full border cursor-pointer border-brand-600 text-brand-600 hover:bg-brand-100 disabled:opacity-50 disabled:pointer-events-none font-semibold py-3 sm:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl flex items-center justify-center gap-2 text-sm sm:text-[15px] transition-all active:scale-95"
       >
         {copied ? (
           <>

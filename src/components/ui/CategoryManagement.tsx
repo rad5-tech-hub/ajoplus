@@ -23,8 +23,8 @@ const SkeletonRow = () => (
 /* ── Empty state ── */
 const EmptyState = ({ onAdd }: { onAdd: () => void }) => (
   <div className="flex flex-col items-center justify-center py-12 text-center">
-    <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center mb-4">
-      <Tag className="w-7 h-7 text-amber-400" />
+    <div className="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center mb-4">
+      <Tag className="w-7 h-7 text-brand-400" />
     </div>
     <p className="font-semibold text-slate-800 mb-1">No categories yet</p>
     <p className="text-sm text-slate-400 max-w-xs leading-relaxed mb-5">
@@ -32,7 +32,7 @@ const EmptyState = ({ onAdd }: { onAdd: () => void }) => (
     </p>
     <button
       onClick={onAdd}
-      className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold rounded-2xl transition-all flex items-center gap-2 cursor-pointer"
+      className="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold rounded-2xl transition-all flex items-center gap-2 cursor-pointer"
     >
       <Plus className="w-4 h-4" /> Add First Category
     </button>
@@ -112,7 +112,7 @@ const CategoryManagement = ({ isOpen, onClose }: CategoryManagementProps) => {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 md:px-6 md:py-5 border-b border-slate-100">
           <div>
-            <h2 className="text-xl md:text-2xl font-semibold text-blue-950">Manage Categories</h2>
+            <h2 className="text-xl md:text-2xl font-semibold text-brand-900">Manage Categories</h2>
             {!isLoading && (
               <p className="text-xs text-slate-400 mt-0.5">{categories.length} categories</p>
             )}
@@ -132,7 +132,7 @@ const CategoryManagement = ({ isOpen, onClose }: CategoryManagementProps) => {
           {!isAdding && categories.length > 0 && (
             <button
               onClick={() => setIsAdding(true)}
-              className="w-full py-4 border-2 border-dashed border-amber-300 text-amber-600 font-semibold rounded-2xl hover:bg-amber-50 transition-colors flex items-center justify-center gap-2"
+              className="w-full py-4 border-2 border-dashed border-brand-300 text-brand-600 font-semibold rounded-2xl hover:bg-brand-50 transition-colors flex items-center justify-center gap-2"
             >
               <Plus className="w-5 h-5" /> Add New Category
             </button>
@@ -140,32 +140,32 @@ const CategoryManagement = ({ isOpen, onClose }: CategoryManagementProps) => {
 
           {/* Add form */}
           {isAdding && (
-            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 space-y-4">
+            <div className="bg-brand-50 border border-brand-200 rounded-2xl p-4 space-y-4">
               <input
                 type="text"
                 placeholder="Category name (e.g., Home & Garden)"
                 value={newCategory.name}
                 onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-                className="w-full px-4 py-3 text-base border border-amber-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white transition-all"
+                className="w-full px-4 py-3 text-base border border-brand-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white transition-all"
               />
               <textarea
                 placeholder="Category description..."
                 value={newCategory.description}
                 onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
                 rows={3}
-                className="w-full px-4 py-3 text-base border border-amber-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white resize-none transition-all"
+                className="w-full px-4 py-3 text-base border border-brand-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-brand-500 bg-white resize-none transition-all"
               />
               <div className="flex gap-3">
                 <button
                   onClick={handleCancel}
-                  className="flex-1 py-2.5 border border-amber-300 text-amber-600 font-medium rounded-2xl hover:bg-amber-100 transition-colors cursor-pointer"
+                  className="flex-1 py-2.5 border border-brand-300 text-brand-600 font-medium rounded-2xl hover:bg-brand-100 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleAdd}
                   disabled={!newCategory.name.trim() || addMutation.isPending}
-                  className="flex-1 py-2.5 bg-amber-600 hover:bg-amber-700 disabled:opacity-50 disabled:pointer-events-none text-white font-medium rounded-2xl transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                  className="flex-1 py-2.5 bg-brand-600 hover:bg-brand-700 disabled:opacity-50 disabled:pointer-events-none text-white font-medium rounded-2xl transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {addMutation.isPending ? (
                     <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
@@ -180,7 +180,7 @@ const CategoryManagement = ({ isOpen, onClose }: CategoryManagementProps) => {
           {/* List */}
           <div className="space-y-3">
             {categories.length > 0 && (
-              <h3 className="font-semibold text-blue-950 text-base">Existing Categories</h3>
+              <h3 className="font-semibold text-brand-900 text-base">Existing Categories</h3>
             )}
 
             {isLoading ? (
@@ -191,10 +191,10 @@ const CategoryManagement = ({ isOpen, onClose }: CategoryManagementProps) => {
               categories.map((category) => (
                 <div
                   key={category.id}
-                  className="bg-white border border-amber-200 rounded-2xl p-4 flex items-start justify-between hover:border-slate-300 transition-colors"
+                  className="bg-white border border-brand-200 rounded-2xl p-4 flex items-start justify-between hover:border-slate-300 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-semibold text-blue-950">{category.name}</h4>
+                    <h4 className="font-semibold text-brand-900">{category.name}</h4>
                     <p className="text-slate-500 text-sm mt-1 leading-relaxed">{category.description}</p>
                     <p className="text-xs text-slate-400 mt-2">Created: {formatDate(category.createdAt)}</p>
                   </div>
@@ -219,7 +219,7 @@ const CategoryManagement = ({ isOpen, onClose }: CategoryManagementProps) => {
         <div className="border-t border-slate-100 p-5 md:p-6">
           <button
             onClick={onClose}
-            className="w-full py-4 border-2 border-amber-600 text-amber-600 font-semibold rounded-2xl hover:bg-amber-50 transition-colors text-base cursor-pointer"
+            className="w-full py-4 border-2 border-brand-600 text-brand-600 font-semibold rounded-2xl hover:bg-brand-50 transition-colors text-base cursor-pointer"
           >
             Close
           </button>

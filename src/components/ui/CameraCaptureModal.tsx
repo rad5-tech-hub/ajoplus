@@ -55,7 +55,7 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-3xl w-full max-w-lg mx-auto shadow-2xl overflow-hidden">
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-100">
-          <h2 className="text-lg font-semibold text-blue-950">Take Photo</h2>
+          <h2 className="text-lg font-semibold text-brand-900">Take Photo</h2>
           <button onClick={onClose}
             className="p-1 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" aria-label="Close">
             <X className="w-5 h-5" />
@@ -70,7 +70,7 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
               </div>
               <p className="text-sm text-slate-600">{error}</p>
               <button onClick={onClose}
-                className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-5 py-2.5 rounded-2xl text-sm transition-all cursor-pointer">
+                className="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-5 py-2.5 rounded-2xl text-sm transition-all cursor-pointer">
                 Close
               </button>
             </div>
@@ -99,7 +99,7 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
                 <button onClick={handleCapture}
                   className="absolute bottom-4 left-1/2 -translate-x-1/2 w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all cursor-pointer"
                   aria-label="Capture photo">
-                  <div className="w-10 h-10 bg-amber-600 rounded-full" />
+                  <div className="w-10 h-10 bg-brand-600 rounded-full" />
                 </button>
               )}
             </div>
@@ -114,7 +114,7 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
                   Retake
                 </button>
                 <button onClick={handleConfirm}
-                  className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-5 py-2 rounded-2xl text-sm shadow transition-all cursor-pointer">
+                  className="bg-brand-600 hover:bg-brand-700 text-white font-semibold px-5 py-2 rounded-2xl text-sm shadow transition-all cursor-pointer">
                   Use Photo
                 </button>
               </div>

@@ -52,7 +52,7 @@ const PromotionalBanner = () => {
                 href={ad.buttonLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-shrink-0 inline-flex items-center gap-2 bg-white text-amber-700 font-semibold text-sm px-6 py-3 rounded-2xl hover:bg-amber-50 active:scale-[0.97] transition-all duration-200 shadow-md cursor-pointer"
+                className="flex-shrink-0 inline-flex items-center gap-2 bg-white text-brand-700 font-semibold text-sm px-6 py-3 rounded-2xl hover:bg-brand-50 active:scale-[0.97] transition-all duration-200 shadow-md cursor-pointer"
               >
                 {ad.buttonText}
                 <ExternalLink className="w-4 h-4" />

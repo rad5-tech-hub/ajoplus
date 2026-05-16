@@ -72,13 +72,13 @@
 //   }
 
 //   return (
-//     <div className="bg-amber-600 text-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8">
+//     <div className="bg-brand-600 text-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8">
 //       <div className="flex items-center gap-2.5 sm:gap-3 mb-4 sm:mb-5 lg:mb-6">
 //         <LinkIcon className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
 //         <h3 className="text-base sm:text-lg lg:text-xl font-semibold">Your Referral Link</h3>
 //       </div>
 
-//       <p className="text-amber-100 text-sm sm:text-[15px] leading-relaxed mb-4 sm:mb-5 lg:mb-6">
+//       <p className="text-brand-100 text-sm sm:text-[15px] leading-relaxed mb-4 sm:mb-5 lg:mb-6">
 //         Share this link with friends and family. You earn{' '}
 //         <span className="font-semibold text-white">₦2,000</span> for every person
 //         who signs up and buys a package!
@@ -86,7 +86,7 @@
 
 //       {/* URL box */}
 //       <div className="bg-white/15 rounded-xl sm:rounded-2xl p-3 sm:p-4 mb-4 sm:mb-5 lg:mb-6">
-//         <p className="text-[10px] sm:text-xs text-amber-200 uppercase tracking-wide mb-1">
+//         <p className="text-[10px] sm:text-xs text-brand-200 uppercase tracking-wide mb-1">
 //           Referral URL
 //         </p>
 //         {isLoading ? (

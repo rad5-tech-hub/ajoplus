@@ -71,7 +71,7 @@ const FAQAccordionItem: React.FC<{
       aria-expanded={isOpen}
     >
       <span
-        className={`text-[15.5px] font-bold leading-snug transition-colors duration-200 ${isOpen ? "text-[#16a34a]" : "text-[#0f2d3d]"
+        className={`text-[15.5px] font-bold leading-snug transition-colors duration-200 ${isOpen ? "text-brand-400" : "text-"
           }`}
       >
         {item.question}

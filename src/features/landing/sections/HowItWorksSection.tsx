@@ -46,21 +46,21 @@ const HowItWorksSection = () => {
             return (
               <div
                 key={index}
-                className="group bg-white border border-slate-300 hover:border-amber-200 shadow-lg rounded-3xl p-10 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                className="group bg-white border border-slate-300 hover:border-brand-200 shadow-lg rounded-3xl p-10 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
               >
                 {/* Top Icon Circle - Exact match to your design */}
                 <div className="flex justify-center mb-8">
-                  <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center">
-                    <Icon className="w-8 h-8 text-amber-600" strokeWidth={2.25} />
+                  <div className="w-12 h-12 rounded-full bg-brand-100 flex items-center justify-center">
+                    <Icon className="w-8 h-8 text-brand-600" strokeWidth={2.25} />
                   </div>
                 </div>
 
                 {/* Number + Title - Side by side, no background on number */}
                 <div className="flex items-center gap-1 mb-6">
-                  <span className="text-2xl font-semibold text-blue-950">
+                  <span className="text-2xl font-semibold text-brand-900">
                     {step.number}.
                   </span>
-                  <h3 className="text-lg font-semibold tracking-tight text-blue-950">
+                  <h3 className="text-lg font-semibold tracking-tight text-brand-900">
                     {step.title}
                   </h3>
                 </div>
@@ -71,7 +71,7 @@ const HowItWorksSection = () => {
                 </p>
 
                 {/* Highlight Text */}
-                <p className="text-amber-600 font-medium text-[14px]">
+                <p className="text-brand-600 font-medium text-[14px]">
                   {step.highlight}
                 </p>
               </div>

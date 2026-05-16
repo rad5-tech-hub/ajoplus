@@ -19,30 +19,30 @@ const SavingsDetailPanel = ({ plan, isOpen, onClose }: SavingsDetailPanelProps) 
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-amber-200">
-          <h2 className="text-lg font-semibold text-blue-950 truncate">{plan.name}</h2>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-brand-200">
+          <h2 className="text-lg font-semibold text-brand-900 truncate">{plan.name}</h2>
           <button onClick={onClose} className="p-1 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" aria-label="Close">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="overflow-y-auto h-full pb-20 px-6 py-6 space-y-6">
-          <div className="bg-amber-600 text-white rounded-2xl p-5">
-            <p className="text-amber-100 text-xs font-medium">Daily Amount</p>
+          <div className="bg-brand-600 text-white rounded-2xl p-5">
+            <p className="text-brand-100 text-xs font-medium">Daily Amount</p>
             <p className="text-2xl font-bold mt-1">₦{plan.dailyAmount.toLocaleString()}</p>
             <div className="mt-4 pt-4 border-t border-white/20 grid grid-cols-2 gap-4">
               <div>
-                <p className="text-amber-100 text-xs">Total Saved</p>
+                <p className="text-brand-100 text-xs">Total Saved</p>
                 <p className="text-lg font-bold mt-0.5">₦{plan.totalSaved.toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-amber-100 text-xs">Balance</p>
+                <p className="text-brand-100 text-xs">Balance</p>
                 <p className="text-lg font-bold mt-0.5">₦{plan.availableBalance.toLocaleString()}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 space-y-3">
+          <div className="bg-brand-50 border border-brand-200 rounded-2xl p-4 space-y-3">
             {[
               { label: 'Days Saved', value: `${plan.daysSaved} days` },
               { label: 'Commission Paid', value: `₦${plan.commission.toLocaleString()}` },
@@ -52,20 +52,20 @@ const SavingsDetailPanel = ({ plan, isOpen, onClose }: SavingsDetailPanelProps) 
             ].map(({ label, value }) => (
               <div key={label} className="flex justify-between text-sm">
                 <span className="text-slate-500">{label}</span>
-                <span className="font-medium text-blue-950">{value}</span>
+                <span className="font-medium text-brand-900">{value}</span>
               </div>
             ))}
           </div>
 
           {plan.description && (
-            <div className="bg-white border border-amber-200 rounded-2xl p-4">
-              <p className="text-sm font-medium text-blue-950 mb-1">Description</p>
+            <div className="bg-white border border-brand-200 rounded-2xl p-4">
+              <p className="text-sm font-medium text-brand-900 mb-1">Description</p>
               <p className="text-sm text-slate-600">{plan.description}</p>
             </div>
           )}
 
-          <div className="bg-white border border-amber-200 rounded-2xl p-4">
-            <p className="text-sm font-medium text-blue-950 mb-1">Created</p>
+          <div className="bg-white border border-brand-200 rounded-2xl p-4">
+            <p className="text-sm font-medium text-brand-900 mb-1">Created</p>
             <p className="text-sm text-slate-500">
               {new Date(plan.createdAt).toLocaleDateString('en-GB', {
                 day: '2-digit', month: 'long', year: 'numeric'

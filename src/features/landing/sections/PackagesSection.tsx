@@ -50,10 +50,10 @@ const PackagesSection = () => {
     <section id="packages" className="py-24 bg-[#f8fafc]">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 text-amber-700 text-sm font-medium tracking-widest">
+          <span className="inline-block px-4 py-1.5 text-brand-700 text-sm font-medium tracking-widest">
             INSTALLMENT SAVINGS
           </span>
-          <h2 className="mt-4 text-2xl md:text-4xl font-bold tracking-tighter text-blue-950">
+          <h2 className="mt-4 text-2xl md:text-4xl font-bold tracking-tighter text-brand-900">
             Ongoing Contribution Packages
           </h2>
           <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
@@ -76,12 +76,12 @@ const PackagesSection = () => {
               const key = pkg.id;
               const isExpanded = expanded === key;
               return (
-                <div key={key} className="bg-white border border-amber-200 hover:border-amber-400 rounded-3xl p-8 flex flex-col h-full transition-all duration-300 hover:shadow-xl group">
-                  <div className="inline-block px-4 py-1 bg-amber-100/40 text-amber-700 text-xs font-medium rounded-2xl mb-6 w-fit">
+                <div key={key} className="bg-white border border-brand-200 hover:border-brand-400 rounded-3xl p-8 flex flex-col h-full transition-all duration-300 hover:shadow-xl group">
+                  <div className="inline-block px-4 py-1 bg-brand-100/40 text-brand-700 text-xs font-medium rounded-2xl mb-6 w-fit">
                     {getCategoryName(pkg.category)}
                   </div>
-                  <h3 className="text-xl font-semibold text-blue-950 mb-3 tracking-tight">{pkg.name}</h3>
-                  <div className="text-2xl font-bold text-amber-600 mb-8">{formatNaira(pkg.totalPrice)}</div>
+                  <h3 className="text-xl font-semibold text-brand-900 mb-3 tracking-tight">{pkg.name}</h3>
+                  <div className="text-2xl font-bold text-brand-600 mb-8">{formatNaira(pkg.totalPrice)}</div>
                   <div className="space-y-4 mb-6 text-sm">
                     <div className="flex items-center gap-3 text-slate-600">
                       <Clock className="w-5 h-5 text-slate-400" />
@@ -95,7 +95,7 @@ const PackagesSection = () => {
                   {pkg.items?.length > 0 && (
                     <div className="mb-6">
                       <button onClick={() => setExpanded(isExpanded ? null : key)}
-                        className="flex items-center gap-1.5 text-xs text-amber-600 hover:text-amber-700 font-medium transition-colors cursor-pointer">
+                        className="flex items-center gap-1.5 text-xs text-brand-600 hover:text-brand-700 font-medium transition-colors cursor-pointer">
                         {pkg.items.length} item{pkg.items.length !== 1 ? 's' : ''} included
                         <ChevronRight className={`w-3.5 h-3.5 transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`} />
                       </button>
@@ -114,7 +114,7 @@ const PackagesSection = () => {
                   <div className="text-[15px] text-slate-600 leading-relaxed mb-8 flex-1">{pkg.description}</div>
                   <div className="mt-auto">
                     <button onClick={() => handleJoin(pkg.id)}
-                      className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.985] cursor-pointer">
+                      className="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-4 px-6 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.985] cursor-pointer">
                       <PackageIcon className="w-5 h-5" />
                       Join Package
                     </button>
@@ -128,7 +128,7 @@ const PackagesSection = () => {
         <div className="flex justify-center mt-16">
           <Button variant="outline" size="lg" showArrow
             onClick={() => navigate('/browse')}
-            className="font-medium text-base tracking-wide rounded-3xl cursor-pointer hover:bg-amber-600 hover:text-white hover:border-amber-700">
+            className="font-medium text-base tracking-wide rounded-3xl cursor-pointer hover:bg-brand-600 hover:text-white hover:border-brand-700">
             View All Packages
           </Button>
         </div>

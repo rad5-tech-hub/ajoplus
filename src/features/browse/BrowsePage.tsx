@@ -106,7 +106,7 @@ function BrowsePage() {
         </button>
 
         <div className="mb-10">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-blue-950 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-brand-900 leading-tight">
             Discover Premium Packages & Products
           </h1>
           <p className="text-slate-600 mt-3 text-base sm:text-lg max-w-2xl">
@@ -117,17 +117,17 @@ function BrowsePage() {
         <BrowseTabs activeTab={activeTab} onTabChange={(t) => { setActiveTab(t); setPage(1); }} />
 
         {/* Search & Filter */}
-        <div ref={productsTopRef} className="mt-10 bg-white rounded-3xl shadow-sm border border-amber-200 p-2">
+        <div ref={productsTopRef} className="mt-10 bg-white rounded-3xl shadow-sm border border-brand-200 p-2">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1 relative group">
-              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 transition-colors group-focus-within:text-amber-500" />
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 transition-colors group-focus-within:text-brand-500" />
               <input type="text" placeholder="Search packages and products..." value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-14 pr-6 py-4 bg-transparent border border-transparent focus:border-amber-200 rounded-2xl focus:outline-none text-base placeholder:text-slate-400" />
+                className="w-full pl-14 pr-6 py-4 bg-transparent border border-transparent focus:border-brand-200 rounded-2xl focus:outline-none text-base placeholder:text-slate-400" />
             </div>
             {activeTab !== 'packages' && (
               <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}
-                className="bg-white border border-amber-200 px-6 py-4 rounded-2xl focus:outline-none focus:border-amber-500 text-base w-full md:w-80 cursor-pointer">
+                className="bg-white border border-brand-200 px-6 py-4 rounded-2xl focus:outline-none focus:border-brand-500 text-base w-full md:w-80 cursor-pointer">
                 {allCategories.map((cat) => <option key={cat}>{cat}</option>)}
               </select>
             )}
@@ -138,7 +138,7 @@ function BrowsePage() {
         {isLoading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="bg-white border border-amber-200 rounded-3xl p-6 animate-pulse flex flex-col gap-4">
+              <div key={i} className="bg-white border border-brand-200 rounded-3xl p-6 animate-pulse flex flex-col gap-4">
                 <div className="h-4 bg-slate-200 rounded-full w-1/3" />
                 <div className="h-5 bg-slate-200 rounded-full w-2/3" />
                 <div className="h-8 bg-slate-100 rounded-full w-1/2" />
@@ -164,22 +164,22 @@ function BrowsePage() {
             {/* Packages Tab */}
             {(activeTab === 'all' || activeTab === 'packages') && (
               <div className="mt-8">
-                <h2 className="text-xl font-semibold text-blue-950 mb-4">
+                <h2 className="text-xl font-semibold text-brand-900 mb-4">
                   {activeTab === 'all' ? 'Contribution Packages' : 'All Packages'}
                 </h2>
                 {filteredPackages.length === 0 ? (
-                  <div className="text-center py-10 bg-white rounded-3xl border border-amber-200 mb-6">
+                  <div className="text-center py-10 bg-white rounded-3xl border border-brand-200 mb-6">
                     <p className="text-slate-500">No packages found.</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                     {filteredPackages.map((pkg) => (
-                      <div key={pkg.id} className="bg-white border border-amber-200 rounded-3xl p-6 flex flex-col h-full hover:shadow-lg transition-shadow">
-                        <div className="inline-block px-3 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded-2xl mb-3 w-fit">
+                      <div key={pkg.id} className="bg-white border border-brand-200 rounded-3xl p-6 flex flex-col h-full hover:shadow-lg transition-shadow">
+                        <div className="inline-block px-3 py-1 bg-brand-100 text-brand-700 text-xs font-medium rounded-2xl mb-3 w-fit">
                           {getCategoryName(pkg.category)}
                         </div>
-                        <h3 className="font-semibold text-lg text-blue-950 mb-2">{pkg.name}</h3>
-                        <p className="text-2xl font-bold text-amber-600 mb-4">{formatNaira(pkg.totalPrice)}</p>
+                        <h3 className="font-semibold text-lg text-brand-900 mb-2">{pkg.name}</h3>
+                        <p className="text-2xl font-bold text-brand-600 mb-4">{formatNaira(pkg.totalPrice)}</p>
                         <div className="text-sm text-slate-500 mb-3 space-y-1">
                           <p>Duration: {pkg.duration} month{pkg.duration !== 1 ? 's' : ''}</p>
                           <p>Frequency: {formatFrequency(pkg.paymentFrequency)}</p>
@@ -197,7 +197,7 @@ function BrowsePage() {
                         )}
                         <p className="text-xs text-slate-400 flex-1 line-clamp-2 mb-4">{pkg.description}</p>
                         <button onClick={() => handleJoinPackage(pkg.id)}
-                          className="w-full bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded-2xl text-sm transition-all active:scale-[0.985] cursor-pointer">
+                          className="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 rounded-2xl text-sm transition-all active:scale-[0.985] cursor-pointer">
                           Join Package
                         </button>
                       </div>
@@ -210,11 +210,11 @@ function BrowsePage() {
             {/* Products Tab */}
             {(activeTab === 'all' || activeTab === 'products') && (
               <div className="mt-8">
-                <h2 className="text-xl font-semibold text-blue-950 mb-4">
+                <h2 className="text-xl font-semibold text-brand-900 mb-4">
                   {activeTab === 'all' ? 'One-Time Products' : 'All Products'}
                 </h2>
                 {filteredProducts.length === 0 ? (
-                  <div className="text-center py-10 bg-white rounded-3xl border border-amber-200">
+                  <div className="text-center py-10 bg-white rounded-3xl border border-brand-200">
                     <p className="text-slate-500">No products found.</p>
                   </div>
                 ) : (
@@ -227,15 +227,15 @@ function BrowsePage() {
 
                 {/* Pagination */}
                 {pagination && pagination.totalPages > 1 && (
-                  <div className="flex items-center justify-between mt-8 bg-white border border-amber-200 rounded-2xl px-5 py-3">
+                  <div className="flex items-center justify-between mt-8 bg-white border border-brand-200 rounded-2xl px-5 py-3">
                     <p className="text-sm text-slate-500">Page {pagination.page} of {pagination.totalPages}</p>
                     <div className="flex gap-2">
                       <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1}
-                        className="px-4 py-2 border border-amber-200 rounded-2xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
+                        className="px-4 py-2 border border-brand-200 rounded-2xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
                         Previous
                       </button>
                       <button onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))} disabled={page >= pagination.totalPages}
-                        className="px-4 py-2 border border-amber-200 rounded-2xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
+                        className="px-4 py-2 border border-brand-200 rounded-2xl text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
                         Next
                       </button>
                     </div>

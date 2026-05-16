@@ -23,7 +23,7 @@ const RejectPaymentModal = ({ isOpen, onClose, onConfirm, customerName, amount }
               <AlertCircle className="w-6 h-6 text-red-600" />
             </div>
             <div>
-              <h3 className="text-xl md:text-2xl font-bold text-blue-950">Reject Payment</h3>
+              <h3 className="text-xl md:text-2xl font-bold text-brand-900">Reject Payment</h3>
               <p className="text-slate-600 text-base">{customerName} • {amount}</p>
             </div>
           </div>
@@ -32,7 +32,7 @@ const RejectPaymentModal = ({ isOpen, onClose, onConfirm, customerName, amount }
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             placeholder="Enter rejection reason..."
-            className="w-full h-36 p-5 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-red-500 resize-y"
+            className="w-full h-36 p-5 text-base border border-brand-200 rounded-2xl focus:outline-none focus:border-red-500 resize-y"
           />
         </div>
 

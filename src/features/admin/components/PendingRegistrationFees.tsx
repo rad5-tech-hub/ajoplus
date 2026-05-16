@@ -61,7 +61,7 @@ const PendingRegistrationFees = () => {
     return (
       <div className="bg-white border border-red-200 rounded-3xl p-8 text-center">
         <p className="text-red-600 font-semibold mb-3">Failed to load pending fees.</p>
-        <button onClick={() => refetch()} className="px-5 py-2 rounded-2xl bg-amber-600 text-white text-sm font-semibold hover:bg-amber-700 transition-colors cursor-pointer">
+        <button onClick={() => refetch()} className="px-5 py-2 rounded-2xl bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 transition-colors cursor-pointer">
           Retry
         </button>
       </div>
@@ -71,7 +71,7 @@ const PendingRegistrationFees = () => {
   return (
     <div className="space-y-4">
       {successMsg && (
-        <div className="bg-amber-50 border border-amber-200 text-amber-700 text-sm rounded-2xl px-5 py-3 font-medium">
+        <div className="bg-brand-50 border border-brand-200 text-brand-700 text-sm rounded-2xl px-5 py-3 font-medium">
           {successMsg}
         </div>
       )}
@@ -83,11 +83,11 @@ const PendingRegistrationFees = () => {
       )}
 
       {fees.length === 0 ? (
-        <div className="bg-white border border-amber-200 rounded-3xl p-10 text-center text-slate-500 text-sm">
+        <div className="bg-white border border-brand-200 rounded-3xl p-10 text-center text-slate-500 text-sm">
           No pending registration fee submissions.
         </div>
       ) : (
-        <div className="overflow-hidden rounded-3xl border border-amber-200 bg-white">
+        <div className="overflow-hidden rounded-3xl border border-brand-200 bg-white">
           <table className="w-full text-left">
             <thead className="bg-slate-50">
               <tr>
@@ -102,10 +102,10 @@ const PendingRegistrationFees = () => {
               {fees.map((fee) => (
                 <tr key={fee.id} className="border-t border-slate-100 hover:bg-slate-50 transition-colors">
                   <td className="py-5 px-5">
-                    <p className="font-medium text-blue-950">{fee.fullName || '—'}</p>
+                    <p className="font-medium text-brand-900">{fee.fullName || '—'}</p>
                     <p className="text-xs text-slate-400">{fee.email || ''}</p>
                   </td>
-                  <td className="py-5 px-5 font-semibold text-amber-600">{formatCurrency(fee.amount)}</td>
+                  <td className="py-5 px-5 font-semibold text-brand-600">{formatCurrency(fee.amount)}</td>
                   <td className="py-5 px-5 text-slate-500 text-sm">
                     {new Date(fee.paymentDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                   </td>
@@ -114,7 +114,7 @@ const PendingRegistrationFees = () => {
                       href={fee.proofFile}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-700 text-xs underline cursor-pointer"
+                      className="inline-flex items-center gap-1 text-brand-600 hover:text-brand-700 text-xs underline cursor-pointer"
                     >
                       <ExternalLink className="w-3 h-3" /> View
                     </a>
@@ -124,7 +124,7 @@ const PendingRegistrationFees = () => {
                       <button
                         onClick={() => handleApprove(fee.id)}
                         disabled={approveMutation.isPending}
-                        className="p-2 bg-amber-100 text-amber-600 hover:bg-amber-200 rounded-xl transition-colors disabled:opacity-50 cursor-pointer"
+                        className="p-2 bg-brand-100 text-brand-600 hover:bg-brand-200 rounded-xl transition-colors disabled:opacity-50 cursor-pointer"
                         title="Approve"
                       >
                         {approveMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}

@@ -56,7 +56,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-amber-600 to-amber-700 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-linear-to-br from-brand-600 to-brand-700 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <Link
           to="/"
@@ -79,7 +79,7 @@ const LoginPage = () => {
         </div>
 
         <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-10">
-          <h1 className="text-3xl font-bold text-blue-950 mb-1">Welcome Back</h1>
+          <h1 className="text-3xl font-bold text-brand-900 mb-1">Welcome Back</h1>
           <p className="text-slate-500 mb-8">Sign in to continue to your account</p>
 
           {(error || localError) && (
@@ -96,7 +96,7 @@ const LoginPage = () => {
                 <input
                   type="email"
                   placeholder="you@example.com"
-                  className="w-full pl-11 pr-4 py-4 bg-slate-50 border border-amber-200 rounded-2xl focus:border-amber-600 outline-none text-blue-950"
+                  className="w-full pl-11 pr-4 py-4 bg-slate-50 border border-brand-200 rounded-2xl focus:border-brand-600 outline-none text-brand-900"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   required
@@ -111,7 +111,7 @@ const LoginPage = () => {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Enter your password"
-                  className="w-full pl-11 pr-12 py-4 bg-slate-50 border border-amber-200 rounded-2xl focus:border-amber-600 outline-none text-blue-950"
+                  className="w-full pl-11 pr-12 py-4 bg-slate-50 border border-brand-200 rounded-2xl focus:border-brand-600 outline-none text-brand-900"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   required
@@ -132,11 +132,11 @@ const LoginPage = () => {
                   type="checkbox"
                   checked={formData.remember}
                   onChange={(e) => setFormData({ ...formData, remember: e.target.checked })}
-                  className="w-4 h-4 accent-amber-600"
+                  className="w-4 h-4 accent-brand-600"
                 />
                 <span className="text-slate-600">Remember me</span>
               </label>
-              <Link to="#" className="text-amber-600 hover:text-amber-700 font-medium">
+              <Link to="#" className="text-brand-600 hover:text-brand-700 font-medium">
                 Forgot password?
               </Link>
             </div>
@@ -144,7 +144,7 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-amber-400 text-white font-semibold py-4 rounded-2xl text-lg transition-all active:scale-[0.985] flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full bg-brand-600 hover:bg-brand-700 disabled:bg-brand-400 text-white font-semibold py-4 rounded-2xl text-lg transition-all active:scale-[0.985] flex items-center justify-center gap-2 cursor-pointer"
             >
               {isLoading ? 'Signing in...' : 'Sign In'}
               {!isLoading && <span className="text-xl">→</span>}
@@ -153,7 +153,7 @@ const LoginPage = () => {
 
           <p className="text-center text-slate-500 mt-8">
             Don't have an account?{' '}
-            <Link to="/signup" className="text-amber-600 font-semibold hover:text-amber-700">
+            <Link to="/signup" className="text-brand-600 font-semibold hover:text-brand-700">
               Sign up
             </Link>
           </p>

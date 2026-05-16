@@ -2,9 +2,9 @@ import { useGetSavingsOverview } from '@/app/store/SavingsAdminStore';
 import { formatCurrency } from '@/lib/currency';
 
 const SummaryCard = ({ label, value }: { label: string; value: string }) => (
-	<div className="rounded-3xl bg-amber-50 border border-amber-100 p-5">
+	<div className="rounded-3xl bg-brand-50 border border-brand-100 p-5">
 		<p className="text-sm text-slate-500">{label}</p>
-		<p className="mt-3 text-2xl font-bold text-blue-950">{value}</p>
+		<p className="mt-3 text-2xl font-bold text-brand-900">{value}</p>
 	</div>
 );
 
@@ -19,7 +19,7 @@ const SavingsOverview = () => {
 			<div className="max-w-7xl mx-auto px-4 sm:px-6">
 				<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
 					<div>
-						<h1 className="text-2xl sm:text-3xl font-bold text-blue-950">Ajo Savings Overview</h1>
+						<h1 className="text-2xl sm:text-3xl font-bold text-brand-900">Ajo Savings Overview</h1>
 						<p className="text-sm text-slate-500 mt-1">Monitor savings plan performance and commissions.</p>
 					</div>
 				</div>
@@ -33,7 +33,7 @@ const SavingsOverview = () => {
 						</div>
 						<div className="space-y-3">
 							{[1, 2, 3].map((item) => (
-								<div key={item} className="h-24 rounded-3xl bg-white border border-amber-200 animate-pulse" />
+								<div key={item} className="h-24 rounded-3xl bg-white border border-brand-200 animate-pulse" />
 							))}
 						</div>
 					</div>
@@ -46,7 +46,7 @@ const SavingsOverview = () => {
 						<button
 							type="button"
 							onClick={() => refetch()}
-							className="px-4 py-2 rounded-2xl bg-amber-600 text-white hover:bg-amber-700 transition-colors"
+							className="px-4 py-2 rounded-2xl bg-brand-600 text-white hover:bg-brand-700 transition-colors"
 						>
 							Retry
 						</button>
@@ -54,7 +54,7 @@ const SavingsOverview = () => {
 				)}
 
 				{!isLoading && !isError && !summary && (
-					<div className="rounded-3xl bg-white border border-amber-200 p-10 text-center">
+					<div className="rounded-3xl bg-white border border-brand-200 p-10 text-center">
 						<p className="text-slate-700 font-semibold mb-2">No active savings plans yet.</p>
 						<p className="text-sm text-slate-500">Savings plan details will appear here once users start contributing.</p>
 					</div>
@@ -69,7 +69,7 @@ const SavingsOverview = () => {
 							<SummaryCard label="Total Payable" value={formatCurrency(summary.totalPayable)} />
 						</div>
 
-						<div className="overflow-hidden rounded-3xl border border-amber-200 bg-white">
+						<div className="overflow-hidden rounded-3xl border border-brand-200 bg-white">
 							<table className="w-full text-left">
 								<thead className="bg-slate-50">
 									<tr>
@@ -86,15 +86,15 @@ const SavingsOverview = () => {
 									{savers.map((saver) => (
 										<tr key={saver.id} className="border-t border-slate-100 hover:bg-slate-50 transition-colors">
 											<td className="py-5 px-5">
-												<p className="font-semibold text-blue-950">{saver.name}</p>
+												<p className="font-semibold text-brand-900">{saver.name}</p>
 											</td>
 											<td className="py-5 px-5 text-slate-500 text-sm truncate" title={saver.email}>
 												{saver.email}
 											</td>
-											<td className="py-5 px-5 font-semibold text-amber-600">{formatCurrency(saver.dailyAmount)}</td>
-											<td className="py-5 px-5 text-blue-950">{formatCurrency(saver.totalSaved)}</td>
-											<td className="py-5 px-5 text-blue-950">{formatCurrency(saver.payable)}</td>
-											<td className="py-5 px-5 text-blue-950">{formatCurrency(saver.commission)}</td>
+											<td className="py-5 px-5 font-semibold text-brand-600">{formatCurrency(saver.dailyAmount)}</td>
+											<td className="py-5 px-5 text-brand-900">{formatCurrency(saver.totalSaved)}</td>
+											<td className="py-5 px-5 text-brand-900">{formatCurrency(saver.payable)}</td>
+											<td className="py-5 px-5 text-brand-900">{formatCurrency(saver.commission)}</td>
 											<td className="py-5 px-5 text-slate-500">{saver.daysSaved}</td>
 										</tr>
 									))}

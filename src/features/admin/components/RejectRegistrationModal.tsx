@@ -20,7 +20,7 @@ const RejectRegistrationModal = ({ isOpen, onClose, onConfirm, isPending, error 
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-3xl w-full max-w-md mx-auto shadow-2xl p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-blue-950">Reject Registration Fee</h3>
+          <h3 className="text-lg font-semibold text-brand-900">Reject Registration Fee</h3>
           <button onClick={onClose} disabled={isPending} className="p-1 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer">
             <X className="w-5 h-5" />
           </button>
@@ -33,7 +33,7 @@ const RejectRegistrationModal = ({ isOpen, onClose, onConfirm, isPending, error 
           onChange={(e) => setReason(e.target.value)}
           placeholder="Enter rejection reason (minimum 10 characters)..."
           disabled={isPending}
-          className="w-full px-4 py-3 border border-amber-200 focus:border-red-400 rounded-2xl focus:outline-none h-28 resize-none text-sm disabled:opacity-50"
+          className="w-full px-4 py-3 border border-brand-200 focus:border-red-400 rounded-2xl focus:outline-none h-28 resize-none text-sm disabled:opacity-50"
         />
 
         {reason.trim().length > 0 && reason.trim().length < 10 && (

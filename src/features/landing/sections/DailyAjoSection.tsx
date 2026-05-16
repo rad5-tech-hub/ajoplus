@@ -12,7 +12,7 @@ const DailyAjoSection = () => {
           {/* Left Content */}
           <div className="space-y-6">
             {/* Badge */}
-            <span className="inline-block px-5 py-1.5 text-amber-700 text-sm font-semibold rounded-full tracking-widest">
+            <span className="inline-block px-5 py-1.5 text-brand-700 text-sm font-semibold rounded-full tracking-widest">
               TRADITIONAL AJO, DIGITAL EXPERIENCE
             </span>
 
@@ -30,27 +30,27 @@ const DailyAjoSection = () => {
             <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
               <div className="flex items-center gap-2 mb-6">
                 <span className="text-2xl">💡</span>
-                <span className="font-semibold text-blue-950">Example Calculation:</span>
+                <span className="font-semibold text-brand-900">Example Calculation:</span>
               </div>
 
               <div className="space-y-4 text-sm">
                 <div className="flex justify-between">
                   <span className="text-slate-600">Daily Savings:</span>
-                  <span className="font-medium text-blue-950">₦500</span>
+                  <span className="font-medium text-brand-900">₦500</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-600">Monthly Total:</span>
-                  <span className="font-medium text-blue-950">₦15,000</span>
+                  <span className="font-medium text-brand-900">₦15,000</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-600">Service Fee (5%):</span>
                   <span className="font-medium text-red-600">₦750</span>
                 </div>
 
-                <div className="border-t border-amber-200 pt-4 mt-2">
+                <div className="border-t border-brand-200 pt-4 mt-2">
                   <div className="flex justify-between items-center">
-                    <span className="font-semibold text-blue-950">You Get:</span>
-                    <span className="text-2xl font-bold text-amber-600">₦14,250</span>
+                    <span className="font-semibold text-brand-900">You Get:</span>
+                    <span className="text-2xl font-bold text-brand-600">₦14,250</span>
                   </div>
                 </div>
               </div>
@@ -59,15 +59,15 @@ const DailyAjoSection = () => {
             {/* Benefits */}
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+                <Check className="w-5 h-5 text-brand-600 mt-0.5 shrink-0" />
                 <span className="text-slate-700">Automated daily collections</span>
               </div>
               <div className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+                <Check className="w-5 h-5 text-brand-600 mt-0.5 shrink-0" />
                 <span className="text-slate-700">Withdraw after 30 days</span>
               </div>
               <div className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+                <Check className="w-5 h-5 text-brand-600 mt-0.5 shrink-0" />
                 <span className="text-slate-700">Transparent 5% service fee</span>
               </div>
             </div>
@@ -75,7 +75,7 @@ const DailyAjoSection = () => {
             {/* CTA Button - Now passes state to trigger modal */}
             <Link
               to="/dashboard/customer?openDailyAjo=true"
-              className="cursor-pointer mt-4 bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-4 rounded-2xl flex items-center gap-2 transition-all active:scale-[0.985]"
+              className="cursor-pointer mt-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold px-8 py-4 rounded-2xl flex items-center gap-2 transition-all active:scale-[0.985]"
             >
               <span className="text-white">🤝</span>
               Start Saving
@@ -95,9 +95,9 @@ const DailyAjoSection = () => {
         </div>
 
         {/* Investment Opportunities section unchanged */}
-        <div className="mt-30 bg-amber-100/60 rounded-3xl p-10 md:p-14 text-center mx-auto max-w-[85%] border border-amber-200">
+        <div className="mt-30 bg-brand-100/60 rounded-3xl p-10 md:p-14 text-center mx-auto max-w-[85%] border border-brand-200">
           <div className="mx-auto w-14 h-14 rounded-2xl flex items-center justify-center mb-6">
-            <Rocket className='h-12 w-12 text-amber-300' />
+            <Rocket className='h-12 w-12 text-brand-300' />
           </div>
 
           <h3 className="text-3xl font-bold tracking-tight text-slate-950 mb-4">
@@ -109,8 +109,8 @@ const DailyAjoSection = () => {
             bonds to high-yield opportunities.
           </p>
 
-          <div className="inline-flex items-center gap-2 mt-8 px-6 py-2.5 bg-white rounded-full border border-amber-200 text-sm font-medium text-slate-700">
-            <Zap className="text-amber-600"></Zap>
+          <div className="inline-flex items-center gap-2 mt-8 px-6 py-2.5 bg-white rounded-full border border-brand-200 text-sm font-medium text-slate-700">
+            <Zap className="text-brand-600"></Zap>
             Launching Q3 2026
           </div>
         </div>

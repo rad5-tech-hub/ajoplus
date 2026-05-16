@@ -11,15 +11,15 @@ const tips = [
 const PerformanceTips = () => {
   return (
     <div className="bg-white border border-slate-100 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8">
-      <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-blue-950 mb-4 sm:mb-5 lg:mb-6">
+      <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-brand-900 mb-4 sm:mb-5 lg:mb-6">
         Performance Tips
       </h3>
 
       <div className="space-y-3.5 sm:space-y-4 lg:space-y-5">
         {tips.map((tip, i) => (
           <div key={i} className="flex gap-3 sm:gap-4">
-            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-amber-100 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 mt-0.5">
-              <Check className="w-3 h-3 sm:w-4 sm:h-4 text-amber-600" />
+            <div className="w-5 h-5 sm:w-6 sm:h-6 bg-brand-100 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+              <Check className="w-3 h-3 sm:w-4 sm:h-4 text-brand-600" />
             </div>
             <p className="text-slate-700 text-sm sm:text-[15px] leading-relaxed">{tip}</p>
           </div>
