@@ -196,7 +196,7 @@ const RegistrationFeeModal = ({ isOpen, userName, onComplete }: RegistrationFeeM
                 ) : (
                   <div className="border-2 border-amber-200 bg-amber-50 rounded-3xl p-5 text-center">
                     <CheckCircle className="mx-auto w-8 h-8 text-amber-600 mb-2" />
-                    <p className="text-sm font-medium text-blue-950">{file.name}</p>
+                    <p className="text-sm font-medium text-blue-950 truncate max-w-full" title={file.name}>{file.name}</p>
                     <button onClick={() => setFile(null)} className="text-xs text-red-500 hover:text-red-600 mt-2">
                       Remove
                     </button>

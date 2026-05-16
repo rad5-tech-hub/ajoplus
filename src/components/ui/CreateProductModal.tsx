@@ -1,9 +1,9 @@
 import { X, Plus, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getCategories, type Category } from '@/api/categories';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createProduct } from '@/api/product';
 import { useModalStore } from '@/app/store/ModalStore';
+import CategorySelect from './CategorySelect';
 
 interface CreateProductModalProps {
   isOpen: boolean;
@@ -26,11 +26,6 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
   });
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-
-  const { data: categories = [], isLoading: categoriesLoading } = useQuery({
-    queryKey: ['categories'],
-    queryFn: getCategories,
-  });
 
   const createMutation = useMutation({
     mutationFn: (payload: FormData) => createProduct(payload),
@@ -204,17 +199,11 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">
                   Category <span className="text-red-500">*</span>
                 </label>
-                <select
+                <CategorySelect
                   value={formData.category}
-                  disabled={isSubmitting || categoriesLoading}
-                  onChange={(e) => setFormData((p) => ({ ...p, category: e.target.value }))}
-                  className="w-full px-4 py-3 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 bg-white disabled:bg-slate-50 disabled:text-slate-400"
-                >
-                  <option value="">{categoriesLoading ? 'Loading…' : 'Select category'}</option>
-                  {categories.map((c: Category) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
-                  ))}
-                </select>
+                  onChange={(id) => setFormData((p) => ({ ...p, category: id }))}
+                  disabled={isSubmitting}
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">

@@ -125,10 +125,15 @@ export const useAddToCart = () => {
 
   return useMutation({
     mutationFn: (payload: cartAPI.AddToCartRequest) => cartAPI.addToCart(payload),
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['cart'] });
+    },
     onSuccess: (response) => {
       if (response.data.cartId) {
         setCartId(response.data.cartId);
       }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
     onError: (error) => {
@@ -146,7 +151,10 @@ export const useUpdateCartItem = () => {
   return useMutation({
     mutationFn: ({ itemId, quantity }: { itemId: string; quantity: number }) =>
       cartAPI.updateCartItem(itemId, { quantity }),
-    onSuccess: () => {
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['cart'] });
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
     onError: (error) => {
@@ -163,7 +171,10 @@ export const useRemoveFromCart = () => {
 
   return useMutation({
     mutationFn: (itemId: string) => cartAPI.removeFromCart(itemId),
-    onSuccess: () => {
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['cart'] });
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
     onError: (error) => {
@@ -184,7 +195,10 @@ export const useClearCart = () => {
       if (!cartId) throw new Error('No cart ID available');
       return cartAPI.clearCart(cartId);
     },
-    onSuccess: () => {
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['cart'] });
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
     onError: (error) => {

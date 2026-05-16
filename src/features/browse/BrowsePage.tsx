@@ -11,6 +11,7 @@ import { formatNaira, formatFrequency, getCategoryName } from './types';
 import BrowseTabs from './components/BrowseTabs';
 import ProductCard from './components/ProductCard';
 import { useAddToCart } from '@/app/store/CartStore';
+import Modal from '@/components/ui/GeneralModal';
 
 type Tab = 'all' | 'packages' | 'products';
 
@@ -245,6 +246,7 @@ function BrowsePage() {
           </>
         )}
       </div>
+      <Modal />
     </div>
   );
 }

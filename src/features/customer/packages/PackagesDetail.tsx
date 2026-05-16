@@ -9,11 +9,11 @@ import {
   Package as PackageIcon,
 } from 'lucide-react';
 import UploadReceiptModal from '@/components/ui/UploadReceiptModal';
-import { useUserPackages, usePackageById } from '@/app/store/PackageStore';
+import { useUserPackages, usePackageById, useJoinPackage } from '@/app/store/PackageStore';
 import { useState } from 'react';
 import type { PackageItem } from '@/api/package';
 import { useQueryClient } from '@tanstack/react-query';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Loader2 } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -71,6 +71,7 @@ const PackageDetail = () => {
   };
 
   const isLoading = pkgLoading || userPkgLoading;
+  const { mutate: joinPackage, isPending: isJoining } = useJoinPackage();
 
   // Find this user's subscription record for the package
   const userPackageData = userPackages?.find((pkg) => pkg.packageId === packageId);
@@ -124,9 +125,67 @@ const PackageDetail = () => {
     );
   }
 
+  // ── Join package (not subscribed yet) ──────────────────────────────────
+
+  if (!userPackageData && packageDetails && !pkgError) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc]">
+        <div className="bg-white border-b border-amber-200 sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-4">
+            <button onClick={() => navigate('/browse')}
+              className="flex items-center gap-1.5 sm:gap-2 text-slate-500 hover:text-blue-950 transition-colors cursor-pointer">
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="font-medium text-sm sm:text-base">Back to Browse</span>
+            </button>
+          </div>
+        </div>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+          <div className="bg-white border border-amber-200 rounded-3xl p-6 sm:p-8">
+            <div className="inline-block px-3 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded-2xl mb-4 w-fit">
+              {typeof packageDetails.category === 'string' ? packageDetails.category : packageDetails.category?.name ?? 'Package'}
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-blue-950 mb-2">{packageDetails.name}</h1>
+            <p className="text-xl font-bold text-amber-600 mb-4">{formatNaira(packageDetails.totalPrice)}</p>
+            <p className="text-slate-600 text-sm mb-6">{packageDetails.description}</p>
+            <div className="flex gap-4 text-sm text-slate-500 mb-6">
+              <div className="flex items-center gap-1.5">
+                <Calendar className="w-4 h-4" />
+                {packageDetails.duration} month{packageDetails.duration !== 1 ? 's' : ''}
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Clock className="w-4 h-4" />
+                {packageDetails.paymentFrequency.charAt(0).toUpperCase() + packageDetails.paymentFrequency.slice(1)}
+              </div>
+            </div>
+            {packageDetails.items && packageDetails.items.length > 0 && (
+              <div className="bg-slate-50 rounded-2xl p-4 mb-6">
+                <p className="font-semibold text-blue-950 text-sm mb-2">Package Includes:</p>
+                <ul className="space-y-1.5">
+                  {packageDetails.items.map((item, i) => (
+                    <li key={i} className="flex items-center gap-2 text-sm text-slate-600">
+                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full shrink-0" />
+                      {item.quantity} {item.itemName}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <button onClick={() => joinPackage(packageId!, {
+              onSuccess: () => navigate(`/dashboard/customer/package/${packageId}`),
+            })}
+              disabled={isJoining}
+              className="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-amber-400 text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-[0.985] cursor-pointer">
+              {isJoining ? <><Loader2 className="w-5 h-5 animate-spin" /> Joining...</> : <><PackageIcon className="w-5 h-5" /> Join This Package</>}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // ── Error / not found ─────────────────────────────────────────────────────
 
-  if (!displayData || pkgError) {
+  if ((!packageDetails && !userPackageData) || pkgError) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
         <div className="text-center">
@@ -138,15 +197,17 @@ const PackageDetail = () => {
             This package may no longer be active or could not be loaded.
           </p>
           <button
-            onClick={() => navigate('/dashboard/customer')}
+            onClick={() => navigate('/browse')}
             className="text-amber-600 underline hover:text-amber-700 text-sm font-medium"
           >
-            Back to Dashboard
+            Browse Packages
           </button>
         </div>
       </div>
     );
   }
+
+  if (!displayData) return null;
 
   // ── Metrics strip ─────────────────────────────────────────────────────────
 

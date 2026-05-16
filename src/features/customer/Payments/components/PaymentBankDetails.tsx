@@ -1,7 +1,7 @@
 // src/features/customer/payments/components/PaymentBankDetails.tsx
 import { Copy, Info } from 'lucide-react';
 import { useState } from 'react';
-import { formatCurrency, convertToUSD } from '@/lib/currency';
+import { formatCurrency } from '@/lib/currency';
 import { useGetAjoSettings } from '@/app/store/SettingsStore';
 
 interface PaymentBankDetailsProps {
@@ -34,7 +34,6 @@ const PaymentBankDetails = ({ onNext, totalAmount = 37500 }: PaymentBankDetailsP
         <div className="bg-amber-600 text-white rounded-3xl p-8 text-center">
           <p className="text-amber-100 text-sm font-medium tracking-wider">Amount to Pay</p>
           <p className="text-4xl sm:text-5xl font-bold mt-3 mb-2">{formatCurrency(totalAmount, 'NGN')}</p>
-          <p className="text-amber-100 text-lg">{formatCurrency(convertToUSD(totalAmount), 'USD')}</p>
         </div>
 
         {/* Bank Details Skeleton */}
@@ -70,7 +69,6 @@ const PaymentBankDetails = ({ onNext, totalAmount = 37500 }: PaymentBankDetailsP
       <div className="bg-amber-600 text-white rounded-3xl p-8 text-center">
         <p className="text-amber-100 text-sm font-medium tracking-wider">Amount to Pay</p>
         <p className="text-4xl sm:text-5xl font-bold mt-3 mb-2">{formatCurrency(totalAmount, 'NGN')}</p>
-        <p className="text-amber-100 text-lg">{formatCurrency(convertToUSD(totalAmount), 'USD')}</p>
       </div>
 
       {/* Bank Details Cards */}

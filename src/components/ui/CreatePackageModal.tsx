@@ -1,9 +1,9 @@
 // src/components/ui/CreatePackageModal.tsx
 import { X, Plus, Trash2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { useCreatePackage, useCategories, useUpdatePackage } from '@/app/store/PackageStore';
+import { useCreatePackage, useUpdatePackage } from '@/app/store/PackageStore';
 import type { Package as APIPackage, PackageItem as APIPackageItem, CreatePackageRequest } from '@/api/package';
-import type { Category } from '@/api/categories';
+import CategorySelect from './CategorySelect';
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 interface CreatePackageModalProps {
@@ -40,7 +40,6 @@ const INITIAL_FORM = {
 const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageModalProps) => {
   const { mutate: createPackage, isPending: isCreating } = useCreatePackage();
   const updatePackageMutation = useUpdatePackage();
-  const { data: categories = [], isLoading: categoriesLoading } = useCategories();
 
   const [packageItems, setPackageItems] = useState<PackageItem[]>([EMPTY_ITEM()]);
   const [formData, setFormData] = useState(INITIAL_FORM);
@@ -216,22 +215,12 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
                 Category <span className="text-red-500">*</span>
               </label>
-              <select
-                name="categoryId"
+              <CategorySelect
                 value={formData.categoryId}
-                onChange={handleInputChange}
-                disabled={isSaving || categoriesLoading}
-                className="w-full px-4 py-3 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 bg-white disabled:bg-slate-50"
-              >
-                <option value="">
-                  {categoriesLoading ? 'Loading…' : 'Select category'}
-                </option>
-                {categories.map((cat: Category) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
+                onChange={(id) => setFormData((p) => ({ ...p, categoryId: id }))}
+                disabled={isSaving}
+                error={!!formError && !formData.categoryId}
+              />
             </div>
 
             <div className="sm:col-span-2 lg:col-span-1">

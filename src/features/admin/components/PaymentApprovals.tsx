@@ -6,7 +6,7 @@ import RejectPaymentModal from '@/components/ui/RejectPaymentModal';
 import PaymentApprovedModal from '@/components/ui/PaymentApprovalModal';
 import PaymentRejectedModal from '@/components/ui/PaymentRejectedModal';
 
-import { formatDualCurrency } from '@/lib/currency';
+import { formatCurrency } from '@/lib/currency';
 import {
   useApprovePayment,
   useRejectPayment,
@@ -245,13 +245,13 @@ const PaymentApprovals = () => {
                   <div>
                     <p className="text-xs text-slate-500">Amount Paid</p>
                     <p className="text-xl sm:text-2xl font-bold text-amber-600 mt-0.5">
-                      {formatDualCurrency(parseFloat(payment.amountPaid))}
+                      {formatCurrency(parseFloat(payment.amountPaid))}
                     </p>
                   </div>
                   <div>
                     <p className="text-xs text-slate-500">Expected Amount</p>
                     <p className="font-medium text-blue-950 mt-0.5">
-                      {formatDualCurrency(parseFloat(payment.expectedAmount))}
+                      {formatCurrency(parseFloat(payment.expectedAmount))}
                     </p>
                   </div>
                   <div>

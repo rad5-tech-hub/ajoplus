@@ -672,26 +672,38 @@ const SignupPage = () => {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
                   {formData.password && (
-                    <div className="mt-2 flex gap-1">
-                      {[1, 2, 3].map((i) => (
-                        <div
-                          key={i}
-                          className={`flex-1 h-1 rounded-full transition-all ${formData.password.length >= i * 4
-                            ? i === 1
-                              ? 'bg-red-400'
-                              : i === 2
-                                ? 'bg-amber-400'
-                                : 'bg-amber-500'
-                            : 'bg-slate-200'
+                    <div className="mt-2">
+                      <div className="flex gap-1 mb-1">
+                        {[1, 2, 3].map((i) => (
+                          <div
+                            key={i}
+                            className={`flex-1 h-1.5 rounded-full transition-all ${
+                              formData.password.length >= i * 4
+                                ? i === 1
+                                  ? 'bg-red-500'
+                                  : i === 2
+                                    ? 'bg-amber-500'
+                                    : 'bg-green-500'
+                                : 'bg-slate-200'
                             }`}
-                        />
-                      ))}
+                          />
+                        ))}
+                      </div>
+                      <p className={`text-xs font-medium ${
+                        formData.password.length < 4 ? 'text-red-500' :
+                        formData.password.length < 8 ? 'text-amber-500' :
+                        'text-green-600'
+                      }`}>
+                        {formData.password.length < 4 ? 'Weak' :
+                         formData.password.length < 8 ? 'Fair' :
+                         'Strong'}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -716,7 +728,7 @@ const SignupPage = () => {
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                     >
                       {showConfirmPassword ? (
                         <EyeOff className="w-5 h-5" />
@@ -752,7 +764,11 @@ const SignupPage = () => {
                   <button
                     type="submit"
                     disabled={isLoading || !formData.agreeTerms}
-                    className="flex-1 bg-amber-600 hover:bg-amber-700 disabled:bg-amber-300 disabled:cursor-not-allowed active:scale-95 text-white py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
+                    className={`flex-1 py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 ${
+                      isLoading || !formData.agreeTerms
+                        ? 'bg-slate-200 text-slate-400 cursor-not-allowed opacity-60'
+                        : 'bg-amber-600 hover:bg-amber-700 text-white cursor-pointer'
+                    }`}
                   >
                     {isLoading ? (
                       <>

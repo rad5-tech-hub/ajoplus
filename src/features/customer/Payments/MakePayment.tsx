@@ -2,7 +2,7 @@
 import { useState, useMemo } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { formatCurrency, convertToUSD } from '@/lib/currency';
+import { formatCurrency } from '@/lib/currency';
 import { usePackageById } from '@/app/store/PackageStore';
 import PaymentBankDetails from './components/PaymentBankDetails';
 import PaymentUploadReceipt from './components/PaymentUploadReceipt';
@@ -126,8 +126,8 @@ const MakePayment = () => {
             <h1 className="text-2xl font-bold text-blue-950">{pageTitle}</h1>
             <p className="text-slate-600 text-sm mt-0.5">
               {isCartPayment
-                ? `${cartItems.length} item${cartItems.length !== 1 ? 's' : ''} - ${formatCurrency(totalAmount, 'NGN')} (${formatCurrency(convertToUSD(totalAmount), 'USD')})`
-                : `${packageName} - ${formatCurrency(totalAmount, 'NGN')} (${formatCurrency(convertToUSD(totalAmount), 'USD')})`
+                ? `${cartItems.length} item${cartItems.length !== 1 ? 's' : ''} - ${formatCurrency(totalAmount, 'NGN')}`
+                : `${packageName} - ${formatCurrency(totalAmount, 'NGN')}`
               }
             </p>
           </div>

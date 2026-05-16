@@ -128,7 +128,7 @@ const UploadReceiptModal = ({
             ) : (
               <div className="border-2 border-amber-200 bg-amber-50 rounded-2xl p-6 text-center">
                 <div className="text-amber-600 mb-2 font-medium">✓ File selected</div>
-                <p className="text-sm text-blue-950 break-all">{file.name}</p>
+                <p className="text-sm text-blue-950 truncate max-w-full" title={file.name}>{file.name}</p>
                 <button
                   onClick={removeFile}
                   disabled={isPending}

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Check } from 'lucide-react';
 import { useCartStore } from '@/app/store/CartStore';
-import { formatCurrency, convertToUSD } from '@/lib/currency';
+import { formatCurrency } from '@/lib/currency';
 import CustomerNavbar from '../customer/components/CustomerNavbar';
 
 const Checkout = () => {
@@ -120,9 +120,6 @@ const Checkout = () => {
                     <div className="font-bold text-amber-600 text-lg">
                       {formatCurrency(itemTotal, 'NGN')}
                     </div>
-                    <div className="text-xs text-slate-600 font-medium">
-                      {formatCurrency(convertToUSD(itemTotal), 'USD')}
-                    </div>
                     <div className="text-xs text-slate-500 mt-1">
                       {formatCurrency(safePrice, 'NGN')} each
                     </div>
@@ -144,10 +141,7 @@ const Checkout = () => {
               <span className="text-slate-600">Subtotal ({items.length} items)</span>
               <span className="font-semibold">{formatCurrency(subtotal, 'NGN')}</span>
             </div>
-            <div className="flex justify-between text-xs text-slate-500">
-              <span></span>
-              <span>{formatCurrency(convertToUSD(subtotal), 'USD')}</span>
-            </div>
+
             <div className="flex justify-between">
               <span className="text-slate-600">Processing Fee</span>
               <span className="font-medium">Free</span>
@@ -161,10 +155,7 @@ const Checkout = () => {
                 {formatCurrency(total, 'NGN')}
               </span>
             </div>
-            <div className="flex justify-between text-xs text-slate-500">
-              <span></span>
-              <span>{formatCurrency(convertToUSD(total), 'USD')}</span>
-            </div>
+
           </div>
 
           <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4 sm:p-5 mb-6 text-sm text-amber-800">

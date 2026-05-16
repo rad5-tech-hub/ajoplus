@@ -1,6 +1,6 @@
 import { useState, useRef, DragEvent, ChangeEvent } from 'react';
 import { Upload, Loader2, AlertCircle, X } from 'lucide-react';
-import { formatCurrency, convertToUSD } from '@/lib/currency';
+import { formatCurrency } from '@/lib/currency';
 import { type SubmitPaymentRequest, type PaymentType } from '@/api/payments';
 import { useSubmitPayment } from '@/app/store/PaymentStore';
 import { useCartStore, useClearCart } from '@/app/store/CartStore';
@@ -174,7 +174,7 @@ const PaymentUploadReceipt = ({
             className="w-full bg-white border-2 border-amber-500 focus:border-amber-600 rounded-2xl px-5 py-4 text-lg focus:outline-none transition-all disabled:opacity-50"
           />
           <p className="text-xs text-slate-500 mt-2">
-            Expected: {formatCurrency(expectedAmount, 'NGN')} ({formatCurrency(convertToUSD(expectedAmount), 'USD')})
+            Expected: {formatCurrency(expectedAmount, 'NGN')}
           </p>
         </div>
 
@@ -210,7 +210,7 @@ const PaymentUploadReceipt = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <p className="font-medium text-blue-950">{file.name}</p>
+              <p className="font-medium text-blue-950 truncate max-w-full" title={file.name}>{file.name}</p>
               <button onClick={removeFile} disabled={isSubmitting} className="text-red-600 hover:text-red-700 text-sm mt-3 font-medium disabled:opacity-50 cursor-pointer">
                 Remove
               </button>

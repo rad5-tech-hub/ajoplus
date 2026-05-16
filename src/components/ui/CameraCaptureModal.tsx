@@ -14,18 +14,32 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [cameraStarted, setCameraStarted] = useState(false);
+  const [streamReady, setStreamReady] = useState(false);
+
+  const stopCamera = useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((t) => t.stop());
+      streamRef.current = null;
+    }
+    setStreamReady(false);
+    setPreview(null);
+    setError(null);
+  }, []);
 
   const startCamera = useCallback(async () => {
     setLoading(true);
     setError(null);
+    setStreamReady(false);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } } });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+      });
       streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
+      const video = videoRef.current;
+      if (video) {
+        video.srcObject = stream;
+        await video.play();
       }
-      setCameraStarted(true);
     } catch (err: unknown) {
       const msg = err instanceof DOMException
         ? err.name === 'NotAllowedError'
@@ -38,16 +52,6 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
     } finally {
       setLoading(false);
     }
-  }, []);
-
-  const stopCamera = useCallback(() => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((t) => t.stop());
-      streamRef.current = null;
-    }
-    setCameraStarted(false);
-    setPreview(null);
-    setError(null);
   }, []);
 
   useEffect(() => {
@@ -63,12 +67,10 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
-
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
     ctx.drawImage(video, 0, 0);
     const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
     setPreview(dataUrl);
@@ -79,8 +81,8 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
     canvasRef.current?.toBlob((blob) => {
       if (!blob) return;
       const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' });
-      onCapture(file);
       stopCamera();
+      onCapture(file);
       onClose();
     }, 'image/jpeg', 0.8);
   };
@@ -96,7 +98,8 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
       <div className="bg-white rounded-3xl w-full max-w-lg mx-auto shadow-2xl overflow-hidden">
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-100">
           <h2 className="text-lg font-semibold text-blue-950">Take Photo</h2>
-          <button onClick={() => { stopCamera(); onClose(); }} className="p-1 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" aria-label="Close">
+          <button onClick={() => { stopCamera(); onClose(); }}
+            className="p-1 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" aria-label="Close">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -115,19 +118,28 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
                 <Camera className="w-7 h-7 text-red-500" />
               </div>
               <p className="text-sm text-slate-600">{error}</p>
-              <button onClick={startCamera} className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-5 py-2.5 rounded-2xl text-sm transition-all cursor-pointer">
+              <button onClick={startCamera}
+                className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-5 py-2.5 rounded-2xl text-sm transition-all cursor-pointer">
                 Try Again
               </button>
             </div>
           )}
 
-          {cameraStarted && !loading && !error && !preview && (
+          {!loading && !error && !streamReady && streamRef.current && (
+            <div className="flex flex-col items-center justify-center h-64 text-slate-500 gap-3">
+              <Loader2 className="w-8 h-8 animate-spin" />
+              <p className="text-sm">Starting camera...</p>
+            </div>
+          )}
+
+          {streamReady && !loading && !error && !preview && (
             <div className="relative">
               <video
                 ref={videoRef}
                 autoPlay
                 playsInline
                 muted
+                onCanPlay={() => setStreamReady(true)}
                 className="w-full h-64 object-cover rounded-2xl bg-slate-900"
               />
               <button
@@ -144,10 +156,12 @@ const CameraCaptureModal = ({ isOpen, onClose, onCapture }: CameraCaptureModalPr
             <div className="relative">
               <img src={preview} alt="Captured preview" className="w-full h-64 object-cover rounded-2xl bg-slate-100" />
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3">
-                <button onClick={handleRetake} className="bg-white text-slate-700 font-medium px-4 py-2 rounded-2xl text-sm shadow hover:bg-slate-50 transition-all cursor-pointer">
+                <button onClick={handleRetake}
+                  className="bg-white text-slate-700 font-medium px-4 py-2 rounded-2xl text-sm shadow hover:bg-slate-50 transition-all cursor-pointer">
                   Retake
                 </button>
-                <button onClick={handleConfirm} className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-5 py-2 rounded-2xl text-sm shadow transition-all cursor-pointer">
+                <button onClick={handleConfirm}
+                  className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-5 py-2 rounded-2xl text-sm shadow transition-all cursor-pointer">
                   Use Photo
                 </button>
               </div>

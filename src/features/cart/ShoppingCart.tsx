@@ -2,7 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Trash2, Plus, Minus, ArrowLeft, ShoppingBag } from 'lucide-react';
 import { useCartStore, useRemoveFromCart, useUpdateCartItem, useClearCart } from '@/app/store/CartStore';
-import { formatCurrency, convertToUSD } from '@/lib/currency';
+import { formatCurrency } from '@/lib/currency';
 import { useModalStore } from '@/app/store/ModalStore';
 import CustomerNavbar from '../customer/components/CustomerNavbar';
 
@@ -232,9 +232,6 @@ const ShoppingCart = () => {
                           <div className="font-bold text-amber-600 text-lg sm:text-xl">
                             {formatCurrency(safePrice * safeQty, 'NGN')}
                           </div>
-                          <div className="text-xs text-slate-600 font-medium">
-                            {formatCurrency(convertToUSD(safePrice * safeQty), 'USD')}
-                          </div>
                           <div className="text-xs text-slate-500 mt-1">
                             {formatCurrency(safePrice, 'NGN')} each
                           </div>
@@ -280,10 +277,7 @@ const ShoppingCart = () => {
                   <span className="text-slate-600">Subtotal</span>
                   <span className="font-semibold">{formatCurrency(subtotal, 'NGN')}</span>
                 </div>
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span></span>
-                  <span>{formatCurrency(convertToUSD(subtotal), 'USD')}</span>
-                </div>
+
                 <div className="flex justify-between">
                   <span className="text-slate-600">Processing Fee</span>
                   <span className="font-medium">Free</span>
@@ -297,10 +291,7 @@ const ShoppingCart = () => {
                     {formatCurrency(total, 'NGN')}
                   </span>
                 </div>
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span></span>
-                  <span>{formatCurrency(convertToUSD(total), 'USD')}</span>
-                </div>
+
               </div>
 
               <button

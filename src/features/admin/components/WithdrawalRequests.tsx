@@ -6,7 +6,7 @@ import {
   useApproveWithdrawal,
   useRejectWithdrawal,
 } from '@/app/store/WithdrwalStore';
-import { formatDualCurrency } from '@/lib/currency';
+import { formatCurrency } from '@/lib/currency';
 import type { AdminWithdrawal } from '@/api/withdrawals';
 
 // ── Reject Reason Modal ───────────────────────────────────────────────────────
@@ -204,7 +204,7 @@ const WithdrawalRequests = () => {
                 <div className="flex items-center justify-between sm:contents gap-3">
                   <div className="text-left sm:text-right sm:mx-6 sm:flex-1">
                     <p className="text-lg sm:text-xl font-bold text-amber-600 leading-tight">
-                      {formatDualCurrency(parseFloat(w.amount))}
+                      {formatCurrency(parseFloat(w.amount))}
                     </p>
                     <p className="text-xs text-slate-500">
                       {new Date(w.createdAt).toLocaleDateString('en-GB', {
