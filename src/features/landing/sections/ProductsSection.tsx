@@ -89,7 +89,12 @@ const ProductsSection = () => {
                   <h3 className="text-lg sm:text-xl font-semibold text-blue-950 leading-tight mb-3 line-clamp-2">{product.name}</h3>
                   <p className="text-slate-600 text-sm sm:text-[15px] leading-relaxed mb-6 flex-1 line-clamp-3">{product.description}</p>
                   <div className="flex items-center justify-between mt-auto pt-2">
-                    <span className="text-2xl sm:text-3xl font-bold text-amber-600">{formatNaira(product.price)}</span>
+                    <div>
+                      <span className="text-2xl sm:text-3xl font-bold text-amber-600">{formatNaira(product.price)}</span>
+                      {product.dollarPrice && (
+                        <p className="text-xs text-slate-500 mt-0.5">≈ ${parseFloat(product.dollarPrice).toFixed(2)} USD</p>
+                      )}
+                    </div>
                     <button onClick={() => handleAddToCart(product)}
                       disabled={product.stockStatus === 'out_of_stock'}
                       className="flex items-center gap-2 bg-amber-600 hover:bg-amber-700 disabled:bg-amber-400 disabled:opacity-50 disabled:pointer-events-none text-white font-semibold text-sm sm:text-base px-5 py-3 rounded-2xl transition-all active:scale-[0.97] shadow-sm cursor-pointer">

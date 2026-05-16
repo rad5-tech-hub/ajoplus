@@ -21,6 +21,7 @@ export interface PublicProduct {
   id: string;
   name: string;
   price: string;
+  dollarPrice?: string | null;
   quantityInStock: number;
   stockStatus: 'in_stock' | 'low_stock' | 'out_of_stock';
   description: string;

@@ -32,7 +32,10 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
           {product.category?.name ?? 'Product'}
         </div>
         <h3 className="font-semibold text-base sm:text-lg leading-tight text-blue-950 mb-2 line-clamp-2">{product.name}</h3>
-        <div className="text-2xl sm:text-3xl font-bold text-amber-600 mb-3">{formatNaira(product.price)}</div>
+        <div className="text-2xl sm:text-3xl font-bold text-amber-600 mb-1">{formatNaira(product.price)}</div>
+        {product.dollarPrice && (
+          <p className="text-sm text-slate-500 mb-3">≈ ${parseFloat(product.dollarPrice).toFixed(2)} USD</p>
+        )}
         <p className="text-sm text-slate-600 flex-1 line-clamp-3 mb-4">{product.description}</p>
         <button onClick={() => onAddToCart(product)} disabled={isOutOfStock}
           className="w-full bg-amber-600 hover:bg-amber-700 disabled:bg-amber-400 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-2xl flex items-center justify-center gap-2 transition-all duration-200 text-sm sm:text-base active:scale-[0.985] cursor-pointer">

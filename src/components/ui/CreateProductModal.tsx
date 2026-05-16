@@ -19,6 +19,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
     category: '',
     description: '',
     price: '',
+    dollarPrice: '',
     quantity: '',
     status: 'In Stock' as 'In Stock' | 'Low Stock' | 'Out of Stock',
     imageFile: null as File | null,
@@ -53,6 +54,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
         category: '',
         description: '',
         price: '',
+        dollarPrice: '',
         quantity: '',
         status: 'In Stock',
         imageFile: null,
@@ -97,6 +99,7 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
     fd.append('categoryId', formData.category);
     fd.append('description', formData.description.trim());
     fd.append('price', String(formData.price));
+    if (formData.dollarPrice) fd.append('dollarPrice', String(formData.dollarPrice));
     fd.append('quantityInStock', String(formData.quantity || '0'));
     fd.append('stockStatus', formData.status);
     // ✅ Fixed: was "image" — API expects "productImage"
@@ -221,6 +224,19 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
                   />
                 </div>
 
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                    Price in USD (optional)
+                  </label>
+                  <input
+                    type="number" step="0.01" min="0"
+                    placeholder="e.g. 4.99"
+                    value={formData.dollarPrice}
+                    disabled={isSubmitting}
+                    onChange={(e) => setFormData((p) => ({ ...p, dollarPrice: e.target.value }))}
+                    className="w-full px-4 py-3 text-base border border-amber-200 rounded-2xl focus:outline-none focus:border-amber-600 disabled:bg-slate-50 disabled:text-slate-400"
+                  />
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">
                     Qty in Stock <span className="text-red-500">*</span>
