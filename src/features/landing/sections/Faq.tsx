@@ -67,11 +67,11 @@ const FAQAccordionItem: React.FC<{
   >
     <button
       onClick={onToggle}
-      className="w-full flex items-center justify-between text-left px-7 py-6 gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 cursor-pointer"
+      className="w-full flex items-center justify-between text-left px-7 py-6 gap-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 cursor-pointer"
       aria-expanded={isOpen}
     >
       <span
-        className={`text-[15.5px] font-bold leading-snug transition-colors duration-200 ${isOpen ? "text-brand-400" : "text-"
+        className={`text-[15.5px] font-bold leading-snug transition-colors duration-200 ${isOpen ? "text-brand-400" : "text-brand-400"
           }`}
       >
         {item.question}
