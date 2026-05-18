@@ -65,6 +65,11 @@ export interface AdminWithdrawalUser {
 	fullName: string;
 	email: string;
 	phoneNumber: string;
+	imageUrl?: string | null;
+	bankName?: string | null;
+	accountNumber?: string | null;
+	accountName?: string | null;
+	role?: string;
 }
 
 export interface AdminWithdrawalWallet {

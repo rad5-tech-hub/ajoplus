@@ -7,11 +7,13 @@ export interface PackageMember {
 	userId: string;
 	status: MemberStatus;
 	totalPaid: number;
-	remainingBalance: number;
-	progress: number;
-	installmentAmount: string;
+	remainingAmount: number;
+	progressPercent: number;
+	installmentAmount: number;
 	nextPaymentDate: string;
-	startDate: string;
+	startedAt: string;
+	claimCode: string | null;
+	claimIssuedAt: string | null;
 	user: {
 		id: string;
 		fullName: string;
@@ -25,11 +27,7 @@ export interface PackageMembersResponse {
 		id: string;
 		name: string;
 		totalPrice: string;
-		duration: number;
-		paymentFrequency: string;
 	};
-	totalRevenue: number;
-	memberCount: number;
 	members: PackageMember[];
 }
 

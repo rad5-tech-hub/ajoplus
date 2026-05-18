@@ -68,7 +68,7 @@ const SavingsCard = memo(({ plan, onWithdraw }: SavingsCardProps) => {
           onClick={() => onWithdraw(plan.id)}
           className="w-full cursor-pointer bg-white text-brand-700 font-semibold py-3 rounded-2xl hover:bg-brand-50 active:bg-brand-100 transition-colors text-sm"
         >
-          Withdraw Balance
+          Withdraw from Savings
         </button>
         <button
           onClick={() => navigate('/dashboard/customer/payment/saving', {

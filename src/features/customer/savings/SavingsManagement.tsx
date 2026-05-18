@@ -102,13 +102,13 @@ const SavingsManagement = () => {
                     onClick={(e) => { e.stopPropagation(); navigate('/dashboard/customer/payment/saving', { state: { isSavingPayment: true, total: plan.dailyAmount, savingPlanId: plan.id } }); }}
                     className="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 rounded-2xl text-sm transition-all active:scale-[0.985] cursor-pointer"
                   >
-                    Add to Plan
+                    Add to Savings
                   </button>
                   <button
                     onClick={(e) => { e.stopPropagation(); setWithdrawPlanId(plan.id); }}
                     className="flex-1 border border-brand-600 text-brand-600 hover:bg-brand-50 font-semibold py-2.5 rounded-2xl text-sm transition-colors cursor-pointer"
                   >
-                    Withdraw
+                    Withdraw from Savings
                   </button>
                 </div>
               </div>

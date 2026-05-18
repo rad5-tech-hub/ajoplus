@@ -33,6 +33,7 @@ export const useCreateSavingPlan = () => {
         hasActivePlans: true,
       });
       qc.invalidateQueries({ queryKey: ['savingPlans'] });
+      qc.invalidateQueries({ queryKey: ['savings', 'plans'] });
       qc.refetchQueries({ queryKey: ['wallet'] });
       qc.invalidateQueries({ queryKey: ['customerDashboard'] });
     },
