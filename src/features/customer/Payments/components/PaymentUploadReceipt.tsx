@@ -3,8 +3,7 @@ import { Upload, Loader2, AlertCircle, X } from 'lucide-react';
 import { formatCurrency } from '@/lib/currency';
 import { type SubmitPaymentRequest, type PaymentType } from '@/api/payments';
 import { useSubmitPayment } from '@/app/store/PaymentStore';
-import { useCartStore, useClearCart } from '@/app/store/CartStore';
-import { useQueryClient } from '@tanstack/react-query';
+import { useCartStore } from '@/app/store/CartStore';
 import PaymentSuccess from '@/components/ui/PaymentSuccess';
 
 interface CartItem {
@@ -44,8 +43,6 @@ const PaymentUploadReceipt = ({
 }: PaymentUploadReceiptProps) => {
   const { mutate: submitPaymentMutation, isPending: isSubmitting } = useSubmitPayment();
   const { clearCart: clearCartLocal } = useCartStore();
-  const { mutate: clearCartAPI } = useClearCart();
-  const queryClient = useQueryClient();
 
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -109,10 +106,6 @@ const PaymentUploadReceipt = ({
       onSuccess: () => {
         if (isCartPayment) {
           clearCartLocal();
-          clearCartAPI(undefined, {          // no args needed — cartId comes from store
-            onError: (err) => console.error('[Clear cart error]', err),
-          });
-          queryClient.invalidateQueries({ queryKey: ['cart'] });
         }
         setTimeout(() => setIsSubmitted(true), 1800);
       },

@@ -129,14 +129,12 @@ const ProductTransactions = () => {
 										</td>
 										<td className="py-5 px-5">
 											{transaction.receiptUrl && (
-												<a
-													href={transaction.receiptUrl}
-													target="_blank"
-													rel="noopener noreferrer"
-													className="text-brand-600 hover:text-brand-700 text-xs underline"
+												<button
+													onClick={() => /* TODO: open receipt modal */ window.open(transaction.receiptUrl, '_blank')}
+													className="text-brand-600 hover:text-brand-700 text-xs underline cursor-pointer"
 												>
 													View Receipt
-												</a>
+												</button>
 											)}
 										</td>
 									</tr>

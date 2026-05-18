@@ -7,6 +7,7 @@ export interface ExpiredUser {
   accountStatus: string;
   registrationFeeStatus: string;
   registrationExpiryDate: string;
+  role?: 'customer' | 'agent';
 }
 
 export interface ExpiredUsersMeta {

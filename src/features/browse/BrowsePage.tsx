@@ -10,7 +10,6 @@ import type { PublicProduct } from '@/api/public';
 import { formatNaira, formatFrequency, getCategoryName } from './types';
 import BrowseTabs from './components/BrowseTabs';
 import ProductCard from './components/ProductCard';
-import { useAddToCart } from '@/app/store/CartStore';
 import Modal from '@/components/ui/GeneralModal';
 
 type Tab = 'all' | 'packages' | 'products';
@@ -19,8 +18,7 @@ function BrowsePage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
   const addToCartLocal = useCartStore((s) => s.addToCart);
-  const { mutate: addToCartAPI } = useAddToCart();
-  const { openModal } = useModalStore();
+  const { openModal, closeModal } = useModalStore();
   const productsTopRef = useRef<HTMLDivElement>(null);
 
   const [activeTab, setActiveTab] = useState<Tab>('all');
@@ -59,16 +57,8 @@ function BrowsePage() {
       id: product.id, title: product.name, price: parseFloat(product.price),
       image: product.imageUrl, type: 'product',
     });
-    addToCartAPI({ itemId: product.id, type: 'product', quantity: 1, price: parseFloat(product.price) }, {
-      onSuccess: () => {
-        openModal({ type: 'success', title: 'Added to Cart', message: `${product.name} has been added successfully.` });
-        setTimeout(() => useModalStore.getState().closeModal(), 2500);
-      },
-      onError: () => {
-        openModal({ type: 'error', title: 'Failed to Add to Cart', message: 'Please try again' });
-        setTimeout(() => useModalStore.getState().closeModal(), 2500);
-      },
-    });
+    openModal({ type: 'success', title: 'Added to Cart', message: `${product.name} has been added successfully.` });
+    setTimeout(() => closeModal(), 2500);
   }
 
   // Derived categories
