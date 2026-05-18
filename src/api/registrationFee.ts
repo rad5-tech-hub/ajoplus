@@ -77,6 +77,50 @@ export interface AdminFeeActionResponse {
   };
 }
 
+export interface RegistrationFeeUser {
+  id: string;
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  role: 'customer' | 'agent';
+  accountStatus: 'pending' | 'active' | 'inactive' | 'suspended';
+  registrationFeeStatus: 'not_submitted' | 'pending' | 'approved' | 'rejected';
+}
+
+export interface RegistrationFeeRecord {
+  id: string;
+  userId: string;
+  amount: string;
+  paymentDate: string;
+  proofFile: string;
+  status: 'pending' | 'approved' | 'rejected';
+  rejectionReason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  user: RegistrationFeeUser;
+}
+
+export interface ApprovedRejectedResponse {
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalRecords: number;
+    recordsPerPage: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
+  fees: RegistrationFeeRecord[];
+}
+
+export const getAdminApprovedRejectedFees = async (status?: 'approved' | 'rejected'): Promise<ApprovedRejectedResponse> => {
+  const url = status
+    ? `/api/registration-fee/admin/approved-rejected?status=${status}`
+    : '/api/registration-fee/admin/approved-rejected';
+  const response = await apiCall<ApiResponse<ApprovedRejectedResponse>>(url);
+  if (!response.success) throw new Error(response.message || 'Failed to fetch fees');
+  return response.data;
+};
+
 export const getAdminPendingFees = async (): Promise<AdminPendingFeesResponse> => {
   const response = await apiCall<ApiResponse<AdminPendingFeesResponse>>(
     '/api/registration-fee/admin/pending'

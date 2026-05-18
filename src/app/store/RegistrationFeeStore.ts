@@ -67,6 +67,15 @@ export const useAdminRejectedRegistrationFees = () =>
 
 // ── Admin Fee Management (new endpoints) ─────────────────────────────
 
+export const useAdminApprovedRejectedFees = (status?: 'approved' | 'rejected') =>
+  useQuery({
+    queryKey: ['admin', 'registrationFees', 'history', status],
+    queryFn: () => registrationFeeAPI.getAdminApprovedRejectedFees(status),
+    staleTime: 60 * 1000,
+    refetchOnWindowFocus: true,
+    retry: smartRetry,
+  });
+
 export const useAdminPendingFees = () =>
   useQuery({
     queryKey: ['admin', 'registrationFees', 'newPending'],
