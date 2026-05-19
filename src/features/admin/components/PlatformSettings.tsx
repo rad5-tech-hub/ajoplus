@@ -83,7 +83,7 @@ const PlatformSettings = () => {
 							type="text"
 							placeholder="Enter account number"
 							value={accountNumber}
-							onChange={(e) => setAccountNumber(e.target.value)}
+							onChange={(e) => setAccountNumber(e.target.value.replace(/\D/g, ''))}
 							disabled={updatePending}
 							className="w-full px-4 sm:px-5 py-3 sm:py-4 border border-brand-200 rounded-xl sm:rounded-2xl focus:border-brand-600 focus:ring-2 focus:ring-brand-100 outline-none text-sm sm:text-base transition-colors disabled:opacity-50"
 						/>

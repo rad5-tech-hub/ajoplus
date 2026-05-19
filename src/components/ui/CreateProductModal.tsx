@@ -219,7 +219,8 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
                     placeholder="e.g., 25000"
                     value={formData.price}
                     disabled={isSubmitting}
-                    onChange={(e) => setFormData((p) => ({ ...p, price: e.target.value }))}
+                    onKeyDown={(e) => { if (e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '-') e.preventDefault(); }}
+                    onChange={(e) => setFormData((p) => ({ ...p, price: e.target.value.replace(/\D/g, '') }))}
                     className="w-full px-4 py-3 text-base border border-brand-200 rounded-2xl focus:outline-none focus:border-brand-600 disabled:bg-slate-50 disabled:text-slate-400"
                   />
                 </div>
@@ -233,7 +234,8 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
                     placeholder="e.g. 4.99"
                     value={formData.dollarPrice}
                     disabled={isSubmitting}
-                    onChange={(e) => setFormData((p) => ({ ...p, dollarPrice: e.target.value }))}
+                    onKeyDown={(e) => { if (e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '-') e.preventDefault(); }}
+                    onChange={(e) => setFormData((p) => ({ ...p, dollarPrice: e.target.value.replace(/[^0-9.]/g, '') }))}
                     className="w-full px-4 py-3 text-base border border-brand-200 rounded-2xl focus:outline-none focus:border-brand-600 disabled:bg-slate-50 disabled:text-slate-400"
                   />
                 </div>
@@ -246,7 +248,8 @@ const CreateProductModal = ({ isOpen, onClose }: CreateProductModalProps) => {
                     placeholder="e.g., 50"
                     value={formData.quantity}
                     disabled={isSubmitting}
-                    onChange={(e) => setFormData((p) => ({ ...p, quantity: e.target.value }))}
+                    onKeyDown={(e) => { if (e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '-') e.preventDefault(); }}
+                    onChange={(e) => setFormData((p) => ({ ...p, quantity: e.target.value.replace(/\D/g, '') }))}
                     className="w-full px-4 py-3 text-base border border-brand-200 rounded-2xl focus:outline-none focus:border-brand-600 disabled:bg-slate-50 disabled:text-slate-400"
                   />
                 </div>

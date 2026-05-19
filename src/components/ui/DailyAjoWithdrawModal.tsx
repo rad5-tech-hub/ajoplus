@@ -176,10 +176,11 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 									</div>
 									<div className="relative">
 										<span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium">₦</span>
-										<input
-											type="number"
-											value={amount}
-											onChange={(e) => setAmount(e.target.value)}
+                    <input
+                      type="number"
+                      value={amount}
+                      onKeyDown={(e) => { if (e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '-') e.preventDefault(); }}
+                      onChange={(e) => setAmount(e.target.value.replace(/\D/g, ''))}
 											placeholder="0"
 											disabled={isPending}
 											className={`w-full pl-9 pr-5 py-3 border rounded-2xl focus:outline-none text-base font-medium placeholder:text-slate-400 transition-colors disabled:bg-slate-50 disabled:cursor-not-allowed ${isExceeding

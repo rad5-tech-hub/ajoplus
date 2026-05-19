@@ -159,7 +159,7 @@ const CreatePlanInline = ({ onClose }: { onClose: () => void }) => {
           <label className="block text-sm font-medium text-slate-700 mb-1.5">Daily Amount</label>
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">₦</span>
-            <input type="number" value={amount} min="100" onChange={(e) => { setAmount(e.target.value); setError(null); }}
+            <input type="number" value={amount} min="100" onKeyDown={(e) => { if (e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '-') e.preventDefault(); }} onChange={(e) => { setAmount(e.target.value.replace(/\D/g, '')); setError(null); }}
               placeholder="500" disabled={isPending}
               className="w-full pl-9 pr-4 py-3 border border-brand-200 focus:border-brand-600 rounded-2xl focus:outline-none text-base disabled:opacity-50" />
           </div>

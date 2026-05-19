@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, type FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Loader2 } from 'lucide-react';
 import { useCreateSavingPlan } from '@/app/store/SavingPlanStore';
 
@@ -8,6 +9,7 @@ interface DailyAjoSetupModalProps {
 }
 
 const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
+  const navigate = useNavigate();
   const [dailyAmount, setDailyAmount] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
@@ -48,9 +50,14 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
     createPlan(
       { amount, description: description.trim() || undefined },
       {
-        onSuccess: () => {
+        onSuccess: (plan) => {
           setSuccess(true);
-          setTimeout(() => { onClose(); }, 1500);
+          setTimeout(() => {
+            onClose();
+            navigate('/dashboard/customer/payment/saving', {
+              state: { isSavingPayment: true, total: amount, savingPlanId: plan.id },
+            });
+          }, 1000);
         },
         onError: (err: unknown) => {
           const message = err instanceof Error
@@ -101,7 +108,8 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
                 <input
                   type="number"
                   value={dailyAmount}
-                  onChange={(e) => { setDailyAmount(e.target.value); setError(null); }}
+                  onKeyDown={(e) => { if (e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '-') e.preventDefault(); }}
+                  onChange={(e) => { setDailyAmount(e.target.value.replace(/\D/g, '')); setError(null); }}
                   placeholder="500"
                   disabled={isPending}
                   className="w-full pl-9 pr-5 py-3 border border-brand-200 rounded-2xl focus:outline-none focus:border-brand-600 text-base font-medium placeholder:text-slate-400 disabled:opacity-50"

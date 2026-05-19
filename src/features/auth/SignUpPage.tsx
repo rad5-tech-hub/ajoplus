@@ -177,7 +177,11 @@ const SignupPage = () => {
         accountType: formData.accountType,
         referralCode: formData.referralCode || undefined,
       });
-      setShowFeeModal(true);
+      if (formData.accountType === 'agent') {
+        setShowFeeModal(true);
+      } else {
+        navigate('/login');
+      }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to create account';
       setLocalError(message);
@@ -368,7 +372,7 @@ const SignupPage = () => {
                   <div className="relative">
                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                     <input
-                      type="tel"
+                      type="number"
                       placeholder="+234 803 456 7890"
                       className={iconInputCls}
                       value={formData.phone}
@@ -683,26 +687,24 @@ const SignupPage = () => {
                         {[1, 2, 3].map((i) => (
                           <div
                             key={i}
-                            className={`flex-1 h-1.5 rounded-full transition-all ${
-                              formData.password.length >= i * 4
+                            className={`flex-1 h-1.5 rounded-full transition-all ${formData.password.length >= i * 4
                                 ? i === 1
                                   ? 'bg-red-500'
                                   : i === 2
                                     ? 'bg-brand-500'
                                     : 'bg-green-500'
                                 : 'bg-slate-200'
-                            }`}
+                              }`}
                           />
                         ))}
                       </div>
-                      <p className={`text-xs font-medium ${
-                        formData.password.length < 4 ? 'text-red-500' :
-                        formData.password.length < 8 ? 'text-brand-500' :
-                        'text-green-600'
-                      }`}>
+                      <p className={`text-xs font-medium ${formData.password.length < 4 ? 'text-red-500' :
+                          formData.password.length < 8 ? 'text-brand-500' :
+                            'text-green-600'
+                        }`}>
                         {formData.password.length < 4 ? 'Weak' :
-                         formData.password.length < 8 ? 'Fair' :
-                         'Strong'}
+                          formData.password.length < 8 ? 'Fair' :
+                            'Strong'}
                       </p>
                     </div>
                   )}
@@ -764,11 +766,10 @@ const SignupPage = () => {
                   <button
                     type="submit"
                     disabled={isLoading || !formData.agreeTerms}
-                    className={`flex-1 py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 ${
-                      isLoading || !formData.agreeTerms
+                    className={`flex-1 py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 ${isLoading || !formData.agreeTerms
                         ? 'bg-[var(--color-disabled-bg)] text-[var(--color-disabled-text)] cursor-not-allowed opacity-60'
                         : 'bg-brand-600 hover:bg-brand-700 text-white cursor-pointer'
-                    }`}
+                      }`}
                   >
                     {isLoading ? (
                       <>
