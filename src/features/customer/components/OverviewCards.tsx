@@ -1,6 +1,7 @@
 // src/features/customer/dashboard/components/OverviewCards.tsx
 import { PiggyBank, Clock, DollarSign, Package } from 'lucide-react';
 import { useCustomerDashboard } from '@/app/store/CustomerStore';
+import { formatCurrency } from '@/lib/currency';
 
 const OverviewCards = () => {
   const { data, isLoading } = useCustomerDashboard();
@@ -29,7 +30,7 @@ const OverviewCards = () => {
           </div>
           <div className="mt-auto pt-6">
             <p className="text-2xl sm:text-3xl font-semibold text-brand-900">
-              ₦{Number(totalSaved).toLocaleString()}
+              {formatCurrency(totalSaved)}
             </p>
             {isEmpty ? (
               <p className="text-slate-400 text-sm mt-1">No savings yet</p>
@@ -69,7 +70,7 @@ const OverviewCards = () => {
           </div>
           <div className="mt-auto pt-6">
             <p className="text-2xl sm:text-3xl font-bold text-brand-900">
-              ₦{Number(availableBalance).toLocaleString()}
+              {formatCurrency(availableBalance)}
             </p>
             {isEmpty && <p className="text-slate-400 text-sm mt-1">Nothing available yet</p>}
           </div>

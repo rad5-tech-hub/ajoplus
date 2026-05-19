@@ -22,7 +22,7 @@ const Modal = () => {
   };
 
   const colorStyles = {
-    success: 'bg-brand-100 border-brand-200 text-amber-800',
+    success: 'bg-green-100 border-green-200 text-green-800',
     error: 'bg-red-100 border-red-200 text-red-800',
     info: 'bg-blue-100 border-blue-200 text-blue-800',
   };

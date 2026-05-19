@@ -10,12 +10,12 @@ const PaymentApprovedModal = ({ isOpen, onClose }: PaymentApprovedModalProps) =>
 
   return (
     <div className="fixed inset-0 bg-black/70 z-200 flex items-center justify-center p-4">
-      <div className="bg-brand-50 border border-brand-200 rounded-3xl max-w-sm w-full p-8 md:p-10 text-center">
-        <CheckCircle className="w-14 h-14 md:w-16 md:h-16 text-brand-600 mx-auto" />
-        <h3 className="text-2xl md:text-3xl font-bold text-brand-700 mt-6">
+      <div className="bg-green-100 border border-green-200 rounded-3xl max-w-sm w-full p-8 md:p-10 text-center">
+        <CheckCircle className="w-14 h-14 md:w-16 md:h-16 text-green-600 mx-auto" />
+        <h3 className="text-2xl md:text-3xl font-bold text-green-800 mt-6">
           Payment Approved!
         </h3>
-        <p className="text-brand-600 mt-2 text-base">
+        <p className="text-green-700 mt-2 text-base">
           This payment has been successfully approved.
         </p>
         <button

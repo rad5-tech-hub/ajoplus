@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Calendar, ChevronRight } from 'lucide-react';
+import { formatCurrency } from '@/lib/currency';
 import ClaimCodeSection from './ClaimCodeSection';
 import type { UserPackage } from '@/api/package';
 
@@ -10,9 +11,9 @@ interface UserPackageCardProps {
 const UserPackageCard = ({ pkg }: UserPackageCardProps) => {
   const navigate = useNavigate();
 
-  const totalPaid = `₦${parseFloat(pkg.totalPaid).toLocaleString('en-NG', { minimumFractionDigits: 2 })}`;
-  const remaining = `₦${pkg.remainingBalance.toLocaleString()}`;
-  const amount = `₦${parseFloat(String(pkg.package.totalPrice)).toLocaleString()}`;
+  const totalPaid = formatCurrency(parseFloat(pkg.totalPaid));
+  const remaining = formatCurrency(pkg.remainingBalance);
+  const amount = formatCurrency(parseFloat(String(pkg.package.totalPrice)));
   const nextDue = new Date(pkg.nextPaymentDate).toLocaleDateString('en-GB');
 
   return (

@@ -2,6 +2,7 @@
 import { Users, DollarSign, TrendingUp, CheckCircle } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getAgentDashboard } from '@/api/agent';
+import { formatCurrency } from '@/lib/currency';
 
 const OverviewCards = () => {
   const { data, isLoading } = useQuery({
@@ -20,8 +21,8 @@ const OverviewCards = () => {
 
   const cards = [
     { label: 'Total Referrals', sub: "Users you've referred", value: stats.totalReferrals.toLocaleString(), icon: Users },
-    { label: 'Total Earnings', sub: 'All-time commission', value: `₦${stats.totalEarnings.toLocaleString()}`, icon: DollarSign },
-    { label: 'Earnings Per Referral', sub: 'Average commission', value: `₦${stats.earningsPerReferral.toLocaleString()}`, icon: TrendingUp },
+    { label: 'Total Earnings', sub: 'All-time commission', value: formatCurrency(stats.totalEarnings), icon: DollarSign },
+    { label: 'Earnings Per Referral', sub: 'Average commission', value: formatCurrency(stats.earningsPerReferral), icon: TrendingUp },
     { label: 'Total Transactions', sub: 'Packages bought by referrals', value: stats.totalTransactions.toLocaleString(), icon: CheckCircle },
   ];
 

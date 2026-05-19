@@ -43,6 +43,16 @@ const AgentDashboard = () => {
             <CommissionStructure />
             <PerformanceTips />
             <AgentSince />
+
+            {/* Agent Terms */}
+            <details className="bg-white border border-slate-200 rounded-2xl text-xs text-slate-600 overflow-hidden">
+              <summary className="px-4 py-3 font-medium text-slate-700 cursor-pointer select-none hover:bg-slate-50 transition-colors">
+                Agent Terms
+              </summary>
+              <div className="px-4 pb-3 space-y-1.5 max-h-48 overflow-y-auto">
+                <p className="flex gap-2 leading-relaxed text-xs"><span className="text-brand-500 shrink-0">•</span>Agent commission is 20% of the registration fee brought by the agent.</p>
+              </div>
+            </details>
           </div>
         </div>
       </div>

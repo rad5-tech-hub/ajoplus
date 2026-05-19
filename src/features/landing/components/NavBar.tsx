@@ -1,7 +1,7 @@
 // src/features/landing/components/Navbar.tsx
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, MessageCircle, Mail, Phone, X } from 'lucide-react';
 import { useCartStore } from '@/app/store/CartStore';
 import abaGoldLogo from '@/assets/ABAGOLD LOGO.png';
 
@@ -32,6 +32,7 @@ const CloseIcon = () => (
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showContact, setShowContact] = useState(false);
   const location = useLocation();
 
   // Cart functionality
@@ -72,12 +73,16 @@ const Navbar = () => {
         <div className="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between gap-4">
 
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 shrink-0">
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="flex items-center gap-2.5 shrink-0 focus:outline-none cursor-pointer"
+            aria-label="Go to top"
+          >
             <img src={abaGoldLogo} alt="ABAGOLD Logo" className="h-9 w-auto border border-gray-300 rounded-lg" />
             <span className="font-bold text-[19px] tracking-tight text-brand-900">
               AbaGold
             </span>
-          </Link>
+          </button>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-7 text-[14px] font-medium text-slate-500">
@@ -91,6 +96,12 @@ const Navbar = () => {
                 {label}
               </a>
             ))}
+            <button
+              onClick={() => setShowContact(true)}
+              className="hover:text-brand-900 transition-colors duration-150 cursor-pointer"
+            >
+              Contact
+            </button>
           </div>
 
           {/* Desktop Right Side: Cart + Auth Buttons */}
@@ -197,6 +208,12 @@ const Navbar = () => {
                 {label}
               </a>
             ))}
+            <button
+              onClick={() => { setShowContact(true); setMenuOpen(false); }}
+              className="px-4 py-4 text-[15px] font-medium text-slate-600 hover:text-brand-900 hover:bg-brand-50 rounded-2xl transition-colors text-left w-full cursor-pointer"
+            >
+              Contact
+            </button>
 
             <div className="h-px bg-gray-100 my-4" />
 
@@ -225,6 +242,40 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {/* Contact Modal */}
+      {showContact && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl w-full max-w-sm mx-auto shadow-2xl p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-brand-900">Get in Touch</h2>
+              <button
+                onClick={() => setShowContact(false)}
+                className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="flex flex-col gap-3">
+              <a href="https://wa.me/" target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-3 px-4 py-3 bg-green-50 border border-green-200 rounded-xl text-green-700 font-medium hover:bg-green-100 transition-all">
+                <MessageCircle className="w-5 h-5" />
+                Chat on WhatsApp
+              </a>
+              <a href="mailto:"
+                className="flex items-center gap-3 px-4 py-3 bg-blue-50 border border-blue-200 rounded-xl text-blue-700 font-medium hover:bg-blue-100 transition-all">
+                <Mail className="w-5 h-5" />
+                Send an Email
+              </a>
+              <a href="tel:"
+                className="flex items-center gap-3 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-700 font-medium hover:bg-amber-100 transition-all">
+                <Phone className="w-5 h-5" />
+                Call Us
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

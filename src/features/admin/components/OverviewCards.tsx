@@ -1,14 +1,14 @@
 // src/features/admin/components/OverviewCards.tsx
-import { Users, DollarSign, AlertCircle, Package } from 'lucide-react';
+import { Users, AlertCircle, Package, Coins } from 'lucide-react';
 import { useAdminOverview } from '@/app/store/AdminStore';
-import type { LucideIcon } from 'lucide-react';
+import type { FC } from 'react';
 
 interface CardConfig {
   label: string;
   sub: string;
   value: string;
   change: string | null;
-  icon: LucideIcon;
+  icon: FC<{ className?: string }>;
 }
 
 function buildCards(data: {
@@ -32,7 +32,7 @@ function buildCards(data: {
       sub: 'All-time earnings',
       value: `₦${data.totalRevenue.toLocaleString('en-NG', { minimumFractionDigits: 0 })}`,
       change: data.revenueGrowthPercent > 0 ? `↑ ${data.revenueGrowthPercent}%` : null,
-      icon: DollarSign,
+      icon: Coins,
     },
     {
       label: 'Pending Approvals',

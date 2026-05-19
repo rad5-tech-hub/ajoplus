@@ -1,14 +1,9 @@
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Shield, Package, Users, FileText } from 'lucide-react';
+import { ArrowLeft, FileText } from 'lucide-react';
 
-const Section = ({ icon: Icon, title, children }: { icon: typeof Shield; title: string; children: React.ReactNode }) => (
+const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="bg-white border border-brand-200 rounded-3xl p-6 sm:p-8 shadow-sm">
-    <div className="flex items-center gap-3 mb-5">
-      <div className="w-10 h-10 bg-brand-100 rounded-2xl flex items-center justify-center">
-        <Icon className="w-5 h-5 text-brand-600" />
-      </div>
-      <h2 className="text-xl font-bold text-brand-900">{title}</h2>
-    </div>
+    <h2 className="text-xl font-bold text-brand-900 mb-5">{title}</h2>
     {children}
   </div>
 );
@@ -40,65 +35,12 @@ const TermsAndConditions = () => {
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6">
 
-        {/* Ajo Terms */}
-        <Section icon={Shield} title="Ajo Terms &amp; Conditions">
-          <ul className="space-y-3">
-            {[
-              'Global daily contribution has a monthly charge of 3.1% which is equivalent to the person\'s daily contribution amount.',
-              'An annual registration fee of N1,000 applies.',
-              'In global daily contributions, a withdrawal notice of 2-3 working days must be given before withdrawals will be successful.',
-              'For those on global daily contributions, you are free to request for your money anytime you want but the withdrawal process will take effect on or before 3 working days of your request.',
-            ].map((item) => (
-              <li key={item} className="flex gap-3 text-sm text-slate-600 leading-relaxed">
-                <span className="text-brand-500 font-bold mt-0.5 shrink-0">•</span>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        {/* Package Terms */}
-        <Section icon={Package} title="Package Contribution Terms">
-          <ul className="space-y-3">
-            {[
-              'For global food contribution, food items you contributed will get to you on or before 30 days of completion.',
-              'No refund of money is accepted on global food contribution.',
-              'The N1,000 registration fee is based on each package.',
-              'The N1,000 registration fee is added to each package price.',
-              'One is allowed to register multiple packages.',
-            ].map((item) => (
-              <li key={item} className="flex gap-3 text-sm text-slate-600 leading-relaxed">
-                <span className="text-brand-500 font-bold mt-0.5 shrink-0">•</span>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        {/* Agent Terms */}
-        <Section icon={Users} title="Agent Terms">
-          <ul className="space-y-3">
-            <li className="flex gap-3 text-sm text-slate-600 leading-relaxed">
-              <span className="text-brand-500 font-bold mt-0.5 shrink-0">•</span>
-              Agent commission is 20% of the registration fee brought by the agent.
-            </li>
-          </ul>
-        </Section>
-
         {/* General Terms */}
-        <Section icon={FileText} title="General Terms &amp; Conditions">
+        <Section title="General Terms &amp; Conditions">
           <ul className="space-y-3">
             {[
-              'Global daily contribution has a monthly charge of 3.1% which is equivalent to the person\'s daily contribution amount.',
               'An annual registration fee of N1,000 applies.',
-              'Agent commission is 20% of the registration fee brought by the agent.',
-              'In global daily contributions, a withdrawal notice of 2-3 working days must be given before withdrawals will be successful.',
-              'For global food contribution, food items you contributed will get to you on or before 30 days of completion.',
               'A well detailed address of yours must be submitted while filling the registration form.',
-              'No refund of money is accepted on global food contribution.',
-              'For those on global daily contributions, you are free to request for your money anytime you want but the withdrawal process will take effect on or before 3 working days of your request.',
-              'The N1,000 registration fee is based on each package.',
-              'One is allowed to register multiple packages.',
             ].map((item) => (
               <li key={item} className="flex gap-3 text-sm text-slate-600 leading-relaxed">
                 <span className="text-brand-500 font-bold mt-0.5 shrink-0">•</span>

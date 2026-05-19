@@ -1,4 +1,5 @@
 import { X, Clock } from 'lucide-react';
+import { useAuthStore } from '@/app/store/authStore';
 
 interface AjoSetupBlockModalProps {
   isOpen: boolean;
@@ -6,7 +7,10 @@ interface AjoSetupBlockModalProps {
 }
 
 const AjoSetupBlockModal = ({ isOpen, onClose }: AjoSetupBlockModalProps) => {
+  const { user } = useAuthStore();
+
   if (!isOpen) return null;
+  if (user?.role !== 'customer') return null;
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">

@@ -49,7 +49,7 @@ const RejectModal = ({ withdrawal, onConfirm, onClose, isPending }: RejectModalP
             <p className="text-slate-700">
               Rejecting <span className="font-semibold">{withdrawal.user.fullName}</span>'s withdrawal of{' '}
               <span className="font-semibold text-red-600">
-                ₦{parseFloat(withdrawal.amount).toLocaleString()}
+                {formatCurrency(parseFloat(withdrawal.amount))}
               </span>
             </p>
           </div>

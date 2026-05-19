@@ -72,7 +72,7 @@ const RegistrationFeeApprovals = () => {
               </td>
               <td className="py-5 px-5">
                 <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium
-                  ${sub.status === 'approved' ? 'bg-brand-100 text-brand-700' : ''}
+                  ${sub.status === 'approved' ? 'bg-green-100 text-green-700' : ''}
                   ${sub.status === 'rejected' ? 'bg-red-100 text-red-700' : ''}
                   ${sub.status === 'pending' ? 'bg-brand-100 text-brand-700' : ''}
                 `}>

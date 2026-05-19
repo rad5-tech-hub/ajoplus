@@ -170,6 +170,20 @@ const PackageDetail = () => {
                 </ul>
               </div>
             )}
+            {/* Package Terms */}
+            <details className="bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-600 group">
+              <summary className="px-4 py-2.5 font-medium text-slate-700 cursor-pointer select-none">
+                Package Terms &amp; Conditions
+              </summary>
+              <div className="px-4 pb-3 space-y-1.5 max-h-48 overflow-y-auto">
+                <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>For global food contribution, food items you contributed will get to you on or before 30 days of completion.</p>
+                <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>No refund of money is accepted on global food contribution.</p>
+                <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>The N1,000 registration fee is based on each package.</p>
+                <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>The N1,000 registration fee is added to each package price.</p>
+                <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>One is allowed to register multiple packages.</p>
+              </div>
+            </details>
+
             <button onClick={() => joinPackage(packageId!, {
               onSuccess: () => navigate(`/dashboard/customer/package/${packageId}`),
             })}

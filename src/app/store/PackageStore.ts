@@ -63,16 +63,30 @@ export const useGetPackageMembers = (packageId: string) =>
 
 export const useFinalizePackage = () => {
   const qc = useQueryClient();
+  const openModal = useModalStore((s) => s.openModal);
+  const closeModal = useModalStore((s) => s.closeModal);
+
   return useMutation({
     mutationFn: (userPackageId: string) =>
       adminPackageAPI.finalizePackage(userPackageId),
-    onSuccess: () => {
+    onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ['admin', 'package'] });
       qc.invalidateQueries({ queryKey: ['availablePackages'] });
       qc.invalidateQueries({ queryKey: ['userPackages'] });
+      openModal({
+        type: 'success',
+        title: 'Package Finalized',
+        message: `Claim code: ${data.userPackage.claimCode}. The member can now use this code.`,
+      });
+      setTimeout(() => closeModal(), 3500);
     },
     onError: (error: Error) => {
-      console.error('[Finalize Package Error]', error);
+      openModal({
+        type: 'error',
+        title: 'Finalization Failed',
+        message: error.message || 'Could not finalize package. Please try again.',
+      });
+      setTimeout(() => closeModal(), 3000);
     },
   });
 };

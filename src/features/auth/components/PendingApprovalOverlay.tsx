@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 import { Clock, RefreshCw, AlertCircle } from 'lucide-react';
 import { useRegistrationFeeStatus } from '@/app/store/RegistrationFeeStore';
+import { useAuthStore } from '@/app/store/authStore';
 
 const PendingApprovalOverlay = () => {
+  const { user } = useAuthStore();
   const { data, isError, refetch, isFetching } = useRegistrationFeeStatus();
 
   const status = data?.user?.registrationFeeStatus;
@@ -14,6 +16,7 @@ const PendingApprovalOverlay = () => {
     return () => clearInterval(interval);
   }, [isBlocking, refetch]);
 
+  if (user?.role !== 'agent') return null;
   if (!isBlocking) return null;
 
   const fee = data?.latestFee;

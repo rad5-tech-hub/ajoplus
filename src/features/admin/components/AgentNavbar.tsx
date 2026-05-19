@@ -51,7 +51,7 @@ const AgentNavbar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
 
           {/* Logo */}
-          <Link to="/customer/dashboard" className="flex items-center gap-2.5 shrink-0">
+          <Link to="/dashboard/admin" className="flex items-center gap-2.5 shrink-0">
             <img src={abaGoldLogo} alt="ABAGOLD Logo" className="h-9 w-auto border border-gray-300 rounded-lg" />
             <span className="font-bold text-[19px] tracking-tight text-[#0f2d3d]">
               AbaGold

@@ -1,4 +1,6 @@
 // src/features/customer/dashboard/components/NeedHelp.tsx
+import { ContactOptions } from '@/components/ui/ContactOptions';
+
 const NeedHelp = () => {
   return (
     <div className="bg-brand-50 border border-brand-100 shadow-lg rounded-3xl p-6">
@@ -6,9 +8,7 @@ const NeedHelp = () => {
       <p className="text-sm text-slate-600 mb-6">
         Our support team is here to assist you 24/7
       </p>
-      <button className="w-full cursor-pointer border border-brand-600 text-brand-600 font-semibold py-3.5 rounded-2xl hover:bg-white transition-all">
-        Contact Support
-      </button>
+      <ContactOptions />
     </div>
   );
 };

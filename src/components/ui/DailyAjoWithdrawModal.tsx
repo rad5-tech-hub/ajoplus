@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { X, CheckCircle } from 'lucide-react';
 import { useModalStore } from '@/app/store/ModalStore';
 import { useSubmitWithdrawal } from '@/app/store/WithdrwalStore';
+import { formatCurrency } from '@/lib/currency';
 
 interface DailyAjoWithdrawModalProps {
 	isOpen: boolean;
@@ -115,9 +116,9 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 							<h3 className="text-xl font-bold text-brand-900 mb-1">Withdrawal Initiated!</h3>
 							<p className="text-slate-500 text-sm mb-5 max-w-xs leading-relaxed">
 								Your request for{' '}
-								<span className="font-semibold text-slate-700">
-									₦{submittedAmount.toLocaleString()}
-								</span>{' '}
+                <span className="font-semibold text-slate-700">
+                  {formatCurrency(submittedAmount)}
+                </span>{' '}
 								has been submitted and will be processed within 24 hours.
 							</p>
 
@@ -156,7 +157,7 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 							<div className="flex items-center justify-center mb-4">
 								<div className="bg-brand-50 border border-brand-100 rounded-2xl px-4 py-2 text-center">
 									<p className="text-xs text-brand-600 font-medium">Available Balance</p>
-									<p className="text-xl font-bold text-brand-700">₦{availableBalance.toLocaleString()}</p>
+              <p className="text-xl font-bold text-brand-700">{formatCurrency(availableBalance)}</p>
 								</div>
 							</div>
 

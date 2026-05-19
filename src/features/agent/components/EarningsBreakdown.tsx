@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { TrendingUp } from 'lucide-react';
 import { getAgentDashboard } from '@/api/agent';
+import { formatCurrency } from '@/lib/currency';
 import DailyAjoWithdrawModal from '@/components/ui/DailyAjoWithdrawModal';
 
 /* ── Skeleton bar ── */
@@ -71,7 +72,7 @@ const EarningsBreakdown = () => {
               <div className="flex justify-between text-sm mb-2">
                 <span className="text-slate-500">{label}</span>
                 <span className="font-semibold text-brand-900">
-                  ₦{amount.toLocaleString()}
+                  {formatCurrency(amount)}
                 </span>
               </div>
               <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">

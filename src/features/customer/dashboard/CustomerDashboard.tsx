@@ -93,9 +93,6 @@ const CustomerDashboard = () => {
         <div className="mt-12">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-semibold text-brand-900">Recent Transactions</h2>
-            <button className="px-6 py-2 border cursor-pointer border-brand-600 text-brand-600 rounded-2xl hover:bg-brand-50 transition-colors text-sm font-medium">
-              View All
-            </button>
           </div>
           <PaymentStatusBanner />
           <RecentTransactions />

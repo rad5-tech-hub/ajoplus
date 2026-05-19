@@ -132,6 +132,19 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
               <span className="text-slate-600">₦500/day = ₦15,000/month → ₦750 fee → You keep ₦14,250</span>
             </div>
 
+            {/* Ajo Terms */}
+            <details className="bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-600 group">
+              <summary className="px-4 py-2.5 font-medium text-slate-700 cursor-pointer select-none">
+                Ajo Terms &amp; Conditions
+              </summary>
+              <div className="px-4 pb-3 space-y-1.5 max-h-48 overflow-y-auto">
+                <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>Global daily contribution has a monthly charge of 3.1% which is equivalent to the person's daily contribution amount.</p>
+                <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>An annual registration fee of N1,000 applies.</p>
+                <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>In global daily contributions, a withdrawal notice of 2-3 working days must be given before withdrawals will be successful.</p>
+                <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>For those on global daily contributions, you are free to request for your money anytime you want but the withdrawal process will take effect on or before 3 working days of your request.</p>
+              </div>
+            </details>
+
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-2xl px-4 py-3">
                 {error}
@@ -139,7 +152,7 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
             )}
 
             {success && (
-              <div className="bg-brand-50 border border-brand-200 text-brand-700 text-sm rounded-2xl px-4 py-3 font-medium">
+              <div className="bg-green-100 border border-green-200 text-green-700 text-sm rounded-2xl px-4 py-3 font-medium">
                 🎉 Daily Ajo activated! Redirecting...
               </div>
             )}

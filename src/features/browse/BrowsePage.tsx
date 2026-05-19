@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, ArrowLeft } from 'lucide-react';
+import { Search, ArrowLeft, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/app/store/authStore';
@@ -17,9 +17,11 @@ type Tab = 'all' | 'packages' | 'products';
 function BrowsePage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
+  const { items } = useCartStore();
   const addToCartLocal = useCartStore((s) => s.addToCart);
   const { openModal, closeModal } = useModalStore();
   const productsTopRef = useRef<HTMLDivElement>(null);
+  const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   const [activeTab, setActiveTab] = useState<Tab>('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -95,13 +97,27 @@ function BrowsePage() {
           <span className="font-medium text-sm">Back</span>
         </button>
 
-        <div className="mb-10">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-brand-900 leading-tight">
-            Discover Premium Packages & Products
-          </h1>
-          <p className="text-slate-600 mt-3 text-base sm:text-lg max-w-2xl">
-            Choose from flexible contribution packages or premium one-time purchase products
-          </p>
+        <div className="mb-10 flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-brand-900 leading-tight">
+              Discover Premium Packages & Products
+            </h1>
+            <p className="text-slate-600 mt-3 text-base sm:text-lg max-w-2xl">
+              Choose from flexible contribution packages or premium one-time purchase products
+            </p>
+          </div>
+          <button
+            onClick={() => navigate('/cart')}
+            className="relative p-2 rounded-xl bg-white border border-amber-200 hover:bg-amber-50 transition-all shrink-0"
+            aria-label="View cart"
+          >
+            <ShoppingCart className="w-5 h-5 text-amber-700" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 bg-amber-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {cartCount > 99 ? '99+' : cartCount}
+              </span>
+            )}
+          </button>
         </div>
 
         <BrowseTabs activeTab={activeTab} onTabChange={(t) => { setActiveTab(t); setPage(1); }} />

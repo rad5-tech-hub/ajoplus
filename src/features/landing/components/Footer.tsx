@@ -1,6 +1,7 @@
 // src/features/landing/components/Footer.tsx
-import React from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { MessageCircle, Mail, Phone, X } from 'lucide-react';
 import ABAGOLD from '@/assets/ABAGOLD LOGO.png';
 
 const FacebookIcon = () => (
@@ -50,6 +51,7 @@ const QUICK_LINKS: { label: string; href: string; isAnchor: boolean }[] = [
   { label: 'Packages', href: '#packages', isAnchor: true },
   { label: 'FAQ', href: '#faq', isAnchor: true },
   { label: 'Login', href: '/login', isAnchor: false },
+  { label: 'Contact', href: '#contact', isAnchor: false },
 ];
 
 // Legal links — plain # for now, swap with real routes/pages when ready
@@ -59,7 +61,10 @@ const LEGAL_LINKS: { label: string; href: string }[] = [
 
 const linkCls = 'text-[13.5px] text-blue-200/55 hover:text-white transition-colors duration-200';
 
-const Footer: React.FC = () => (
+const Footer = () => {
+  const [showContact, setShowContact] = useState(false);
+
+  return (
   <footer
     className="w-full bg-[#0d1f35] mt-14"
     style={{
@@ -108,6 +113,10 @@ const Footer: React.FC = () => (
                   >
                     {label}
                   </a>
+                ) : label === 'Contact' ? (
+                  <button onClick={() => setShowContact(true)} className={`${linkCls} cursor-pointer`}>
+                    {label}
+                  </button>
                 ) : (
                   <Link to={href} className={linkCls}>
                     {label}
@@ -143,7 +152,42 @@ const Footer: React.FC = () => (
         </p>
       </div>
     </div>
+
+      {/* Contact Modal */}
+      {showContact && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl w-full max-w-sm mx-auto shadow-2xl p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-brand-900">Get in Touch</h2>
+              <button
+                onClick={() => setShowContact(false)}
+                className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="flex flex-col gap-3">
+              <a href="https://wa.me/" target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-3 px-4 py-3 bg-green-50 border border-green-200 rounded-xl text-green-700 font-medium hover:bg-green-100 transition-all">
+                <MessageCircle className="w-5 h-5" />
+                Chat on WhatsApp
+              </a>
+              <a href="mailto:"
+                className="flex items-center gap-3 px-4 py-3 bg-blue-50 border border-blue-200 rounded-xl text-blue-700 font-medium hover:bg-blue-100 transition-all">
+                <Mail className="w-5 h-5" />
+                Send an Email
+              </a>
+              <a href="tel:"
+                className="flex items-center gap-3 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-700 font-medium hover:bg-amber-100 transition-all">
+                <Phone className="w-5 h-5" />
+                Call Us
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
   </footer>
-);
+  );
+};
 
 export default Footer;

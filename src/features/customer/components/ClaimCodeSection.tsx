@@ -11,11 +11,22 @@ const ClaimCodeSection = ({ claimCode, claimIssuedAt }: ClaimCodeSectionProps) =
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(claimCode);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(claimCode);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = claimCode;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Clipboard API not available — silently fail
+    } catch (err) {
+      console.error('Copy failed:', err);
     }
   };
 

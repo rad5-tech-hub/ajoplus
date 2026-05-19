@@ -54,9 +54,9 @@ const PaymentSuccess = ({
 
           {/* Animated check icon */}
           <div className="relative mx-auto w-20 h-20 mb-6">
-            <div className="absolute inset-0 bg-brand-100 rounded-full animate-ping opacity-30" />
-            <div className="relative w-20 h-20 bg-brand-100 rounded-full flex items-center justify-center">
-              <CheckCircle className="w-10 h-10 text-brand-600" strokeWidth={2.5} />
+            <div className="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-30" />
+            <div className="relative w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+              <CheckCircle className="w-10 h-10 text-green-600" strokeWidth={2.5} />
             </div>
           </div>
 
@@ -101,8 +101,8 @@ const PaymentSuccess = ({
           {/* Timeline */}
           <div className="px-6 py-4">
             <div className="flex items-start gap-3">
-              <div className="w-7 h-7 bg-brand-100 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
-                <Receipt className="w-3.5 h-3.5 text-brand-600" />
+              <div className="w-7 h-7 bg-green-100 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+                <Receipt className="w-3.5 h-3.5 text-green-600" />
               </div>
               <div>
                 <p className="text-sm font-medium text-brand-900">Receipt received</p>

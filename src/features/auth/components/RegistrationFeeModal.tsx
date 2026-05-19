@@ -65,15 +65,15 @@ const RegistrationFeeModal = ({ isOpen, userName, onComplete }: RegistrationFeeM
     return (
       <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-3xl w-full max-w-md mx-auto shadow-2xl p-8 text-center">
-          <div className="mx-auto w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mb-4">
-            <CheckCircle className="w-8 h-8 text-brand-600" />
+          <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+            <CheckCircle className="w-8 h-8 text-green-600" />
           </div>
           <h2 className="text-xl font-bold text-brand-900 mb-2">Payment Proof Submitted!</h2>
           <p className="text-slate-500 text-sm mb-6">
             Your registration fee proof has been submitted. Your account is pending approval.
             You will be notified once an admin reviews your payment.
           </p>
-          <div className="bg-brand-50 border border-brand-200 rounded-2xl p-4 text-sm text-amber-800 mb-6">
+          <div className="bg-green-100 border border-green-200 rounded-2xl p-4 text-sm text-green-800 mb-6">
             <p className="font-medium">What happens next?</p>
             <p className="mt-1">An admin will review your payment within 24 hours. Once approved, you'll get full access to your account.</p>
           </div>
