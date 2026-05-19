@@ -1,92 +1,177 @@
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronDown, ChevronUp, Search } from 'lucide-react';
+import { ChevronLeft, ChevronDown, ChevronUp, Search, Check, Copy, Calendar, TrendingUp, Wallet } from 'lucide-react';
 import { useGetPackageMembers, useFinalizePackage } from '@/app/store/PackageStore';
 import { formatCurrency } from '@/lib/currency';
 import type { PackageMember } from '@/api/adminPackages';
 
 const statusStyles: Record<string, string> = {
-  active: 'bg-green-100 text-green-700',
-  completed: 'bg-brand-100 text-brand-700',
-  finalized: 'bg-slate-100 text-slate-700',
-  suspended: 'bg-red-100 text-red-700',
-  inactive: 'bg-slate-100 text-slate-700',
+  active: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+  completed: 'bg-blue-100 text-blue-700 border-blue-200',
+  finalized: 'bg-slate-100 text-slate-600 border-slate-200',
+  suspended: 'bg-red-100 text-red-700 border-red-200',
+  inactive: 'bg-slate-100 text-slate-500 border-slate-200',
+};
+
+const Avatar = ({ user }: { user: PackageMember['user'] }) => {
+  const initials = (user.fullName || '?').split(' ').map((s) => s[0]).slice(0, 2).join('').toUpperCase();
+  if (user.imageUrl) {
+    return (
+      <img src={user.imageUrl} alt={user.fullName}
+        className="w-10 h-10 rounded-full object-cover shrink-0 ring-2 ring-white shadow-sm" />
+    );
+  }
+  return (
+    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 text-white flex items-center justify-center text-sm font-semibold shrink-0 ring-2 ring-white shadow-sm">
+      {initials || '?'}
+    </div>
+  );
+};
+
+const StatusBadge = ({ status }: { status: string }) => {
+  const s = status.toLowerCase();
+  const dotColors: Record<string, string> = {
+    active: 'bg-emerald-500',
+    completed: 'bg-blue-500',
+    finalized: 'bg-slate-400',
+    suspended: 'bg-red-500',
+    inactive: 'bg-slate-300',
+  };
+  return (
+    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${statusStyles[s] || 'bg-slate-100 text-slate-600 border-slate-200'}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${dotColors[s] || 'bg-slate-400'}`} />
+      {status.charAt(0).toUpperCase() + status.slice(1)}
+    </span>
+  );
 };
 
 const MemberRow = ({ member }: { member: PackageMember }) => {
   const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const { mutate: finalizePkg, isPending: isFinalizing } = useFinalizePackage();
-
-  const initials = (member.user.fullName || '?').split(' ').map((s) => s[0]).slice(0, 2).join('').toUpperCase();
   const isCompleted = member.status.toLowerCase() === 'completed';
+  const isFinalized = member.status.toLowerCase() === 'finalized';
+  const hasClaim = !!member.claimCode;
+
+  const handleCopy = async (code: string) => {
+    try { await navigator.clipboard.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch {}
+  };
 
   return (
-    <div className="bg-white border border-brand-200 rounded-xl shadow-sm">
-      <div className="px-4 py-3">
-        {/* Top row — always visible */}
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-sm font-semibold shrink-0">
-            {initials || '?'}
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
+      {/* Main row */}
+      <div className="px-5 py-4">
+        <div className="flex items-center gap-4">
+          <Avatar user={member.user} />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <p className="font-semibold text-slate-800 text-sm truncate">{member.user.fullName}</p>
+              <StatusBadge status={member.status} />
+            </div>
+            <p className="text-xs text-slate-400 mt-0.5">{member.user.email}</p>
           </div>
-          <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-            <p className="font-semibold text-slate-800 text-sm truncate">{member.user.fullName}</p>
-            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium w-fit ${statusStyles[member.status] || 'bg-slate-100 text-slate-700'}`}>
-              {member.status}
-            </span>
-          </div>
-          <p className="font-medium text-brand-600 text-sm shrink-0 hidden sm:block">{formatCurrency(member.installmentAmount)}</p>
-          <button onClick={() => setOpen(!open)} className="p-1 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer">
-            {open ? <ChevronUp className="w-4 h-4 text-slate-400 shrink-0" /> : <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />}
+          <p className="font-bold text-brand-600 text-sm shrink-0 hidden sm:block">{formatCurrency(member.installmentAmount)}</p>
+          <button onClick={() => setOpen(!open)} className="p-1.5 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer">
+            {open ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
           </button>
         </div>
 
-        {/* Finalize button — shows for every completed member, no conditions */}
-        {isCompleted && !isFinalizing && (
-          <div className="mt-3 pt-3 border-t border-brand-100">
+        {/* Progress bar — always visible */}
+        <div className="mt-3 flex items-center gap-3">
+          <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all duration-500 ${isCompleted || isFinalized ? 'bg-brand-500' : 'bg-brand-600'}`}
+              style={{ width: `${Math.min(member.progressPercent, 100)}%` }}
+            />
+          </div>
+          <span className="text-xs font-semibold text-slate-500 whitespace-nowrap">{member.progressLabel || `${member.progressPercent.toFixed(0)}%`}</span>
+        </div>
+
+        {/* Quick stats row — always visible */}
+        <div className="mt-3 flex items-center gap-4 text-xs text-slate-500">
+          <span className="flex items-center gap-1">
+            <Wallet className="w-3.5 h-3.5 text-slate-400" />
+            Paid: <span className="font-medium text-slate-700">{formatCurrency(member.totalPaid)}</span>
+          </span>
+          {member.remainingAmount > 0 && (
+            <span className="flex items-center gap-1">
+              Left: <span className="font-medium text-red-500">{formatCurrency(member.remainingAmount)}</span>
+            </span>
+          )}
+          <span className="flex items-center gap-1">
+            <Calendar className="w-3.5 h-3.5 text-slate-400" />
+            {new Date(member.startedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+          </span>
+        </div>
+
+        {/* Finalize button */}
+        {isCompleted && !hasClaim && !isFinalizing && (
+          <div className="mt-3 pt-3 border-t border-slate-100">
             <button onClick={() => finalizePkg(member.id)} disabled={isFinalizing}
-              className="w-full bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white text-sm font-semibold py-2.5 rounded-xl transition-all cursor-pointer">
+              className="w-full bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 disabled:opacity-50 text-white text-sm font-semibold py-2.5 rounded-xl transition-all cursor-pointer shadow-sm">
               {isFinalizing ? 'Finalizing...' : 'Mark as Finalised'}
             </button>
           </div>
         )}
 
-        {/* No claim code UI — finalized members show nothing extra */}
-
-        {/* Expandable details */}
-        <div className={`transition-all duration-200 overflow-hidden ${open ? 'max-h-96 mt-3' : 'max-h-0'}`}>
-          <div className="pt-3 border-t border-brand-100 space-y-3 text-sm">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <p className="text-xs text-slate-500">Total Paid</p>
-                <p className="font-medium text-slate-800">{formatCurrency(member.totalPaid)}</p>
+        {/* Claim code */}
+        {(isFinalized || hasClaim) && member.claimCode && (
+          <div className="mt-3 pt-3 border-t border-slate-100">
+            <div className="bg-brand-50 border border-brand-200 rounded-xl p-3 flex items-center gap-3">
+              <div className="w-8 h-8 bg-brand-100 rounded-lg flex items-center justify-center shrink-0">
+                <Check className="w-4 h-4 text-brand-600" />
               </div>
-              <div>
-                <p className="text-xs text-slate-500">Remaining</p>
-                <p className="font-medium text-slate-800">{formatCurrency(member.remainingAmount)}</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-slate-500">Claim Code</p>
+                <p className="font-mono font-bold text-brand-800 text-sm tracking-wider truncate">{member.claimCode}</p>
+                {member.claimIssuedAt && (
+                  <p className="text-xs text-slate-400 mt-0.5">Issued {new Date(member.claimIssuedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                )}
               </div>
-              <div>
-                <p className="text-xs text-slate-500">Installment</p>
-                <p className="font-medium text-slate-800">{formatCurrency(member.installmentAmount)}</p>
-              </div>
-              <div>
-                <p className="text-xs text-slate-500">Started</p>
-                <p className="font-medium text-slate-800">{new Date(member.startedAt).toLocaleDateString('en-NG', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-              </div>
-              <div>
-                <p className="text-xs text-slate-500">Next Payment</p>
-                <p className="font-medium text-slate-800">{new Date(member.nextPaymentDate).toLocaleDateString('en-NG', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-              </div>
+              <button onClick={() => handleCopy(member.claimCode!)}
+                className="p-2 bg-white border border-brand-200 rounded-lg hover:bg-brand-50 transition-colors cursor-pointer shrink-0" title="Copy">
+                {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4 text-brand-600" />}
+              </button>
             </div>
+          </div>
+        )}
+      </div>
 
-            {/* Progress bar */}
-            <div>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-slate-500">Progress</span>
-                <span className="font-medium text-brand-600">{member.progressPercent.toFixed(1)}%</span>
-              </div>
-              <div className="h-2 bg-brand-100 rounded-full overflow-hidden">
-                <div className="h-full bg-brand-600 rounded-full transition-all" style={{ width: `${Math.min(member.progressPercent, 100)}%` }} />
-              </div>
+      {/* Expandable details */}
+      <div className={`transition-all duration-200 overflow-hidden ${open ? 'max-h-80' : 'max-h-0'}`}>
+        <div className="px-5 pb-4 space-y-3 text-sm border-t border-slate-100 pt-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div className="bg-slate-50 rounded-xl p-3">
+              <p className="text-xs text-slate-400">Total Paid</p>
+              <p className="font-semibold text-slate-800 mt-0.5">{formatCurrency(member.totalPaid)}</p>
+            </div>
+            <div className="bg-slate-50 rounded-xl p-3">
+              <p className="text-xs text-slate-400">Remaining</p>
+              <p className={`font-semibold mt-0.5 ${member.remainingAmount === 0 ? 'text-green-600' : 'text-red-500'}`}>
+                {formatCurrency(member.remainingAmount)}
+              </p>
+            </div>
+            <div className="bg-slate-50 rounded-xl p-3">
+              <p className="text-xs text-slate-400">Installment</p>
+              <p className="font-semibold text-slate-800 mt-0.5">{formatCurrency(member.installmentAmount)}</p>
+            </div>
+            <div className="bg-slate-50 rounded-xl p-3">
+              <p className="text-xs text-slate-400">Started</p>
+              <p className="font-semibold text-slate-800 mt-0.5 text-xs">
+                {new Date(member.startedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+              </p>
+            </div>
+            <div className="bg-slate-50 rounded-xl p-3">
+              <p className="text-xs text-slate-400">Next Payment</p>
+              <p className="font-semibold text-slate-800 mt-0.5 text-xs">
+                {new Date(member.nextPaymentDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+              </p>
+            </div>
+            <div className="bg-slate-50 rounded-xl p-3">
+              <p className="text-xs text-slate-400">Bank</p>
+              <p className="font-semibold text-slate-800 mt-0.5 text-xs truncate">
+                {member.user.bankName ? `${member.user.bankName} • ${member.user.accountNumber || ''}` : '—'}
+              </p>
             </div>
           </div>
         </div>
@@ -118,7 +203,9 @@ const PackageMemberList = () => {
     return (
       <div className="min-h-screen bg-slate-50 py-6">
         <div className="max-w-4xl mx-auto px-4 space-y-4">
-          {[1, 2, 3].map((i) => <div key={i} className="h-16 bg-white rounded-xl animate-pulse border border-brand-200" />)}
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-24 bg-white rounded-2xl animate-pulse border border-slate-200" />
+          ))}
         </div>
       </div>
     );
@@ -136,53 +223,90 @@ const PackageMemberList = () => {
     );
   }
 
+  const pkg = data?.package;
+
   return (
-    <div className="min-h-screen bg-slate-50 py-6">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white py-6">
       <div className="max-w-4xl mx-auto px-4">
         <button onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-2 text-slate-600 hover:text-brand-900 bg-white border border-brand-200 rounded-2xl px-4 py-2 text-sm transition-colors mb-4 cursor-pointer">
+          className="inline-flex items-center gap-2 text-slate-500 hover:text-brand-700 bg-white border border-slate-200 rounded-2xl px-4 py-2 text-sm transition-all mb-5 cursor-pointer shadow-sm hover:shadow">
           <ChevronLeft className="w-4 h-4" /> Back
         </button>
 
-        {/* Status filter pills */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          {FILTERS.map((f) => {
-            const count = data?.members.filter((m) => m.status.toLowerCase() === f).length ?? 0;
-            const isActive = filter === f;
-            return (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all cursor-pointer border ${
-                  isActive
-                    ? 'bg-amber-600 text-white border-amber-600'
-                    : 'bg-white text-slate-600 border-amber-200 hover:bg-amber-50'
-                }`}
-              >
-                {f.charAt(0).toUpperCase() + f.slice(1)} ({count})
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-          <div>
-            <h1 className="text-xl font-bold text-brand-900">{data?.package.name || 'Package Members'}</h1>
-            <p className="text-sm text-slate-500">{members.length} member{members.length !== 1 ? 's' : ''}</p>
+        {/* Package summary card */}
+        {pkg && (
+          <div className="bg-gradient-to-br from-brand-600 to-brand-700 rounded-3xl p-6 sm:p-8 mb-6 text-white shadow-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{pkg.name}</h1>
+                <p className="text-brand-100 text-sm mt-1">Package Members</p>
+              </div>
+              <div className="text-right">
+                <p className="text-2xl sm:text-3xl font-bold">{formatCurrency(parseFloat(pkg.totalPrice))}</p>
+                <p className="text-brand-100 text-xs mt-0.5">Total Price</p>
+              </div>
+            </div>
+            <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div className="bg-white/10 rounded-2xl p-4 backdrop-blur-sm">
+                <p className="text-brand-100 text-xs">Members</p>
+                <p className="text-xl font-bold mt-1">{data?.members.length || 0}</p>
+              </div>
+              <div className="bg-white/10 rounded-2xl p-4 backdrop-blur-sm">
+                <p className="text-brand-100 text-xs">Total Paid</p>
+                <p className="text-xl font-bold mt-1">{formatCurrency(pkg.totalAmountPaidByAllMembers)}</p>
+              </div>
+              <div className="bg-white/10 rounded-2xl p-4 backdrop-blur-sm col-span-2 sm:col-span-1">
+                <p className="text-brand-100 text-xs">Progress</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <TrendingUp className="w-4 h-4 text-brand-200" />
+                  <p className="text-xl font-bold">{pkg.packageProgressLabel}</p>
+                </div>
+              </div>
+            </div>
+            {pkg.packageProgressPercent > 0 && (
+              <div className="mt-4 h-2 bg-white/20 rounded-full overflow-hidden">
+                <div className="h-full bg-white rounded-full transition-all" style={{ width: `${Math.min(pkg.packageProgressPercent, 100)}%` }} />
+              </div>
+            )}
           </div>
-          <div className="relative">
+        )}
+
+        {/* Controls */}
+        <div className="flex flex-wrap items-center gap-3 mb-5">
+          <div className="flex flex-wrap gap-2">
+            {FILTERS.map((f) => {
+              const count = f === 'all' ? data?.members.length : data?.members.filter((m) => m.status.toLowerCase() === f).length ?? 0;
+              const isActive = filter === f;
+              return (
+                <button key={f} onClick={() => setFilter(f)}
+                  className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all cursor-pointer border ${
+                    isActive
+                      ? 'bg-brand-600 text-white border-brand-600 shadow-sm'
+                      : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                  }`}>
+                  {f.charAt(0).toUpperCase() + f.slice(1)}
+                  <span className={`ml-1.5 ${isActive ? 'text-brand-200' : 'text-slate-400'}`}>({count})</span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="relative ml-auto">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input type="text" placeholder="Search members by name..." value={search} onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 pr-4 py-2 border border-brand-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none w-full sm:w-64" />
+            <input type="text" placeholder="Search by name..." value={search} onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 outline-none w-full sm:w-56 bg-white" />
           </div>
         </div>
 
+        {/* Members list */}
         {members.length === 0 ? (
-          <div className="bg-white border border-brand-200 rounded-2xl p-10 text-center text-slate-500 text-sm">
-            {search ? 'No members matching your search.' : 'No members found for this package.'}
+          <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center">
+            <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Search className="w-6 h-6 text-slate-400" />
+            </div>
+            <p className="text-slate-600 font-medium">{search ? 'No members matching your search.' : 'No members found for this package.'}</p>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {members.map((member) => <MemberRow key={member.id} member={member} />)}
           </div>
         )}

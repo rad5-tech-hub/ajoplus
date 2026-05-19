@@ -9,6 +9,7 @@ export interface PackageMember {
 	totalPaid: number;
 	remainingAmount: number;
 	progressPercent: number;
+	progressLabel: string;
 	installmentAmount: number;
 	nextPaymentDate: string;
 	startedAt: string;
@@ -19,6 +20,15 @@ export interface PackageMember {
 		fullName: string;
 		email: string;
 		phoneNumber: string;
+		imageUrl: string | null;
+		accountName: string | null;
+		bankName: string | null;
+		accountNumber: string | null;
+		address: string | null;
+		role: string;
+		accountStatus: string;
+		registrationFeeStatus: string;
+		createdAt: string;
 	};
 }
 
@@ -27,6 +37,9 @@ export interface PackageMembersResponse {
 		id: string;
 		name: string;
 		totalPrice: string;
+		totalAmountPaidByAllMembers: number;
+		packageProgressPercent: number;
+		packageProgressLabel: string;
 	};
 	members: PackageMember[];
 }
