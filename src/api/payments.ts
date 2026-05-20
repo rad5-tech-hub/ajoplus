@@ -206,6 +206,20 @@ export const getMyApprovedPayments = async (): Promise<PendingPaymentsResponse> 
   }
 };
 
+/** Customer: get their own pending payments */
+export const fetchMyPendingPayments = async (): Promise<PendingPaymentsResponse> => {
+  try {
+    const response = await apiCall<ApiResponse<PendingPaymentsResponse>>(
+      '/api/payment/payments/me/pending'
+    );
+    if (!response.success) throw new Error(response.message || 'Failed to fetch pending payments');
+    return response.data;
+  } catch (error) {
+    console.error('[Fetch My Pending Payments Error]', error);
+    throw error;
+  }
+};
+
 /** Admin: all approved payments */
 export const getApprovedPayments = async (): Promise<PendingPaymentsResponse> => {
   try {

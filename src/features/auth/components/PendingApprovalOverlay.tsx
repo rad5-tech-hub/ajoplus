@@ -1,11 +1,14 @@
-import { useEffect } from 'react';
-import { Clock, RefreshCw, AlertCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Clock, RefreshCw, AlertCircle, Eye } from 'lucide-react';
 import { useRegistrationFeeStatus } from '@/app/store/RegistrationFeeStore';
 import { useAuthStore } from '@/app/store/authStore';
+import ReceiptPreviewModal from '@/components/ui/ReceiptPreviewModal';
 
 const PendingApprovalOverlay = () => {
   const { user } = useAuthStore();
   const { data, isError, refetch, isFetching } = useRegistrationFeeStatus();
+  const [showReceipt, setShowReceipt] = useState(false);
+  const [receiptUrl, setReceiptUrl] = useState('');
 
   const status = data?.user?.registrationFeeStatus;
   const isBlocking = status === 'pending' || status === 'rejected';
@@ -55,10 +58,10 @@ const PendingApprovalOverlay = () => {
             <p className="text-slate-500">Submitted on: <span className="font-medium text-slate-700">{new Date(fee.createdAt).toLocaleDateString()}</span></p>
             <p className="text-slate-500">Amount: <span className="font-medium text-slate-700">₦{fee.amount.toLocaleString()}</span></p>
             {fee.proofFile && (
-              <a href={fee.proofFile} target="_blank" rel="noopener noreferrer"
-                className="text-brand-600 hover:text-brand-700 underline font-medium inline-block">
-                View Receipt
-              </a>
+              <button onClick={() => { setReceiptUrl(fee.proofFile); setShowReceipt(true); }}
+                className="text-brand-600 hover:text-brand-700 underline font-medium inline-flex items-center gap-1 cursor-pointer">
+                <Eye className="w-3.5 h-3.5" /> View Receipt
+              </button>
             )}
           </div>
         )}
@@ -80,6 +83,8 @@ const PendingApprovalOverlay = () => {
         {isError && (
           <p className="text-xs text-red-500 mt-3">Could not check status. Try again.</p>
         )}
+
+        <ReceiptPreviewModal isOpen={showReceipt} onClose={() => setShowReceipt(false)} imageUrl={receiptUrl} />
       </div>
     </div>
   );

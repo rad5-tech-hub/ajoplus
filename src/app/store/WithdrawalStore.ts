@@ -86,6 +86,15 @@ export const useGetMyApprovedWithdrawals = () =>
 		retry: smartRetry,
 	});
 
+export const useMyPendingWithdrawals = () =>
+	useQuery({
+		queryKey: ['myPendingWithdrawals'],
+		queryFn: withdrawalAPI.fetchMyPendingWithdrawals,
+		staleTime: 30_000,
+		refetchInterval: 30_000,
+		retry: smartRetry,
+	});
+
 /** Admin: approved withdrawals history */
 export const useGetAdminApprovedWithdrawals = () =>
 	useQuery({
@@ -154,6 +163,9 @@ export const useApproveAgentWithdrawal = () => {
 		mutationFn: (withdrawalId: string) => withdrawalAPI.approveAgentWithdrawal(withdrawalId),
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: ['agentWithdrawals'] });
+		},
+		onError: (error) => {
+			console.error('[Approve Agent Withdrawal Error]', error);
 		},
 	});
 };

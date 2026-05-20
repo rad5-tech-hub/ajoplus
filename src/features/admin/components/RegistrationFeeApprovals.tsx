@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, X, ExternalLink } from 'lucide-react';
+import { Check, X, Eye } from 'lucide-react';
 import { formatCurrency } from '@/lib/currency';
 import {
   useAdminPendingRegistrationFees,
@@ -8,7 +8,8 @@ import {
   useApproveRegistrationFee,
   useRejectRegistrationFee,
 } from '@/app/store/RegistrationFeeStore';
-import type { RegistrationFeeSubmission } from '@/api/registrationFee';
+import ReceiptPreviewModal from '@/components/ui/ReceiptPreviewModal';
+import type { AdminPendingFee } from '@/api/registrationFee';
 
 type TabValue = 'pending' | 'history';
 
@@ -16,6 +17,8 @@ const RegistrationFeeApprovals = () => {
   const [activeTab, setActiveTab] = useState<TabValue>('pending');
   const [rejectId, setRejectId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
+  const [showReceipt, setShowReceipt] = useState(false);
+  const [receiptUrl, setReceiptUrl] = useState('');
 
   const { data: pendingData, isLoading: pendingLoading } = useAdminPendingRegistrationFees();
   const { data: approvedData, isLoading: approvedLoading } = useAdminApprovedRegistrationFees();
@@ -24,10 +27,10 @@ const RegistrationFeeApprovals = () => {
   const approveMutation = useApproveRegistrationFee();
   const rejectMutation = useRejectRegistrationFee();
 
-  const pending = pendingData?.submissions ?? [];
+  const pending = pendingData?.fees ?? [];
   const history = [
-    ...(approvedData?.submissions ?? []),
-    ...(rejectedData?.submissions ?? []),
+    ...(approvedData?.fees ?? []),
+    ...(rejectedData?.fees ?? []),
   ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const handleApprove = (id: string) => {
@@ -41,7 +44,7 @@ const RegistrationFeeApprovals = () => {
     setRejectReason('');
   };
 
-  const renderTable = (submissions: RegistrationFeeSubmission[], isHistory: boolean) => (
+  const renderTable = (fees: AdminPendingFee[], isHistory: boolean) => (
     <div className="overflow-hidden rounded-3xl border border-brand-200 bg-white">
       <table className="w-full text-left">
         <thead className="bg-slate-50">
@@ -56,34 +59,34 @@ const RegistrationFeeApprovals = () => {
           </tr>
         </thead>
         <tbody>
-          {submissions.map((sub) => (
-            <tr key={sub.id} className="border-t border-slate-100 hover:bg-slate-50 transition-colors">
-              <td className="py-5 px-5 font-medium text-brand-900">{sub.fullName}</td>
-              <td className="py-5 px-5 text-slate-500 text-sm">{sub.email}</td>
-              <td className="py-5 px-5 text-brand-600 font-semibold">{formatCurrency(sub.amount)}</td>
+          {fees.map((fee) => (
+            <tr key={fee.id} className="border-t border-slate-100 hover:bg-slate-50 transition-colors">
+              <td className="py-5 px-5 font-medium text-brand-900">{fee.user.fullName}</td>
+              <td className="py-5 px-5 text-slate-500 text-sm">{fee.user.email}</td>
+              <td className="py-5 px-5 text-brand-600 font-semibold">{formatCurrency(Number(fee.amount))}</td>
               <td className="py-5 px-5 text-slate-500 text-sm">
-                {new Date(sub.paymentDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                {new Date(fee.paymentDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
               </td>
               <td className="py-5 px-5">
-                <a href={sub.proofUrl} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-brand-600 hover:text-brand-700 text-xs underline">
-                  <ExternalLink className="w-3 h-3" /> View
-                </a>
+                <button onClick={() => { setReceiptUrl(fee.proofFile); setShowReceipt(true); }}
+                  className="inline-flex items-center gap-1 text-brand-600 hover:text-brand-700 text-xs underline cursor-pointer">
+                  <Eye className="w-3 h-3" /> View
+                </button>
               </td>
               <td className="py-5 px-5">
                 <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium
-                  ${sub.status === 'approved' ? 'bg-green-100 text-green-700' : ''}
-                  ${sub.status === 'rejected' ? 'bg-red-100 text-red-700' : ''}
-                  ${sub.status === 'pending' ? 'bg-brand-100 text-brand-700' : ''}
+                  ${fee.status === 'approved' ? 'bg-green-100 text-green-700' : ''}
+                  ${fee.status === 'rejected' ? 'bg-red-100 text-red-700' : ''}
+                  ${fee.status === 'pending' ? 'bg-brand-100 text-brand-700' : ''}
                 `}>
-                  {sub.status}
+                  {fee.status}
                 </span>
               </td>
               {!isHistory && (
                 <td className="py-5 px-5">
                   <div className="flex gap-2">
                     <button
-                      onClick={() => handleApprove(sub.id)}
+                      onClick={() => handleApprove(fee.id)}
                       disabled={approveMutation.isPending}
                       className="p-2 bg-brand-100 text-brand-600 hover:bg-brand-200 rounded-xl transition-colors disabled:opacity-50"
                       title="Approve"
@@ -91,14 +94,14 @@ const RegistrationFeeApprovals = () => {
                       <Check className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => setRejectId(rejectId === sub.id ? null : sub.id)}
+                      onClick={() => setRejectId(rejectId === fee.id ? null : fee.id)}
                       className="p-2 bg-red-100 text-red-600 hover:bg-red-200 rounded-xl transition-colors"
                       title="Reject"
                     >
                       <X className="w-4 h-4" />
                     </button>
                   </div>
-                  {rejectId === sub.id && (
+                  {rejectId === fee.id && (
                     <div className="mt-3 flex gap-2">
                       <input
                         type="text"
@@ -108,7 +111,7 @@ const RegistrationFeeApprovals = () => {
                         className="flex-1 px-3 py-1.5 border border-brand-200 rounded-xl text-xs focus:outline-none focus:border-red-400"
                       />
                       <button
-                        onClick={() => handleReject(sub.id)}
+                        onClick={() => handleReject(fee.id)}
                         disabled={!rejectReason.trim() || rejectMutation.isPending}
                         className="px-3 py-1.5 bg-red-600 text-white text-xs rounded-xl font-medium hover:bg-red-700 disabled:opacity-50"
                       >
@@ -122,7 +125,7 @@ const RegistrationFeeApprovals = () => {
           ))}
         </tbody>
       </table>
-      {submissions.length === 0 && (
+      {fees.length === 0 && (
         <div className="p-10 text-center text-slate-500 text-sm">No submissions found.</div>
       )}
     </div>
@@ -162,6 +165,7 @@ const RegistrationFeeApprovals = () => {
           renderTable(history, true)
         )
       )}
+      <ReceiptPreviewModal isOpen={showReceipt} onClose={() => setShowReceipt(false)} imageUrl={receiptUrl} />
     </div>
   );
 };

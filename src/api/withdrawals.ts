@@ -160,6 +160,47 @@ export const getMyApprovedWithdrawals = async (): Promise<CustomerWithdrawalsRes
 	}
 };
 
+// ── Customer Pending Withdrawals ────────────────────────────────────────────────
+
+export interface MyPendingWithdrawalWallet {
+	id: string;
+	savingPlanId: string;
+	availableBalance: string;
+	commissionPaid: string;
+}
+
+export interface MyPendingWithdrawal {
+	id: string;
+	userId: string;
+	walletId: string;
+	withdrawalType: string;
+	amount: string;
+	description: string;
+	status: 'pending';
+	rejectionReason: string | null;
+	createdAt: string;
+	updatedAt: string;
+	wallet: MyPendingWithdrawalWallet;
+}
+
+export interface MyPendingWithdrawalsResponse {
+	count: number;
+	withdrawals: MyPendingWithdrawal[];
+}
+
+/** Customer: get their own pending withdrawals */
+export const fetchMyPendingWithdrawals = async (): Promise<MyPendingWithdrawalsResponse> => {
+	try {
+		const res = await apiCall<{ data: MyPendingWithdrawalsResponse }>(
+			'/api/customer/wallet/withdrawals/pending'
+		);
+		return res.data;
+	} catch (error) {
+		console.error('[Fetch My Pending Withdrawals Error]', error);
+		throw error;
+	}
+};
+
 // ── Admin Withdrawal History ────────────────────────────────────────────────
 
 export const getAdminApprovedWithdrawals = async (): Promise<AdminWithdrawalsResponse> => {
@@ -241,9 +282,12 @@ export async function fetchPendingAgentWithdrawals(page = 1): Promise<PendingAge
 	return res.data;
 }
 
-export async function approveAgentWithdrawal(withdrawalId: string): Promise<void> {
-	await apiCall<void>(
+export async function approveAgentWithdrawal(withdrawalId: string) {
+	const res = await apiCall<{
+		data: { withdrawal: { id: string; amount: number; status: string; approvedAt: string } }
+	}>(
 		`/api/admin/agent-withdrawals/${withdrawalId}/approve`,
 		{ method: 'PATCH' }
 	);
+	return res.data;
 }

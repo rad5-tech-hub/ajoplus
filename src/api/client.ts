@@ -44,8 +44,10 @@ export async function apiCall<T>(
   const isFormData = options.body instanceof FormData;
 
   const headers: Record<string, string> = {
-    // Only set JSON content-type for non-FormData requests
-    ...(!isFormData && { 'Content-Type': 'application/json' }),
+    // Only set JSON content-type when there is a body and it is not FormData.
+    // Bodyless PATCH/POST/DELETE must not send Content-Type — some backends
+    // reject PATCH with Content-Type but no body (e.g. agent withdrawal approval).
+    ...(!isFormData && options.body !== undefined && { 'Content-Type': 'application/json' }),
     ...(token && { Authorization: `Bearer ${token}` }),
     // Spread caller-supplied headers last so they can override defaults.
     // Explicitly exclude Content-Type from caller headers for FormData —

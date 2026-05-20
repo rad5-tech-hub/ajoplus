@@ -9,9 +9,16 @@ import DateRangeFilter, { type DateRange } from '@/components/ui/DateRangeFilter
 import { useApprovePayment, useRejectPayment, useGetPendingPayments, useGetApprovedPayments, useGetRejectedPayments } from '@/app/store/PaymentStore';
 import { useAdminPendingFees, useApproveAdminFee } from '@/app/store/RegistrationFeeStore';
 import type { Payment } from '@/api/payments';
+import type { AdminPendingFee } from '@/api/registrationFee';
 
 type FilterValue = 'all' | 'package' | 'product' | 'saving' | 'registration';
 type TabValue = 'pending' | 'history';
+
+const PAYMENT_TYPE_LABELS: Record<string, string> = {
+  package: 'Package Installment',
+  saving: 'Ajo Savings',
+  product: 'Product Purchase',
+};
 
 const filterOptions: { value: FilterValue; label: string }[] = [
   { value: 'all', label: 'All' },
@@ -150,6 +157,8 @@ const PaymentApprovals = () => {
               {filteredPayments.map((payment) => {
                 const effectiveStatus = localStatus[payment.id] || payment.status;
                 const initials = (payment.user?.fullName ?? '?').split(' ').map((s) => s[0]).slice(0, 2).join('');
+                const userPackage = payment.userPackage as { installmentAmount?: string } | null | undefined;
+                const amountMismatch = Number(payment.amountPaid) !== Number(payment.expectedAmount);
                 return (
                   <div key={payment.id}
                     className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden hover:shadow-md hover:border-amber-200/50 transition-all duration-200"
@@ -163,6 +172,9 @@ const PaymentApprovals = () => {
                           <div className="min-w-0">
                             <p className="font-semibold text-slate-800 text-sm truncate">{payment.user.fullName}</p>
                             <p className="text-xs text-slate-400 truncate">{payment.user.email}</p>
+                            {(payment.user as { phoneNumber?: string }).phoneNumber && (
+                              <p className="text-xs text-slate-400 truncate">{(payment.user as { phoneNumber?: string }).phoneNumber}</p>
+                            )}
                           </div>
                         </div>
                         <div className="text-right shrink-0">
@@ -175,7 +187,55 @@ const PaymentApprovals = () => {
                         </div>
                       </div>
 
-                      <div className="mt-3 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2 mt-3 mb-3">
+                        <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">Payment for:</span>
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                          payment.paymentType === 'package' ? 'bg-blue-100 text-blue-700' :
+                          payment.paymentType === 'saving' ? 'bg-green-100 text-green-700' :
+                          'bg-purple-100 text-purple-700'
+                        }`}>
+                          {PAYMENT_TYPE_LABELS[payment.paymentType] ?? payment.paymentType}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3 mb-3">
+                        <div className="bg-slate-50 rounded-xl p-3">
+                          <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Amount Paid</p>
+                          <p className="text-base font-bold text-slate-800 mt-1">{formatCurrency(Number(payment.amountPaid))}</p>
+                        </div>
+                        <div className="bg-slate-50 rounded-xl p-3">
+                          <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Expected</p>
+                          <p className={`text-base font-bold mt-1 ${amountMismatch ? 'text-amber-600' : 'text-slate-800'}`}>
+                            {formatCurrency(Number(payment.expectedAmount))}
+                            {amountMismatch && <span className="ml-1 text-[10px] font-medium text-amber-500">(mismatch)</span>}
+                          </p>
+                        </div>
+                        <div className="bg-slate-50 rounded-xl p-3">
+                          <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Date</p>
+                          <p className="text-sm font-semibold text-slate-700 mt-1">
+                            {payment.createdAt
+                              ? new Date(payment.createdAt).toLocaleDateString('en-NG', { day: 'numeric', month: 'short', year: 'numeric' })
+                              : '—'}
+                          </p>
+                        </div>
+                        {userPackage?.installmentAmount ? (
+                          <div className="bg-slate-50 rounded-xl p-3">
+                            <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Installment</p>
+                            <p className="text-sm font-semibold text-slate-700 mt-1">{formatCurrency(Number(userPackage.installmentAmount))}</p>
+                          </div>
+                        ) : (
+                          <div className="bg-slate-50 rounded-xl p-3">
+                            <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Time</p>
+                            <p className="text-sm font-semibold text-slate-700 mt-1">
+                              {payment.createdAt
+                                ? new Date(payment.createdAt).toLocaleTimeString('en-NG', { hour: '2-digit', minute: '2-digit' })
+                                : '—'}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-2">
                           {payment.receiptUrl && (
                             <button onClick={() => { setReceiptUrl(payment.receiptUrl); setShowReceiptModal(true); }}
@@ -441,7 +501,7 @@ const PaymentApprovals = () => {
 };
 
 const RegFeeBlock = ({ fees, onApprove, onViewReceipt, isPending }: {
-  fees: { id: string; fullName?: string; email?: string; proofFile: string }[];
+  fees: AdminPendingFee[];
   onApprove: (id: string) => void;
   onViewReceipt: (url: string) => void;
   isPending: boolean;
@@ -451,7 +511,7 @@ const RegFeeBlock = ({ fees, onApprove, onViewReceipt, isPending }: {
     <div className="space-y-1.5">
       {fees.slice(0, 5).map((fee) => (
         <div key={fee.id} className="flex items-center justify-between bg-white rounded-xl px-3 py-2 text-xs">
-          <span className="font-medium text-slate-800 truncate max-w-[200px]">{fee.fullName || fee.email || '—'}</span>
+          <span className="font-medium text-slate-800 truncate max-w-[200px]">{fee.user?.fullName || fee.user?.email || '—'}</span>
           <div className="flex items-center gap-1.5 shrink-0 ml-2">
             <button onClick={() => onViewReceipt(fee.proofFile)}
               className="p-1 text-brand-600 hover:bg-brand-100 rounded-lg transition-colors cursor-pointer"><Eye className="w-3.5 h-3.5" /></button>

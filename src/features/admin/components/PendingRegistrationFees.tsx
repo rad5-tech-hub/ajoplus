@@ -169,10 +169,10 @@ const PendingRegistrationFees = () => {
             </div>
             <div className="bg-slate-50 rounded-xl p-3">
               <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Receipt</p>
-              <a href={fee.proofFile} target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700 mt-1 bg-white border border-amber-200 hover:bg-amber-50 px-3 py-1.5 rounded-xl transition-all duration-200">
+              <button onClick={() => { setReceiptUrl(fee.proofFile); setShowReceipt(true); }}
+                className="inline-flex items-center gap-1 text-sm font-semibold text-brand-600 hover:text-brand-700 mt-1 bg-white border border-amber-200 hover:bg-amber-50 px-3 py-1.5 rounded-xl transition-all duration-200 cursor-pointer">
                 <Eye className="w-3.5 h-3.5" /> View
-              </a>
+              </button>
             </div>
           </div>
 

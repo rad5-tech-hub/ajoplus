@@ -35,7 +35,7 @@ export interface RegistrationFeeSubmission {
 }
 
 export interface AdminRegistrationFeesResponse {
-  submissions: RegistrationFeeSubmission[];
+  fees: AdminPendingFee[];
   count: number;
 }
 

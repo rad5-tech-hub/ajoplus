@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Eye } from 'lucide-react';
 import { useGetProductTransactions } from '@/app/store/SavingsAdminStore';
 import { formatCurrency } from '@/lib/currency';
+import ReceiptPreviewModal from '@/components/ui/ReceiptPreviewModal';
 
 const statusStyles: Record<'approved' | 'rejected' | 'pending', string> = {
 	approved: 'bg-brand-100 text-brand-700',
@@ -22,6 +23,8 @@ const ProductTransactions = () => {
 	const navigate = useNavigate();
 
 	const { data, isLoading, isError, error, refetch } = useGetProductTransactions(productId ?? '');
+	const [showReceipt, setShowReceipt] = useState(false);
+	const [receiptUrl, setReceiptUrl] = useState('');
 
 	const transactions = data?.transactions ?? [];
 	const transactionCount = data?.transactionCount ?? 0;
@@ -130,10 +133,10 @@ const ProductTransactions = () => {
 										<td className="py-5 px-5">
 											{transaction.receiptUrl && (
 												<button
-													onClick={() => /* TODO: open receipt modal */ window.open(transaction.receiptUrl, '_blank')}
-													className="text-brand-600 hover:text-brand-700 text-xs underline cursor-pointer"
+													onClick={() => { setReceiptUrl(transaction.receiptUrl); setShowReceipt(true); }}
+													className="inline-flex items-center gap-1 text-brand-600 hover:text-brand-700 text-xs underline cursor-pointer"
 												>
-													View Receipt
+													<Eye className="w-3 h-3" /> View Receipt
 												</button>
 											)}
 										</td>
@@ -144,6 +147,8 @@ const ProductTransactions = () => {
 					</div>
 				)}
 			</div>
+
+			<ReceiptPreviewModal isOpen={showReceipt} onClose={() => setShowReceipt(false)} imageUrl={receiptUrl} />
 		</div>
 	);
 };

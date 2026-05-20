@@ -58,11 +58,15 @@ export const useAuthStore = create<AuthStore>()(
         // Clear all stores + React Query cache
         const { useDailyAjoStore } = await import('@/app/store/DailyAjoStore');
         const { useCartStore } = await import('@/app/store/CartStore');
+        const { usePendingPaymentStore } = await import('@/app/store/PendingPaymentStore');
+        const { useWithdrawalStore } = await import('@/app/store/WithdrawalStore');
         const { QueryClient } = await import('@tanstack/react-query');
 
         await useDailyAjoStore.getState().clearForLogout();
         useCartStore.getState().clearCart?.();
         useCartStore.setState?.({ cartId: undefined });
+        usePendingPaymentStore.getState().clearAll();
+        useWithdrawalStore.getState().clearAll();
 
         // Clear React Query cache to prevent stale data for next user
         try {

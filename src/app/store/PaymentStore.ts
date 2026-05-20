@@ -85,13 +85,22 @@ export const useGetMyRejectedPayments = () =>
   });
 
 export const useGetMyApprovedPayments = () =>
-  useQuery({
-    queryKey: ['payments', 'me', 'approved'],
-    queryFn: paymentAPI.getMyApprovedPayments,
-    staleTime: 60 * 1000,
-    refetchOnWindowFocus: true,
-    retry: smartRetry,
-  });
+	useQuery({
+		queryKey: ['payments', 'me', 'approved'],
+		queryFn: paymentAPI.getMyApprovedPayments,
+		staleTime: 60 * 1000,
+		refetchOnWindowFocus: true,
+		retry: smartRetry,
+	});
+
+export const useMyPendingPayments = () =>
+	useQuery({
+		queryKey: ['myPendingPayments'],
+		queryFn: paymentAPI.fetchMyPendingPayments,
+		staleTime: 30_000,
+		refetchInterval: 30_000,
+		retry: smartRetry,
+	});
 
 export const useGetApprovedPayments = () =>
   useQuery({
