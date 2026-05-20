@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronDown, ChevronUp, Search, Check, Copy, Calendar, TrendingUp, Wallet } from 'lucide-react';
+import { ChevronLeft, ChevronDown, ChevronUp, Search, Check, Copy, Calendar, TrendingUp, Wallet, Building2, UserCircle, ShieldCheck, ExternalLink } from 'lucide-react';
 import { useGetPackageMembers, useFinalizePackage } from '@/app/store/PackageStore';
 import { formatCurrency } from '@/lib/currency';
 import type { PackageMember } from '@/api/adminPackages';
@@ -11,6 +11,29 @@ const statusStyles: Record<string, string> = {
   finalized: 'bg-slate-100 text-slate-600 border-slate-200',
   suspended: 'bg-red-100 text-red-700 border-red-200',
   inactive: 'bg-slate-100 text-slate-500 border-slate-200',
+};
+
+const CopyField = ({ value, label }: { value: string; label: string }) => {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+  return (
+    <div className="bg-slate-50 rounded-xl p-3 cursor-pointer hover:bg-slate-100 transition-colors" onClick={handleCopy} title={`Copy ${label}`}>
+      <div className="flex items-center gap-1.5 mb-0.5">
+        <p className="text-xs text-slate-400">{label}</p>
+        {copied
+          ? <Check className="w-3 h-3 text-emerald-500 ml-auto shrink-0" />
+          : <Copy className="w-3 h-3 text-slate-300 ml-auto shrink-0" />
+        }
+      </div>
+      <p className="font-semibold text-slate-800 text-sm truncate">
+        {copied ? 'Copied!' : value}
+      </p>
+    </div>
+  );
 };
 
 const Avatar = ({ user }: { user: PackageMember['user'] }) => {
@@ -54,7 +77,7 @@ const MemberRow = ({ member }: { member: PackageMember }) => {
   const hasClaim = !!member.claimCode;
 
   const handleCopy = async (code: string) => {
-    try { await navigator.clipboard.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch {}
+    try { await navigator.clipboard.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 2000); } finally { setCopied(false); }
   };
 
   return (
@@ -138,42 +161,79 @@ const MemberRow = ({ member }: { member: PackageMember }) => {
       </div>
 
       {/* Expandable details */}
-      <div className={`transition-all duration-200 overflow-hidden ${open ? 'max-h-80' : 'max-h-0'}`}>
-        <div className="px-5 pb-4 space-y-3 text-sm border-t border-slate-100 pt-3">
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <div className="bg-slate-50 rounded-xl p-3">
-              <p className="text-xs text-slate-400">Total Paid</p>
-              <p className="font-semibold text-slate-800 mt-0.5">{formatCurrency(member.totalPaid)}</p>
-            </div>
-            <div className="bg-slate-50 rounded-xl p-3">
-              <p className="text-xs text-slate-400">Remaining</p>
-              <p className={`font-semibold mt-0.5 ${member.remainingAmount === 0 ? 'text-green-600' : 'text-red-500'}`}>
-                {formatCurrency(member.remainingAmount)}
-              </p>
-            </div>
-            <div className="bg-slate-50 rounded-xl p-3">
-              <p className="text-xs text-slate-400">Installment</p>
-              <p className="font-semibold text-slate-800 mt-0.5">{formatCurrency(member.installmentAmount)}</p>
-            </div>
-            <div className="bg-slate-50 rounded-xl p-3">
-              <p className="text-xs text-slate-400">Started</p>
-              <p className="font-semibold text-slate-800 mt-0.5 text-xs">
-                {new Date(member.startedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-              </p>
-            </div>
-            <div className="bg-slate-50 rounded-xl p-3">
-              <p className="text-xs text-slate-400">Next Payment</p>
-              <p className="font-semibold text-slate-800 mt-0.5 text-xs">
-                {new Date(member.nextPaymentDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-              </p>
-            </div>
-            <div className="bg-slate-50 rounded-xl p-3">
-              <p className="text-xs text-slate-400">Bank</p>
-              <p className="font-semibold text-slate-800 mt-0.5 text-xs truncate">
-                {member.user.bankName ? `${member.user.bankName} • ${member.user.accountNumber || ''}` : '—'}
-              </p>
+      <div className={`transition-all duration-200 overflow-hidden ${open ? 'max-h-[600px]' : 'max-h-0'}`}>
+        <div className="px-5 pb-4 border-t border-slate-100 pt-3 space-y-4">
+
+          {/* Payment progress */}
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
+              <Wallet className="w-3.5 h-3.5" /> Payment Progress
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <CopyField value={formatCurrency(member.totalPaid)} label="Total Paid" />
+              <CopyField value={formatCurrency(member.remainingAmount)} label="Remaining" />
+              <CopyField value={formatCurrency(member.installmentAmount)} label="Installment" />
+              <CopyField value={new Date(member.startedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} label="Started" />
+              <CopyField value={new Date(member.nextPaymentDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} label="Next Payment" />
+              <CopyField value={member.user.bankName ? `${member.user.bankName} • ${member.user.accountNumber || ''}` : '—'} label={member.user.bankName ? 'Bank' : 'Bank Info'} />
             </div>
           </div>
+
+          {/* User contact & IDs */}
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
+              <UserCircle className="w-3.5 h-3.5" /> Contact & IDs
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              <CopyField value={member.user.email} label="Email" />
+              <CopyField value={member.user.phoneNumber || '—'} label="Phone" />
+              <CopyField value={member.id} label="Membership ID" />
+              <CopyField value={member.user.id} label="User ID" />
+            </div>
+          </div>
+
+          {/* Banking details */}
+          {(member.user.bankName || member.user.accountNumber || member.user.accountName) && (
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
+                <Building2 className="w-3.5 h-3.5" /> Banking Details
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {member.user.bankName && <CopyField value={member.user.bankName} label="Bank" />}
+                {member.user.accountNumber && <CopyField value={member.user.accountNumber} label="Account Number" />}
+                {member.user.accountName && <CopyField value={member.user.accountName} label="Account Name" />}
+              </div>
+            </div>
+          )}
+
+          {/* Account status */}
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5" /> Account Status
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <CopyField value={member.user.role || '—'} label="Role" />
+              <CopyField value={member.user.accountStatus || '—'} label="Account" />
+              <CopyField value={member.user.registrationFeeStatus ? member.user.registrationFeeStatus.replace(/_/g, ' ') : '—'} label="Reg. Fee" />
+              <CopyField value={new Date(member.user.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} label="Created" />
+              {member.user.address && <CopyField value={member.user.address} label="Address" />}
+            </div>
+          </div>
+
+          {/* Claim code */}
+          {member.claimCode && (
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1.5">
+                <ExternalLink className="w-3.5 h-3.5" /> Claim Info
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <CopyField value={member.claimCode} label="Claim Code" />
+                {member.claimIssuedAt && (
+                  <CopyField value={new Date(member.claimIssuedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} label="Claim Issued" />
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -279,11 +339,10 @@ const PackageMemberList = () => {
               const isActive = filter === f;
               return (
                 <button key={f} onClick={() => setFilter(f)}
-                  className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all cursor-pointer border ${
-                    isActive
-                      ? 'bg-brand-600 text-white border-brand-600 shadow-sm'
-                      : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
-                  }`}>
+                  className={`rounded-full px-4 py-1.5 text-sm font-medium transition-all cursor-pointer border ${isActive
+                    ? 'bg-brand-600 text-white border-brand-600 shadow-sm'
+                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                    }`}>
                   {f.charAt(0).toUpperCase() + f.slice(1)}
                   <span className={`ml-1.5 ${isActive ? 'text-brand-200' : 'text-slate-400'}`}>({count})</span>
                 </button>

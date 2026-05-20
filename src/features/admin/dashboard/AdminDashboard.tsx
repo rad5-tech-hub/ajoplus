@@ -8,16 +8,17 @@ import ProductManagement from '../components/ProductManagement';
 import PaymentApprovals from '../components/PaymentApprovals';
 import WithdrawalRequests from '../components/WithdrawalRequests';
 import PlatformSettings from '../components/PlatformSettings';
-import ExpiredRegistrations from '../components/ExpiredRegistrations';
 import BannerAdManager from '../components/BannerAdManager';
+import UserManagement from '../components/UserManagement';
 
-type Tab = 'packages' | 'products' | 'approvals' | 'expiredRegs' | 'banner' | 'withdrawals' | 'settings';
+type Tab = 'packages' | 'products' | 'approvals' | 'banner' | 'withdrawals' | 'settings' | 'users';
 
 const TABS: { key: Tab; label: string; shortLabel: string }[] = [
   { key: 'packages', label: 'Package Management', shortLabel: 'Packages' },
   { key: 'products', label: 'Product Management', shortLabel: 'Products' },
+  { key: 'users', label: 'User Management', shortLabel: 'Users' },
   { key: 'approvals', label: 'Payment Approvals', shortLabel: 'Approvals' },
-  { key: 'expiredRegs', label: 'Expired Registrations', shortLabel: 'Expired' },
+  // { key: 'expiredRegs', label: 'Expired Registrations', shortLabel: 'Expired' },
   { key: 'banner', label: 'Promotional Banner', shortLabel: 'Banner' },
   { key: 'withdrawals', label: 'Withdrawals', shortLabel: 'Withdrawals' },
   { key: 'settings', label: 'Settings', shortLabel: 'Settings' },
@@ -26,7 +27,6 @@ const TABS: { key: Tab; label: string; shortLabel: string }[] = [
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState<Tab>('packages');
   const navigate = useNavigate();
-
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       <AgentNavbar />
@@ -86,10 +86,10 @@ const AdminDashboard = () => {
           {activeTab === 'packages' && <PackageManagement />}
           {activeTab === 'products' && <ProductManagement />}
           {activeTab === 'approvals' && <PaymentApprovals />}
-          {activeTab === 'expiredRegs' && <ExpiredRegistrations />}
           {activeTab === 'banner' && <BannerAdManager />}
           {activeTab === 'withdrawals' && <WithdrawalRequests />}
           {activeTab === 'settings' && <PlatformSettings />}
+          {activeTab === 'users' && <UserManagement />}
         </div>
 
       </div>

@@ -7,12 +7,27 @@ export interface ReferredUser {
 	joinedAt: string;
 	packages: number;
 	earnings: number;
+	commissions: number;
+	packageCommissions: number;
+	savingCommissions: number;
+	pendingEarnings: number;
 }
 
 export interface AgentDashboardData {
+	agent: {
+		id: string;
+		fullName: string;
+		referralCode: string;
+		createdAt: string;
+	};
 	stats: {
 		totalReferrals: number;
 		totalEarnings: number;
+		commissionPaid: number;
+		pendingEarnings: number;
+		totalCommission: number;
+		packageEarnings: number;
+		savingEarnings: number;
 		earningsPerReferral: number;
 		totalTransactions: number;
 	};
@@ -64,3 +79,63 @@ export const getAgentDashboard = async (): Promise<AgentDashboardData> => {
 		throw error;
 	}
 };
+
+// ── Agent Downline ────────────────────────────────────────────────────────────
+
+export interface AgentDownlineCustomer {
+	id: string;
+	fullName: string;
+	email: string;
+	phoneNumber: string;
+	bankName: string | null;
+	accountNumber: string | null;
+	accountStatus: 'pending' | 'active' | 'inactive' | 'suspended';
+	createdAt: string;
+}
+
+export interface AgentDownlineResponse {
+	agent: { id: string; fullName: string; referralCode: string };
+	totalCustomers: number;
+	customers: AgentDownlineCustomer[];
+}
+
+export async function fetchAgentDownline(referralCode: string): Promise<AgentDownlineResponse> {
+	const response = await apiCall<{
+		success: boolean;
+		statusCode: number;
+		data: AgentDownlineResponse;
+	}>(`/api/agents/${referralCode}/downline`);
+	return response.data;
+}
+
+// ── Agent Withdrawal ───────────────────────────────────────────────────────────
+
+export interface AgentWithdrawalPayload {
+	amount: number;
+	description: string;
+}
+
+export interface AgentWithdrawalResult {
+	withdrawal: {
+		id: string;
+		userId: string;
+		walletId: null;
+		withdrawalType: string;
+		amount: number;
+		description: string;
+		status: string;
+		updatedAt: string;
+		createdAt: string;
+	};
+	availableBalance: number;
+	totalAvailable: number;
+}
+
+export async function submitAgentWithdrawal(
+	payload: AgentWithdrawalPayload
+): Promise<AgentWithdrawalResult> {
+	return apiCall<AgentWithdrawalResult>(
+		'/api/agents/wallet/withdrawals',
+		{ method: 'POST', body: JSON.stringify(payload) }
+	);
+}

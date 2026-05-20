@@ -452,32 +452,42 @@ const PackageDetail = () => {
                 </div>
               </div>
 
-              <div className="flex flex-row gap-3">
-                <button
-                  onClick={() =>
-                    navigate(`/dashboard/customer/payment/${packageId}`, {
-                      state: {
-                        expectedAmount: parseFloat(userPackageData?.installmentAmount ?? '0'),
-                        packageName: displayData.title,
-                        userPackageId: userPackageData?.id,
-                      },
-                    })
-                  }
-                  className="bg-brand-600 hover:bg-brand-700 w-[50%] cursor-pointer transition-colors
-                             text-white font-semibold py-3 sm:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl
-                             flex items-center justify-center gap-2 text-sm sm:text-base active:scale-[0.985]"
-                >
-                  Make Payment
-                </button>
-                <button
-                  onClick={() => setShowUploadModal(true)}
-                  className="border-2 border-brand-600 text-brand-600 w-[50%] cursor-pointer
-                             hover:bg-brand-50 font-semibold py-3 sm:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl
-                             flex items-center justify-center gap-2 text-sm sm:text-base transition-colors active:scale-[0.985]"
-                >
-                  Upload Receipt
-                </button>
-              </div>
+              {displayData.status === 'completed' ? (
+                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 sm:p-6 text-center">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center mx-auto mb-3">
+                    <CheckCircle className="w-6 h-6 text-emerald-600" />
+                  </div>
+                  <p className="font-bold text-emerald-800 text-base sm:text-lg">Package Completed</p>
+                  <p className="text-emerald-600 text-sm mt-1">All payments have been fulfilled for this package.</p>
+                </div>
+              ) : (
+                <div className="flex flex-row gap-3">
+                  <button
+                    onClick={() =>
+                      navigate(`/dashboard/customer/payment/${packageId}`, {
+                        state: {
+                          expectedAmount: parseFloat(userPackageData?.installmentAmount ?? '0'),
+                          packageName: displayData.title,
+                          userPackageId: userPackageData?.id,
+                        },
+                      })
+                    }
+                    className="bg-brand-600 hover:bg-brand-700 w-[50%] cursor-pointer transition-colors
+                               text-white font-semibold py-3 sm:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl
+                               flex items-center justify-center gap-2 text-sm sm:text-base active:scale-[0.985]"
+                  >
+                    Make Payment
+                  </button>
+                  <button
+                    onClick={() => setShowUploadModal(true)}
+                    className="border-2 border-brand-600 text-brand-600 w-[50%] cursor-pointer
+                               hover:bg-brand-50 font-semibold py-3 sm:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl
+                               flex items-center justify-center gap-2 text-sm sm:text-base transition-colors active:scale-[0.985]"
+                  >
+                    Upload Receipt
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Contribution History */}

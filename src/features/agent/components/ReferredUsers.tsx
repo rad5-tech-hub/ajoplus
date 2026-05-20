@@ -2,6 +2,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Users } from 'lucide-react';
 import { getAgentDashboard, type ReferredUser } from '@/api/agent';
+import { formatCurrency } from '@/lib/currency';
 
 function getInitials(name: string) {
   return name.split(' ').map((p) => p[0]).join('').slice(0, 2).toUpperCase();
@@ -49,7 +50,7 @@ const EmptyState = () => (
 
 /* ── User row ── */
 const UserRow = ({ user }: { user: ReferredUser }) => (
-  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 py-3.5 sm:py-4 border-b border-slate-100 last:border-b-0 last:pb-0">
+  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 py-3.5 sm:py-4 border-b border-slate-100 last:border-b-0 last:pb-0">
     <div className="flex items-center gap-3 sm:gap-4 min-w-0">
       <div className="w-9 h-9 sm:w-10 sm:h-10 bg-brand-100 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 text-brand-700 text-xs font-bold">
         {getInitials(user.fullName)}
@@ -60,17 +61,33 @@ const UserRow = ({ user }: { user: ReferredUser }) => (
       </div>
     </div>
 
-    <div className="grid grid-cols-3 sm:flex sm:gap-6 lg:gap-8 bg-slate-50 sm:bg-transparent rounded-xl sm:rounded-none px-3 py-2 sm:p-0 text-xs sm:text-sm shrink-0">
+    <div className="grid grid-cols-2 sm:flex sm:gap-4 lg:gap-6 bg-slate-50 sm:bg-transparent rounded-xl sm:rounded-none px-3 py-2 sm:p-0 text-xs shrink-0">
       <div className="sm:text-right">
-        <p className="text-slate-400 text-[10px] sm:text-xs">Packages</p>
+        <p className="text-slate-400 text-[10px]">Packages</p>
         <p className="font-medium text-brand-900 mt-0.5">{user.packages}</p>
       </div>
       <div className="sm:text-right">
-        <p className="text-slate-400 text-[10px] sm:text-xs">Earnings</p>
-        <p className="font-semibold text-brand-600 mt-0.5">₦{user.earnings.toLocaleString()}</p>
+        <p className="text-slate-400 text-[10px]">Earnings</p>
+        <p className="font-semibold text-brand-600 mt-0.5">{formatCurrency(user.earnings)}</p>
       </div>
       <div className="sm:text-right">
-        <p className="text-slate-400 text-[10px] sm:text-xs">Joined</p>
+        <p className="text-slate-400 text-[10px]">Pkg Comm.</p>
+        <p className="font-medium text-brand-900 mt-0.5">{formatCurrency(user.packageCommissions)}</p>
+      </div>
+      <div className="sm:text-right">
+        <p className="text-slate-400 text-[10px]">Sav. Comm.</p>
+        <p className="font-medium text-brand-900 mt-0.5">{formatCurrency(user.savingCommissions)}</p>
+      </div>
+      <div className="sm:text-right">
+        <p className="text-slate-400 text-[10px]">Comm.</p>
+        <p className="font-medium text-brand-900 mt-0.5">{user.commissions}</p>
+      </div>
+      <div className="sm:text-right">
+        <p className="text-slate-400 text-[10px]">Pending</p>
+        <p className="font-medium text-amber-600 mt-0.5">{formatCurrency(user.pendingEarnings)}</p>
+      </div>
+      <div className="sm:text-right">
+        <p className="text-slate-400 text-[10px]">Joined</p>
         <p className="font-medium text-brand-900 mt-0.5 whitespace-nowrap">{formatDate(user.joinedAt)}</p>
       </div>
     </div>

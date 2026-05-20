@@ -1,5 +1,5 @@
 // src/features/agent/dashboard/components/OverviewCards.tsx
-import { Users, DollarSign, TrendingUp, CheckCircle } from 'lucide-react';
+import { Users, DollarSign, TrendingUp, CheckCircle, Clock, Award, Package, PiggyBank, Receipt } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getAgentDashboard } from '@/api/agent';
 import { formatCurrency } from '@/lib/currency';
@@ -15,6 +15,11 @@ const OverviewCards = () => {
   const stats = data?.stats ?? {
     totalReferrals: 0,
     totalEarnings: 0,
+    commissionPaid: 0,
+    pendingEarnings: 0,
+    totalCommission: 0,
+    packageEarnings: 0,
+    savingEarnings: 0,
     earningsPerReferral: 0,
     totalTransactions: 0,
   };
@@ -22,6 +27,11 @@ const OverviewCards = () => {
   const cards = [
     { label: 'Total Referrals', sub: "Users you've referred", value: stats.totalReferrals.toLocaleString(), icon: Users },
     { label: 'Total Earnings', sub: 'All-time commission', value: formatCurrency(stats.totalEarnings), icon: DollarSign },
+    { label: 'Commission Paid', sub: 'Total commission paid out', value: formatCurrency(stats.commissionPaid), icon: Receipt },
+    { label: 'Pending Earnings', sub: 'Awaiting approval', value: formatCurrency(stats.pendingEarnings), icon: Clock },
+    { label: 'Total Commission', sub: 'Gross commission earned', value: formatCurrency(stats.totalCommission), icon: Award },
+    { label: 'Package Earnings', sub: 'From package referrals', value: formatCurrency(stats.packageEarnings), icon: Package },
+    { label: 'Savings Earnings', sub: 'From savings referrals', value: formatCurrency(stats.savingEarnings), icon: PiggyBank },
     { label: 'Earnings Per Referral', sub: 'Average commission', value: formatCurrency(stats.earningsPerReferral), icon: TrendingUp },
     { label: 'Total Transactions', sub: 'Packages bought by referrals', value: stats.totalTransactions.toLocaleString(), icon: CheckCircle },
   ];

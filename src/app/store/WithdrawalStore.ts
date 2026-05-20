@@ -97,10 +97,10 @@ export const useGetAdminApprovedWithdrawals = () =>
 	});
 
 /** Admin: rejected withdrawals history */
-export const useGetAdminRejectedWithdrawals = () =>
+export const useRejectedWithdrawals = () =>
 	useQuery({
-		queryKey: ['admin', 'withdrawals', 'rejected'],
-		queryFn: withdrawalAPI.getAdminRejectedWithdrawals,
+		queryKey: ['withdrawals', 'rejected'],
+		queryFn: withdrawalAPI.fetchRejectedWithdrawals,
 		staleTime: 60 * 1000,
 		refetchOnWindowFocus: true,
 		retry: smartRetry,

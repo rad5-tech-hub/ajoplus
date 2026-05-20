@@ -169,8 +169,35 @@ export const getAdminApprovedWithdrawals = async (): Promise<AdminWithdrawalsRes
 	return res.data;
 };
 
-export const getAdminRejectedWithdrawals = async (): Promise<AdminWithdrawalsResponse> => {
-	const res = await apiCall<{ data: AdminWithdrawalsResponse }>(
+/** Rejected withdrawal — no user object, just userId */
+export interface RejectedWithdrawalWallet {
+	id: string;
+	savingPlanId: string;
+	availableBalance: string;
+	commissionPaid: string;
+}
+
+export interface RejectedWithdrawal {
+	id: string;
+	userId: string;
+	walletId: string;
+	withdrawalType: string;
+	amount: string;
+	description: string;
+	status: 'rejected';
+	rejectionReason: string | null;
+	createdAt: string;
+	updatedAt: string;
+	wallet: RejectedWithdrawalWallet;
+}
+
+export interface RejectedWithdrawalsResponse {
+	count: number;
+	withdrawals: RejectedWithdrawal[];
+}
+
+export const fetchRejectedWithdrawals = async (): Promise<RejectedWithdrawalsResponse> => {
+	const res = await apiCall<{ data: RejectedWithdrawalsResponse }>(
 		'/api/admin/withdrawals/rejected'
 	);
 	return res.data;
