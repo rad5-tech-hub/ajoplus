@@ -51,14 +51,14 @@ interface ApiResponse<T> {
 export interface AdminPendingFee {
   id: string;
   userId: string;
-  fullName?: string;
-  email?: string;
-  amount: number;
+  amount: string;
   paymentDate: string;
   proofFile: string;
   status: 'pending' | 'approved' | 'rejected';
   rejectionReason: string | null;
   createdAt: string;
+  updatedAt: string;
+  user: RegistrationFeeUser;
 }
 
 export interface AdminPendingFeesResponse {
@@ -90,7 +90,7 @@ export interface RegistrationFeeUser {
 export interface RegistrationFeeRecord {
   id: string;
   userId: string;
-  amount: string;
+  amount: string | number;
   paymentDate: string;
   proofFile: string;
   status: 'pending' | 'approved' | 'rejected';
@@ -120,6 +120,14 @@ export const getAdminApprovedRejectedFees = async (status?: 'approved' | 'reject
   if (!response.success) throw new Error(response.message || 'Failed to fetch fees');
   return response.data;
 };
+
+export async function fetchApprovedRejectedFees(page = 1): Promise<ApprovedRejectedResponse> {
+  const response = await apiCall<ApiResponse<ApprovedRejectedResponse>>(
+    `/api/registration-fee/admin/approved-rejected?page=${page}`
+  );
+  if (!response.success) throw new Error(response.message || 'Failed to fetch fees');
+  return response.data;
+}
 
 export const getAdminPendingFees = async (): Promise<AdminPendingFeesResponse> => {
   const response = await apiCall<ApiResponse<AdminPendingFeesResponse>>(

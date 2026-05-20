@@ -85,6 +85,14 @@ export const useAdminPendingFees = () =>
     retry: smartRetry,
   });
 
+export const useApprovedRejectedFees = (page: number) =>
+  useQuery({
+    queryKey: ['registrationFees', 'history', page],
+    queryFn: () => registrationFeeAPI.fetchApprovedRejectedFees(page),
+    staleTime: 60_000,
+    retry: smartRetry,
+  });
+
 export const useApproveAdminFee = () => {
   const qc = useQueryClient();
   return useMutation({

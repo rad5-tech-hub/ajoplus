@@ -18,7 +18,7 @@ const BrowsePage = lazy(() => import('@/features/browse/BrowsePage'));
 
 // Admin auth routes (lazy-loaded)
 const AdminLoginPage = lazy(() => import('@/features/admin/auth/AdminLoginPage'));
-const AdminSignupPage = lazy(() => import('@/features/admin/auth/AdminSignupPage'));
+// const AdminSignupPage = lazy(() => import('@/features/admin/auth/AdminSignupPage'));
 
 // Protected routes (lazy-loaded)
 const CustomerDashboard = lazy(() => import('@/features/customer/dashboard/CustomerDashboard'));
@@ -77,14 +77,14 @@ const AppRouter = () => {
           </Suspense>
         }
       />
-      <Route
+      {/* <Route
         path="/admin/signup"
         element={
           <Suspense fallback={<RouteSuspenseFallback />}>
             <AdminSignupPage />
           </Suspense>
         }
-      />
+      /> */}
 
       <Route
         path="/browse"
