@@ -9,6 +9,7 @@ import {
 import { useGetAdminApprovedWithdrawals, useRejectedWithdrawals } from '@/app/store/WithdrawalStore';
 import { formatCurrency } from '@/lib/currency';
 import DateRangeFilter, { type DateRange } from '@/components/ui/DateRangeFilter';
+import AgentWithdrawalRequests from './AgentWithdrawalRequests';
 import type { AdminWithdrawal } from '@/api/withdrawals';
 
 // ── Reject Reason Modal ───────────────────────────────────────────────────────

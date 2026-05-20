@@ -202,3 +202,48 @@ export const fetchRejectedWithdrawals = async (): Promise<RejectedWithdrawalsRes
 	);
 	return res.data;
 };
+
+// ── Admin: Agent Withdrawals ──────────────────────────────────────────────────
+
+export interface AgentWithdrawalRequest {
+	id: string;
+	agentId: string;
+	agent: {
+		id: string;
+		fullName: string;
+		email: string;
+		phoneNumber: string;
+		bankName: string | null;
+		accountNumber: string | null;
+	};
+	amount: number;
+	description: string;
+	status: 'pending' | 'success' | 'rejected';
+	createdAt: string;
+}
+
+export interface PendingAgentWithdrawalsResponse {
+	pagination: {
+		total: number;
+		page: number;
+		limit: number;
+		totalPages: number;
+		hasNextPage: boolean;
+		hasPreviousPage: boolean;
+	};
+	withdrawals: AgentWithdrawalRequest[];
+}
+
+export async function fetchPendingAgentWithdrawals(page = 1): Promise<PendingAgentWithdrawalsResponse> {
+	const res = await apiCall<{ data: PendingAgentWithdrawalsResponse }>(
+		`/api/admin/agent-withdrawals/pending?page=${page}&limit=20`
+	);
+	return res.data;
+}
+
+export async function approveAgentWithdrawal(withdrawalId: string): Promise<void> {
+	await apiCall<void>(
+		`/api/admin/agent-withdrawals/${withdrawalId}/approve`,
+		{ method: 'PATCH' }
+	);
+}

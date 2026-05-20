@@ -137,3 +137,23 @@ export const useRejectWithdrawal = () => {
 		},
 	});
 };
+
+// ── Admin: Agent Withdrawals ──────────────────────────────────────────────────
+
+export const usePendingAgentWithdrawals = (page: number) =>
+	useQuery({
+		queryKey: ['agentWithdrawals', 'pending', page],
+		queryFn: () => withdrawalAPI.fetchPendingAgentWithdrawals(page),
+		staleTime: 30_000,
+		retry: smartRetry,
+	});
+
+export const useApproveAgentWithdrawal = () => {
+	const qc = useQueryClient();
+	return useMutation({
+		mutationFn: (withdrawalId: string) => withdrawalAPI.approveAgentWithdrawal(withdrawalId),
+		onSuccess: () => {
+			qc.invalidateQueries({ queryKey: ['agentWithdrawals'] });
+		},
+	});
+};

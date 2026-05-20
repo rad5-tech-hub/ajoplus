@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { TrendingUp } from 'lucide-react';
 import { getAgentDashboard } from '@/api/agent';
 import { formatCurrency } from '@/lib/currency';
-import DailyAjoWithdrawModal from '@/components/ui/DailyAjoWithdrawModal';
+import AgentWithdrawModal from '@/components/ui/AgentWithdrawModal';
 
 /* ── Skeleton bar ── */
 const SkeletonBar = () => (
@@ -94,7 +94,7 @@ const EarningsBreakdown = () => {
         Request Withdrawal
       </button>
 
-      <DailyAjoWithdrawModal
+      <AgentWithdrawModal
         isOpen={isWithdrawOpen}
         onClose={() => setIsWithdrawOpen(false)}
         availableBalance={totalEarnings}
