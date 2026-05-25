@@ -57,12 +57,34 @@ export const useCartStore = create<CartStore>()(
 
 export const useCartId = () => useCartStore((state) => state.cartId);
 
+interface AddToCartPayload {
+  itemId: string;
+  type: 'product' | 'package';
+  quantity: number;
+  price: number;
+  title?: string;
+  image?: string;
+}
+
 export const useAddToCart = () => {
-  const setCartId = useCartStore((state) => state.setCartId);
+  const store = useCartStore();
   return useMutation({
-    mutationFn: (payload: cartAPI.AddToCartRequest) => cartAPI.addToCart(payload),
-    onSuccess: (response) => {
-      if (response.data.cartId) setCartId(response.data.cartId);
+    mutationFn: (payload: AddToCartPayload) =>
+      cartAPI.addToCart({
+        itemId: payload.itemId,
+        type: payload.type,
+        quantity: payload.quantity,
+        price: payload.price,
+      }),
+    onSuccess: (response, variables) => {
+      if (response.data.cartId) store.setCartId(response.data.cartId);
+      store.addToCart({
+        id: variables.itemId,
+        title: variables.title,
+        price: variables.price,
+        image: variables.image,
+        type: variables.type,
+      });
     },
     onError: (error) => console.error('Failed to add item to cart:', error),
   });

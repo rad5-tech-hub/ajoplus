@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as withdrawalAPI from '@/api/withdrawals';
 import { APIError } from '@/api/client';
-import type { Withdrawal, SubmitWithdrawalResponse } from '@/api/withdrawals';
+import type { Withdrawal } from '@/api/withdrawals';
 
 // ─── Smart retry logic ──────────────────────────────────────────────────────
 
@@ -48,9 +48,7 @@ export const useSubmitWithdrawal = () => {
 	return useMutation({
 		mutationFn: (body: withdrawalAPI.WithdrawalRequest) =>
 			withdrawalAPI.requestWithdrawal(body),
-		onSuccess: (response: SubmitWithdrawalResponse) => {
-			// requestWithdrawal now returns SubmitWithdrawalResponse directly (apiCall unwraps .data)
-			useWithdrawalStore.getState().addPending(response.withdrawal);
+		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: ['wallet'] });
 			qc.invalidateQueries({ queryKey: ['transactions'] });
 		},
@@ -163,9 +161,22 @@ export const useApproveAgentWithdrawal = () => {
 		mutationFn: (withdrawalId: string) => withdrawalAPI.approveAgentWithdrawal(withdrawalId),
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: ['agentWithdrawals'] });
+			qc.invalidateQueries({ queryKey: ['admin', 'overview'] });
 		},
 		onError: (error) => {
 			console.error('[Approve Agent Withdrawal Error]', error);
+		},
+	});
+};
+
+export const useRejectAgentWithdrawal = () => {
+	const qc = useQueryClient();
+	return useMutation({
+		mutationFn: ({ id, reason }: { id: string; reason: string }) =>
+			withdrawalAPI.rejectAgentWithdrawal(id, { rejectionReason: reason }),
+		onSuccess: () => {
+			qc.invalidateQueries({ queryKey: ['agentWithdrawals'] });
+			qc.invalidateQueries({ queryKey: ['admin', 'overview'] });
 		},
 	});
 };

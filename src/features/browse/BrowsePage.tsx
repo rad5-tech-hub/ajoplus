@@ -3,7 +3,7 @@ import { Search, ArrowLeft, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@/app/store/authStore';
-import { useCartStore } from '@/app/store/CartStore';
+import { useCartStore, useAddToCart } from '@/app/store/CartStore';
 import { useModalStore } from '@/app/store/ModalStore';
 import { fetchPublicPackages, fetchPublicProducts } from '@/api/public';
 import type { PublicProduct } from '@/api/public';
@@ -18,7 +18,7 @@ function BrowsePage() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
   const { items } = useCartStore();
-  const addToCartLocal = useCartStore((s) => s.addToCart);
+  const addToCartMutation = useAddToCart();
   const { openModal, closeModal } = useModalStore();
   const productsTopRef = useRef<HTMLDivElement>(null);
   const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -55,10 +55,17 @@ function BrowsePage() {
   }
 
   function handleAddToCart(product: PublicProduct) {
-    addToCartLocal({
-      id: product.id, title: product.name, price: parseFloat(product.price),
-      image: product.imageUrl, type: 'product',
-    });
+    if (isAuthenticated) {
+      addToCartMutation.mutate({
+        itemId: product.id, type: 'product', quantity: 1, price: parseFloat(product.price),
+        title: product.name, image: product.imageUrl,
+      });
+    } else {
+      useCartStore.getState().addToCart({
+        id: product.id, title: product.name, price: parseFloat(product.price),
+        image: product.imageUrl, type: 'product',
+      });
+    }
     openModal({ type: 'success', title: 'Added to Cart', message: `${product.name} has been added successfully.` });
     setTimeout(() => closeModal(), 2500);
   }

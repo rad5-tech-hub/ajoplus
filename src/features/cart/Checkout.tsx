@@ -44,7 +44,6 @@ const Checkout = () => {
   }
 
   const handleProceedToPayment = () => {
-    // Encode cart items as JSON in URL state
     navigate('/dashboard/customer/payment/cart', {
       state: {
         items: items,

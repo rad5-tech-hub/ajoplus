@@ -6,7 +6,7 @@
 const EXCHANGE_RATE = 1550; // 1 USD to NGN
 
 export const formatCurrency = (amount: number | null | undefined, currency: 'NGN' | 'USD' = 'NGN'): string => {
-	const value = amount ?? 0;
+	const value = (amount != null && !Number.isNaN(amount)) ? amount : 0;
 	if (currency === 'NGN') {
 		return `₦${value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 	}

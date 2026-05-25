@@ -282,6 +282,19 @@ export async function fetchPendingAgentWithdrawals(page = 1): Promise<PendingAge
 	return res.data;
 }
 
+export async function rejectAgentWithdrawal(
+	withdrawalId: string,
+	body: { rejectionReason: string }
+) {
+	const res = await apiCall<{
+		data: { withdrawal: { id: string; status: string; rejectionReason: string } }
+	}>(
+		`/api/admin/agent-withdrawals/${withdrawalId}/reject`,
+		{ method: 'PATCH', body: JSON.stringify(body) }
+	);
+	return res.data;
+}
+
 export async function approveAgentWithdrawal(withdrawalId: string) {
 	const res = await apiCall<{
 		data: { withdrawal: { id: string; amount: number; status: string; approvedAt: string } }

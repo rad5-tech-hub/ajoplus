@@ -1,7 +1,7 @@
 // src/features/admin/dashboard/components/AgentWithdrawalRequests.tsx
-import { useState } from 'react';
-import { Inbox, Check, AlertCircle } from 'lucide-react';
-import { usePendingAgentWithdrawals, useApproveAgentWithdrawal } from '@/app/store/WithdrawalStore';
+import { useState, useRef, useEffect } from 'react';
+import { Inbox, Check, X, AlertCircle } from 'lucide-react';
+import { usePendingAgentWithdrawals, useApproveAgentWithdrawal, useRejectAgentWithdrawal } from '@/app/store/WithdrawalStore';
 import { formatCurrency } from '@/lib/currency';
 import type { AgentWithdrawalRequest } from '@/api/withdrawals';
 
@@ -15,15 +15,79 @@ function formatDate(iso: string) {
   });
 }
 
+const RejectModal = ({ withdrawal, onConfirm, onClose, isPending }: {
+  withdrawal: AgentWithdrawalRequest;
+  onConfirm: (reason: string) => void;
+  onClose: () => void;
+  isPending: boolean;
+}) => {
+  const [reason, setReason] = useState('');
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) onClose();
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+      <div ref={ref} className="bg-white rounded-3xl w-full max-w-md shadow-2xl">
+        <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3.5">
+          <button onClick={onClose} className="p-1.5 -ml-1.5 cursor-pointer text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
+            <X className="w-5 h-5" />
+          </button>
+          <h2 className="text-base font-semibold text-brand-900">Reject Withdrawal</h2>
+          <div className="w-8" />
+        </div>
+
+        <div className="px-5 py-4 space-y-4">
+          <div className="bg-red-50 border border-red-100 rounded-2xl px-4 py-3 text-sm">
+            <p className="text-slate-700">
+              Rejecting <span className="font-semibold">{withdrawal.agent.fullName}</span>'s withdrawal of{' '}
+              <span className="font-semibold text-red-600">{formatCurrency(withdrawal.amount)}</span>
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Rejection Reason</label>
+            <textarea
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="e.g. Insufficient balance, invalid details..."
+              className="w-full px-4 py-3 border border-brand-200 rounded-2xl focus:outline-none focus:border-red-400 h-24 resize-none text-sm leading-relaxed"
+              autoFocus
+            />
+          </div>
+
+          <div className="flex gap-2">
+            <button onClick={onClose} className="flex-1 py-3 rounded-2xl border border-brand-200 text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors cursor-pointer">
+              Cancel
+            </button>
+            <button onClick={() => onConfirm(reason)} disabled={!reason.trim() || isPending} className="flex-1 py-3 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+              {isPending ? 'Rejecting…' : 'Confirm Reject'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const AgentWithdrawalRequests = () => {
   const [page, setPage] = useState(1);
   const { data, isLoading, isError, refetch } = usePendingAgentWithdrawals(page);
   const approveMutation = useApproveAgentWithdrawal();
+  const rejectMutation = useRejectAgentWithdrawal();
 
   const withdrawals = data?.withdrawals ?? [];
   const pagination = data?.pagination;
   const [approvedIds, setApprovedIds] = useState<Record<string, boolean>>({});
+  const [rejectedIds, setRejectedIds] = useState<Record<string, boolean>>({});
   const [errorIds, setErrorIds] = useState<Record<string, string>>({});
+  const [rejectTarget, setRejectTarget] = useState<AgentWithdrawalRequest | null>(null);
 
   const handleApprove = (id: string) => {
     approveMutation.mutate(id, {
@@ -35,6 +99,22 @@ const AgentWithdrawalRequests = () => {
         setErrorIds((prev) => ({ ...prev, [id]: 'Approval failed. Please try again.' }));
       },
     });
+  };
+
+  const handleRejectConfirm = (reason: string) => {
+    if (!rejectTarget) return;
+    rejectMutation.mutate(
+      { id: rejectTarget.id, reason },
+      {
+        onSuccess: () => {
+          setRejectedIds((prev) => ({ ...prev, [rejectTarget.id]: true }));
+          setRejectTarget(null);
+        },
+        onError: () => {
+          setErrorIds((prev) => ({ ...prev, [rejectTarget.id]: 'Rejection failed. Please try again.' }));
+        },
+      }
+    );
   };
 
   if (isLoading) {
@@ -70,8 +150,10 @@ const AgentWithdrawalRequests = () => {
         <div className="space-y-3">
           {withdrawals.map((w: AgentWithdrawalRequest) => {
             const isApproved = approvedIds[w.id];
+            const isRejected = rejectedIds[w.id];
             const error = errorIds[w.id];
-            const isLoading = approveMutation.isPending && approveMutation.variables === w.id && !isApproved;
+            const isApproving = approveMutation.isPending && approveMutation.variables === w.id && !isApproved && !isRejected;
+            const isRejecting = rejectMutation.isPending && rejectMutation.variables?.id === w.id && !isRejected;
 
             if (isApproved) {
               return (
@@ -79,6 +161,17 @@ const AgentWithdrawalRequests = () => {
                   <div className="flex items-center gap-3">
                     <Check className="w-5 h-5 text-green-600" />
                     <p className="text-green-700 font-semibold text-sm">Approved ✓</p>
+                  </div>
+                </div>
+              );
+            }
+
+            if (isRejected) {
+              return (
+                <div key={w.id} className="bg-white rounded-2xl border border-red-200 shadow-sm p-5">
+                  <div className="flex items-center gap-3">
+                    <X className="w-5 h-5 text-red-600" />
+                    <p className="text-red-700 font-semibold text-sm">Rejected ✗</p>
                   </div>
                 </div>
               );
@@ -128,23 +221,32 @@ const AgentWithdrawalRequests = () => {
                     </p>
                   </div>
                   <div className="flex flex-col items-end gap-1.5">
-                    <button
-                      onClick={() => handleApprove(w.id)}
-                      disabled={isLoading}
-                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
-                    >
-                      {isLoading ? (
-                        <>
-                          <svg className="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                          </svg>
-                          Approving…
-                        </>
-                      ) : (
-                        <><Check className="w-4 h-4" /> Approve</>
-                      )}
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleApprove(w.id)}
+                        disabled={isApproving || isRejecting}
+                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
+                      >
+                        {isApproving ? (
+                          <>
+                            <svg className="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                            </svg>
+                            Approving…
+                          </>
+                        ) : (
+                          <><Check className="w-4 h-4" /> Approve</>
+                        )}
+                      </button>
+                      <button
+                        onClick={() => setRejectTarget(w)}
+                        disabled={isApproving || isRejecting}
+                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-1.5"
+                      >
+                        <X className="w-4 h-4" /> Reject
+                      </button>
+                    </div>
                     {error && (
                       <p className="text-red-600 text-xs">{error}</p>
                     )}
@@ -187,6 +289,15 @@ const AgentWithdrawalRequests = () => {
             </button>
           </div>
         </div>
+      )}
+
+      {rejectTarget && (
+        <RejectModal
+          withdrawal={rejectTarget}
+          onConfirm={handleRejectConfirm}
+          onClose={() => setRejectTarget(null)}
+          isPending={rejectMutation.isPending}
+        />
       )}
     </div>
   );

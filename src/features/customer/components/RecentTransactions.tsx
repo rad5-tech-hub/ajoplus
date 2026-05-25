@@ -2,11 +2,8 @@ import { ArrowUpDown, Clock, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useMemo } from 'react';
 import { useGetTransactions } from '@/app/store/TransactionStore';
-import { useMyPendingPayments } from '@/app/store/PaymentStore';
-import { useMyPendingWithdrawals } from '@/app/store/WithdrawalStore';
-import { usePendingPaymentStore } from '@/app/store/PendingPaymentStore';
 import { formatCurrency } from '@/lib/currency';
-import type { Transaction, TransactionTitle, TransactionStatus } from '@/api/transactions';
+import type { Transaction } from '@/api/transactions';
 
 const TITLE_LABELS: Record<string, string> = {
   withdrawal: 'Withdrawal',
@@ -46,6 +43,8 @@ const TransactionRow = ({ tx }: { tx: Transaction }) => {
   const status = STATUS_META[tx.status] ?? STATUS_META.pending;
   const amount = parseFloat(tx.amount);
 
+  if (Number.isNaN(amount)) return null;
+
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between py-5 border-b border-slate-100 last:border-b-0 gap-3 sm:gap-0">
       <div className="flex items-center gap-4 flex-1 min-w-0">
@@ -77,54 +76,18 @@ const TransactionRow = ({ tx }: { tx: Transaction }) => {
 const RecentTransactions = () => {
   const navigate = useNavigate();
   const { data, isLoading, error, refetch, isFetching } = useGetTransactions();
-  const { data: pendingPaymentsData, isLoading: paymentsLoading } = useMyPendingPayments();
-  const { data: pendingWithdrawalsData, isLoading: withdrawalsLoading } = useMyPendingWithdrawals();
-  const localPending = usePendingPaymentStore((s) => s.pending);
-  const transactions = data?.transactions ?? [];
 
-  const pendingItems = useMemo(() => {
-    const apiPaymentIds = new Set(pendingPaymentsData?.payments.map((p) => p.id) ?? []);
-    const apiWithdrawalIds = new Set(pendingWithdrawalsData?.withdrawals.map((w) => w.id) ?? []);
-    const apiIds = new Set([...apiPaymentIds, ...apiWithdrawalIds]);
+  const transactions = useMemo(() => data?.transactions ?? [], [data]);
 
-    const payments: Transaction[] = (pendingPaymentsData?.payments ?? []).map((p) => ({
-      id: p.id,
-      userId: p.userId,
-      title: p.paymentType as TransactionTitle,
-      amount: p.amountPaid,
-      status: 'pending' as TransactionStatus,
-      createdAt: p.createdAt ?? p.updatedAt ?? '',
-      updatedAt: p.updatedAt ?? p.createdAt ?? '',
-    }));
+  const pendingItems = useMemo(
+    () => transactions.filter((tx) => tx.status === 'pending'),
+    [transactions]
+  );
 
-    const withdrawals: Transaction[] = (pendingWithdrawalsData?.withdrawals ?? []).map((w) => ({
-      id: w.id,
-      userId: w.userId,
-      title: 'withdrawal' as TransactionTitle,
-      amount: w.amount,
-      status: 'pending' as TransactionStatus,
-      createdAt: w.createdAt,
-      updatedAt: w.updatedAt,
-    }));
-
-    const localItems: Transaction[] = localPending
-      .filter((entry) => !apiIds.has(entry.id))
-      .map((entry) => ({
-        id: entry.id,
-        userId: '',
-        title: entry.paymentType as TransactionTitle,
-        amount: entry.amountPaid,
-        status: 'pending' as TransactionStatus,
-        createdAt: entry.submittedAt,
-        updatedAt: entry.submittedAt,
-      }));
-
-    return [...payments, ...withdrawals, ...localItems].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-  }, [pendingPaymentsData, pendingWithdrawalsData, localPending]);
-
-  const isLoadingPending = paymentsLoading || withdrawalsLoading;
+  const confirmedTransactions = useMemo(
+    () => transactions.filter((tx) => tx.status !== 'pending'),
+    [transactions]
+  );
 
   // ── Loading skeleton ───────────────────────────────────────────────────────
   if (isLoading) {
@@ -165,7 +128,7 @@ const RecentTransactions = () => {
   }
 
   // ── Empty state (only when no pending AND no history) ──────────────────────
-  if (transactions.length === 0 && pendingItems.length === 0 && !isLoadingPending) {
+  if (confirmedTransactions.length === 0 && pendingItems.length === 0) {
     return (
       <div className="bg-white border border-brand-200 rounded-3xl p-12 text-center shadow-sm">
         <div className="mx-auto w-16 h-16 bg-slate-100 rounded-3xl flex items-center justify-center mb-6">
@@ -210,23 +173,7 @@ const RecentTransactions = () => {
         </button>
       </div>
 
-      {isLoadingPending ? (
-        <div className="space-y-4 mt-4">
-          {[1, 2].map((i) => (
-            <div key={i} className="flex items-center gap-4 py-4 border-b border-slate-100 animate-pulse">
-              <div className="w-10 h-10 bg-slate-200 rounded-2xl shrink-0" />
-              <div className="flex-1 space-y-2">
-                <div className="h-4 bg-slate-200 rounded-full w-1/3" />
-                <div className="h-3 bg-slate-100 rounded-full w-1/4" />
-              </div>
-              <div className="space-y-2 items-end flex flex-col">
-                <div className="h-5 bg-slate-200 rounded-full w-20" />
-                <div className="h-4 bg-slate-100 rounded-full w-16" />
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : showPendingSection ? (
+      {showPendingSection && (
         <>
           <div className="flex items-center gap-2 mt-6 mb-3">
             <Clock className="w-4 h-4 text-amber-500" />
@@ -240,11 +187,11 @@ const RecentTransactions = () => {
             ))}
           </div>
         </>
-      ) : null}
+      )}
 
-      {transactions.length > 0 && (
+      {confirmedTransactions.length > 0 && (
         <div className="divide-y divide-slate-100">
-          {transactions.map((tx) => (
+          {confirmedTransactions.map((tx) => (
             <TransactionRow key={tx.id} tx={tx} />
           ))}
         </div>

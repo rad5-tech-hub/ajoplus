@@ -14,7 +14,7 @@ const faqs: FAQItem[] = [
   {
     question: "How does the Ajo savings work?",
     answer:
-      "You set a daily amount you want to save, and we collect it automatically. A small commission (5%) is deducted for management. You can withdraw anytime after 30 days.",
+      "You set a daily amount you want to save, and we collect it automatically. A small commission (3.1%) is deducted for management. You can withdraw anytime after 30 days.",
   },
   {
     question: "What happens if I miss a payment?",

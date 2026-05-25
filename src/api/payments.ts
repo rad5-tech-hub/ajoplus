@@ -32,6 +32,8 @@ export interface Payment {
   userId: string;
   userPackageId: string | null;
   productId: string | null;
+  cartId?: string | null;
+  savingPlanId?: string | null;
   amountPaid: string;
   expectedAmount: string;
   receiptUrl: string;
@@ -85,7 +87,7 @@ export const submitPayment = async (payload: SubmitPaymentRequest): Promise<Paym
     if (payload.paymentType) formData.append('paymentType', payload.paymentType);
     if (payload.product) formData.append('product', payload.product);
 
-    const response = await apiCall<ApiResponse<Payment>>('/api/payment/manual-payment', {
+    const response = await apiCall<ApiResponse<{ payment: Payment }>>('/api/payment/manual-payment', {
       method: 'POST',
       body: formData,
       // No Content-Type header → browser sets correct multipart boundary
@@ -95,7 +97,7 @@ export const submitPayment = async (payload: SubmitPaymentRequest): Promise<Paym
       throw new Error(response.message || 'Failed to submit payment');
     }
 
-    return response.data;
+    return response.data.payment;
   } catch (error) {
     console.error('[Submit Payment Error]', error);
     throw error; // Let React Query / global boundary handle
