@@ -28,7 +28,7 @@ const STATUS_META: Record<string, { dot: string; badge: string; label: string }>
   failed: {
     dot: 'bg-red-500',
     badge: 'bg-red-100 text-red-700 border-red-200',
-    label: 'Failed',
+    label: 'Rejected',
   },
 };
 
