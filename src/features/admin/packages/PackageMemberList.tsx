@@ -21,8 +21,8 @@ const CopyField = ({ value, label }: { value: string; label: string }) => {
     setTimeout(() => setCopied(false), 1500);
   };
   return (
-    <div className="bg-slate-50 rounded-xl p-3 cursor-pointer hover:bg-slate-100 transition-colors" onClick={handleCopy} title={`Copy ${label}`}>
-      <div className="flex items-center gap-1.5 mb-0.5">
+    <div className="bg-slate-50 rounded-xl p-3.5 cursor-pointer hover:bg-slate-100 transition-colors" onClick={handleCopy} title={`Copy ${label}`}>
+      <div className="flex items-center gap-1.5 mb-1">
         <p className="text-xs text-slate-400">{label}</p>
         {copied
           ? <Check className="w-3 h-3 text-emerald-500 ml-auto shrink-0" />
@@ -128,7 +128,7 @@ const MemberRow = ({ member }: { member: PackageMember }) => {
         </div>
 
         {/* Finalize button */}
-        {isCompleted && !hasClaim && !isFinalizing && (
+        {isCompleted && !isFinalizing && (
           <div className="mt-3 pt-3 border-t border-slate-100">
             <button onClick={() => finalizePkg(member.id)} disabled={isFinalizing}
               className="w-full bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 disabled:opacity-50 text-white text-sm font-semibold py-2.5 rounded-xl transition-all cursor-pointer shadow-sm">
@@ -162,7 +162,7 @@ const MemberRow = ({ member }: { member: PackageMember }) => {
 
       {/* Expandable details */}
       <div className={`transition-all duration-200 overflow-hidden ${open ? 'max-h-[600px]' : 'max-h-0'}`}>
-        <div className="px-5 pb-4 border-t border-slate-100 pt-3 space-y-4">
+        <div className="px-5 pb-6 border-t border-slate-100 pt-3 space-y-4">
 
           {/* Payment progress */}
           <div>
