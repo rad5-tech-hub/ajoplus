@@ -43,7 +43,8 @@ const EarningsBreakdown = () => {
 
   const breakdown = data?.earningsBreakdown ?? { thisMonth: 0, lastMonth: 0 };
   const totalEarnings = data?.stats.totalEarnings ?? 0;
-  const hasEarnings = totalEarnings > 0;
+  const availableBalance = data?.stats.availableBalance ?? 0;
+  const hasEarnings = availableBalance > 0;
 
   // Scale bars relative to all-time max so they're always proportional
   const max = Math.max(breakdown.thisMonth, breakdown.lastMonth, totalEarnings, 1);
@@ -97,7 +98,7 @@ const EarningsBreakdown = () => {
       <AgentWithdrawModal
         isOpen={isWithdrawOpen}
         onClose={() => setIsWithdrawOpen(false)}
-        availableBalance={totalEarnings}
+        availableBalance={availableBalance}
       />
     </div>
   );

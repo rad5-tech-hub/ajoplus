@@ -1,7 +1,7 @@
 // src/components/ui/AgentWithdrawModal.tsx
 import { useState, useEffect, useRef } from 'react';
 import { X, CheckCircle, AlertCircle } from 'lucide-react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { submitAgentWithdrawal } from '@/api/agent';
 import { formatCurrency } from '@/lib/currency';
 
@@ -18,7 +18,6 @@ const AgentWithdrawModal = ({ isOpen, onClose, availableBalance }: AgentWithdraw
   const [submittedAmount, setSubmittedAmount] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const queryClient = useQueryClient();
   const modalRef = useRef<HTMLDivElement>(null);
 
   const { mutate: submitWithdrawal, isPending } = useMutation({
@@ -27,7 +26,6 @@ const AgentWithdrawModal = ({ isOpen, onClose, availableBalance }: AgentWithdraw
       setSubmittedAmount(parsedAmount);
       setIsSuccess(true);
       setErrorMessage('');
-      queryClient.invalidateQueries({ queryKey: ['agentDashboard'] });
     },
     onError: (err: unknown) => {
       const msg = err instanceof Error ? err.message : 'Withdrawal request failed. Please try again.';
@@ -156,6 +154,7 @@ const AgentWithdrawModal = ({ isOpen, onClose, availableBalance }: AgentWithdraw
                         : 'border-amber-200 focus:border-amber-600'
                       }`}
                       min="100"
+                      max={availableBalance}
                       required
                     />
                   </div>
