@@ -345,16 +345,16 @@ const WithdrawalRequests = () => {
                         </div>
                         <div className="flex items-center gap-4 text-sm">
                           <span className="text-slate-500">Wallet Balance:</span>
-                          <span className="font-medium text-slate-700">{formatCurrency(parseFloat(w.wallet.availableBalance))}</span>
+                          <span className="font-medium text-slate-700">{formatCurrency(parseFloat(w.wallet?.availableBalance ?? '0'))}</span>
                         </div>
                         <div className="flex items-center gap-4 text-sm">
                           <span className="text-slate-500">Commission Paid:</span>
-                          <span className="font-medium text-slate-700">{formatCurrency(parseFloat(w.wallet.commissionPaid))}</span>
+                          <span className="font-medium text-slate-700">{formatCurrency(parseFloat(w.wallet?.commissionPaid ?? '0'))}</span>
                         </div>
                         <div className="flex items-center gap-4 text-sm">
                           <span className="text-slate-500">Date:</span>
                           <span className="font-medium text-slate-700">
-                            {new Date(w.createdAt).toLocaleDateString('en-NG', { day: 'numeric', month: 'short', year: 'numeric' })} • {new Date(w.createdAt).toLocaleTimeString('en-NG', { hour: '2-digit', minute: '2-digit' })}
+                            {new Date(w.createdAt).toLocaleDateString('en-NG', { day: 'numeric', month: 'short', year: 'numeric' })}
                           </span>
                         </div>
                       </div>
@@ -403,11 +403,11 @@ const WithdrawalRequests = () => {
                         </div>
                         <div className="flex items-center gap-4 text-sm">
                           <span className="text-slate-500">Wallet Balance:</span>
-                          <span className="font-medium text-slate-700">{formatCurrency(parseFloat(w.wallet.availableBalance))}</span>
+                          <span className="font-medium text-slate-700">{formatCurrency(parseFloat(w.wallet?.availableBalance ?? '0'))}</span>
                         </div>
                         <div className="flex items-center gap-4 text-sm">
                           <span className="text-slate-500">Commission Paid:</span>
-                          <span className="font-medium text-slate-700">{formatCurrency(parseFloat(w.wallet.commissionPaid))}</span>
+                          <span className="font-medium text-slate-700">{formatCurrency(parseFloat(w.wallet?.commissionPaid ?? '0'))}</span>
                         </div>
                         <div className="flex items-center gap-4 text-sm">
                           <span className="text-slate-500">Date:</span>

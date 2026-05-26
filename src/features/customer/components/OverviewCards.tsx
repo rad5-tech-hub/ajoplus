@@ -1,5 +1,5 @@
 // src/features/customer/dashboard/components/OverviewCards.tsx
-import { PiggyBank, Clock, DollarSign, Package } from 'lucide-react';
+import { PiggyBank, Clock, Coins, Package } from 'lucide-react';
 import { useCustomerDashboard } from '@/app/store/CustomerStore';
 import { formatCurrency } from '@/lib/currency';
 
@@ -65,7 +65,7 @@ const OverviewCards = () => {
               <p className="text-xs text-slate-400 mt-1">Ready to withdraw</p>
             </div>
             <div className="w-10 h-10 bg-brand-100 rounded-2xl flex items-center justify-center shrink-0">
-              <DollarSign className="w-5 h-5 text-brand-600" />
+              <Coins className="w-5 h-5 text-brand-600" />
             </div>
           </div>
           <div className="mt-auto pt-6">

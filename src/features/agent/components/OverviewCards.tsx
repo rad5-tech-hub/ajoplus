@@ -1,6 +1,6 @@
 // src/features/agent/dashboard/components/OverviewCards.tsx
 import { useState } from 'react';
-import { Users, DollarSign, TrendingUp, CheckCircle, Clock, Award, Package, PiggyBank, Receipt, ChevronDown } from 'lucide-react';
+import { Users, Coins, TrendingUp, CheckCircle, Clock, Award, Package, PiggyBank, Receipt, ChevronDown } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getAgentDashboard } from '@/api/agent';
 import { formatCurrency } from '@/lib/currency';
@@ -20,6 +20,9 @@ const OverviewCards = () => {
     totalReferrals: 0,
     totalEarnings: 0,
     commissionPaid: 0,
+    totalWithdrawn: 0,
+    pendingWithdrawalAmount: 0,
+    availableBalance: 0,
     pendingEarnings: 0,
     totalCommission: 0,
     packageEarnings: 0,
@@ -30,8 +33,8 @@ const OverviewCards = () => {
 
   const primaryCards = [
     { label: 'Total Referrals', sub: "Users you've referred", value: stats.totalReferrals.toLocaleString(), icon: Users },
-    { label: 'Total Earnings', sub: 'All-time commission', value: formatCurrency(stats.totalEarnings), icon: DollarSign },
-    { label: 'Earnings Per Referral', sub: 'Average commission', value: formatCurrency(stats.earningsPerReferral), icon: TrendingUp },
+    { label: 'Total Earnings', sub: 'All-time commission', value: formatCurrency(stats.totalEarnings), icon: Coins },
+    { label: 'Available Balance', sub: 'Balance available to withdraw', value: formatCurrency(stats.availableBalance), icon: TrendingUp },
     { label: 'Total Transactions', sub: 'Packages bought by referrals', value: stats.totalTransactions.toLocaleString(), icon: CheckCircle },
   ];
 
@@ -41,6 +44,7 @@ const OverviewCards = () => {
     { label: 'Total Commission', sub: 'Gross commission earned', value: formatCurrency(stats.totalCommission), icon: Award },
     { label: 'Package Earnings', sub: 'From package referrals', value: formatCurrency(stats.packageEarnings), icon: Package },
     { label: 'Savings Earnings', sub: 'From savings referrals', value: formatCurrency(stats.savingEarnings), icon: PiggyBank },
+    { label: 'Earnings Per Referral', sub: 'Average commission per referral', value: formatCurrency(stats.earningsPerReferral), icon: TrendingUp },
   ];
 
   const Card = ({ label, sub, value, icon: Icon }: { label: string; sub: string; value: string; icon: React.ElementType }) => (

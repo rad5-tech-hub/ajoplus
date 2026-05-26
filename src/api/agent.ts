@@ -24,6 +24,9 @@ export interface AgentDashboardData {
 		totalReferrals: number;
 		totalEarnings: number;
 		commissionPaid: number;
+		totalWithdrawn: number;
+		pendingWithdrawalAmount: number;
+		availableBalance: number;
 		pendingEarnings: number;
 		totalCommission: number;
 		packageEarnings: number;

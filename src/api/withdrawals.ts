@@ -229,7 +229,7 @@ export interface RejectedWithdrawal {
 	rejectionReason: string | null;
 	createdAt: string;
 	updatedAt: string;
-	wallet: RejectedWithdrawalWallet;
+	wallet: RejectedWithdrawalWallet | null;
 }
 
 export interface RejectedWithdrawalsResponse {
@@ -291,6 +291,42 @@ export async function rejectAgentWithdrawal(
 	}>(
 		`/api/admin/agent-withdrawals/${withdrawalId}/reject`,
 		{ method: 'PATCH', body: JSON.stringify(body) }
+	);
+	return res.data;
+}
+
+// ── Agent: Agent Transactions (agent-facing) ───────────────────────────────────
+
+export interface AgentTransaction {
+	id: string;
+	userId: string;
+	walletId: string | null;
+	withdrawalType: string;
+	amount: string;
+	description: string;
+	status: 'pending' | 'approved' | 'rejected';
+	rejectionReason: string | null;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface AgentTransactionsResponse {
+	filter: string;
+	summary: {
+		total: number;
+		pending: number;
+		approved: number;
+		rejected: number;
+	};
+	transactions: AgentTransaction[];
+}
+
+export async function getAgentTransactions(
+	status?: 'pending' | 'approved' | 'rejected'
+): Promise<AgentTransactionsResponse> {
+	const params = status ? `?status=${status}` : '';
+	const res = await apiCall<{ data: AgentTransactionsResponse }>(
+		`/api/agents/wallet/withdrawals/transactions${params}`
 	);
 	return res.data;
 }

@@ -19,10 +19,10 @@ const UserPackageCard = ({ pkg }: UserPackageCardProps) => {
 
   return (
     <div
-      onClick={() => !isFinalised && navigate(`/dashboard/customer/package/${pkg.packageId}`)}
+      onClick={() => navigate(`/dashboard/customer/package/${pkg.packageId}`)}
       className={`bg-white border shadow-sm rounded-3xl p-6 transition-all duration-200
         ${isFinalised
-          ? 'border-slate-200 opacity-60 pointer-events-none select-none'
+          ? 'border-slate-200 opacity-60 cursor-pointer hover:shadow-md hover:border-slate-300'
           : 'border-brand-200 hover:shadow-md hover:border-brand-200 cursor-pointer group'
         }`}
     >

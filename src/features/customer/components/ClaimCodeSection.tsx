@@ -9,7 +9,8 @@ interface ClaimCodeSectionProps {
 const ClaimCodeSection = ({ claimCode, claimIssuedAt }: ClaimCodeSectionProps) => {
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = async () => {
+  const handleCopy = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(claimCode);

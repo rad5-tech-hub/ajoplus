@@ -183,3 +183,13 @@ export const useRejectAgentWithdrawal = () => {
 		},
 	});
 };
+
+// ─── Agent Transactions ──────────────────────────────────────────────────────
+
+export const useAgentTransactions = (status?: 'pending' | 'approved' | 'rejected') =>
+	useQuery({
+		queryKey: ['agentTransactions', status],
+		queryFn: () => withdrawalAPI.getAgentTransactions(status),
+		staleTime: 5 * 60 * 1000,
+		retry: smartRetry,
+	});

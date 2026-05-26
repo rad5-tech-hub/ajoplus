@@ -5,6 +5,7 @@ import OverviewCards from '../components/OverviewCards';
 import ReferralCode from '../components/ReferralCode';
 import ReferredUsers from '../components/ReferredUsers';
 import AgentDownlines from '../components/AgentDownlines';
+import AgentTransactions from '../components/AgentTransactions';
 import EarningsBreakdown from '../components/EarningsBreakdown';
 import PerformanceTips from '../components/PerformanceTips';
 import AgentSince from '../components/AgentSince';
@@ -37,6 +38,7 @@ const AgentDashboard = () => {
           <div className="lg:col-span-8 space-y-8">
             <ReferredUsers />
             <AgentDownlines />
+            <AgentTransactions />
           </div>
 
           <div className="lg:col-span-4 space-y-8">
