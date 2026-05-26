@@ -49,6 +49,7 @@ export const useSubmitWithdrawal = () => {
 		mutationFn: (body: withdrawalAPI.WithdrawalRequest) =>
 			withdrawalAPI.requestWithdrawal(body),
 		onSuccess: () => {
+			qc.invalidateQueries({ queryKey: ['myPendingWithdrawals'] });
 			qc.invalidateQueries({ queryKey: ['wallet'] });
 			qc.invalidateQueries({ queryKey: ['transactions'] });
 		},
@@ -118,6 +119,7 @@ export const useApproveWithdrawal = () => {
 	return useMutation({
 		mutationFn: (id: string) => withdrawalAPI.approveWithdrawal(id),
 		onSuccess: () => {
+			qc.invalidateQueries({ queryKey: ['myPendingWithdrawals'] });
 			qc.invalidateQueries({ queryKey: ['admin', 'withdrawals'] });
 			qc.invalidateQueries({ queryKey: ['admin', 'withdrawals', 'approved'] });
 			qc.invalidateQueries({ queryKey: ['withdrawals', 'me', 'approved'] });
@@ -134,6 +136,7 @@ export const useRejectWithdrawal = () => {
 		mutationFn: ({ id, reason }: { id: string; reason: string }) =>
 			withdrawalAPI.rejectWithdrawal(id, { rejectionReason: reason }),
 		onSuccess: () => {
+			qc.invalidateQueries({ queryKey: ['myPendingWithdrawals'] });
 			qc.invalidateQueries({ queryKey: ['admin', 'withdrawals'] });
 			qc.invalidateQueries({ queryKey: ['admin', 'withdrawals', 'rejected'] });
 			qc.invalidateQueries({ queryKey: ['withdrawals', 'me', 'rejected'] });

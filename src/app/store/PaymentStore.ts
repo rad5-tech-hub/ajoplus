@@ -44,6 +44,7 @@ export const useSubmitPayment = () => {
     mutationFn: (payload: paymentAPI.SubmitPaymentRequest) =>
       paymentAPI.submitPayment(payload),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myPendingPayments'] });
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
       queryClient.invalidateQueries({ queryKey: ['userPackages'] });
       queryClient.invalidateQueries({ queryKey: ['customerDashboard'] });
@@ -118,6 +119,7 @@ export const useApprovePayment = () => {
   return useMutation({
     mutationFn: (paymentId: string) => paymentAPI.approvePayment(paymentId),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myPendingPayments'] });
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       queryClient.invalidateQueries({ queryKey: ['userPackages'] });
       queryClient.invalidateQueries({ queryKey: ['payment'] });
@@ -160,6 +162,7 @@ export const useRejectPayment = () => {
       rejectionReason: string;
     }) => paymentAPI.rejectPayment(paymentId, { rejectionReason }),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myPendingPayments'] });
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       queryClient.invalidateQueries({ queryKey: ['userPackages'] });
       queryClient.invalidateQueries({ queryKey: ['wallet'] });

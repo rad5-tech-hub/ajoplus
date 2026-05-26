@@ -2,8 +2,10 @@ import { ArrowUpDown, Clock, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useMemo } from 'react';
 import { useGetTransactions } from '@/app/store/TransactionStore';
+import { useMyPendingPayments } from '@/app/store/PaymentStore';
+import { useMyPendingWithdrawals } from '@/app/store/WithdrawalStore';
 import { formatCurrency } from '@/lib/currency';
-import type { Transaction } from '@/api/transactions';
+import type { Transaction, TransactionTitle, TransactionStatus } from '@/api/transactions';
 
 const TITLE_LABELS: Record<string, string> = {
   withdrawal: 'Withdrawal',
@@ -76,21 +78,48 @@ const TransactionRow = ({ tx }: { tx: Transaction }) => {
 const RecentTransactions = () => {
   const navigate = useNavigate();
   const { data, isLoading, error, refetch, isFetching } = useGetTransactions();
+  const { data: pendingPaymentsData, isLoading: paymentsLoading } = useMyPendingPayments();
+  const { data: pendingWithdrawalsData, isLoading: withdrawalsLoading } = useMyPendingWithdrawals();
 
   const transactions = useMemo(() => data?.transactions ?? [], [data]);
 
-  const pendingItems = useMemo(
-    () => transactions.filter((tx) => tx.status === 'pending'),
-    [transactions]
-  );
+  const pendingItems = useMemo(() => {
+    const payments: Transaction[] = (pendingPaymentsData?.payments ?? []).map((p) => ({
+      id: p.id,
+      userId: p.userId,
+      title: p.paymentType as TransactionTitle,
+      amount: p.amountPaid,
+      status: 'pending' as TransactionStatus,
+      createdAt: p.createdAt ?? p.updatedAt ?? '',
+      updatedAt: p.updatedAt ?? p.createdAt ?? '',
+    }));
+
+    const withdrawals: Transaction[] = (pendingWithdrawalsData?.withdrawals ?? []).map((w) => ({
+      id: w.id,
+      userId: w.userId,
+      title: 'withdrawal' as TransactionTitle,
+      amount: w.amount,
+      status: 'pending' as TransactionStatus,
+      createdAt: w.createdAt,
+      updatedAt: w.updatedAt,
+    }));
+
+    return [...payments, ...withdrawals].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }, [pendingPaymentsData, pendingWithdrawalsData]);
+
+  const pendingIds = useMemo(() => new Set(pendingItems.map((t) => t.id)), [pendingItems]);
 
   const confirmedTransactions = useMemo(
-    () => transactions.filter((tx) => tx.status !== 'pending'),
-    [transactions]
+    () => transactions.filter((t) => t.status !== 'pending' && !pendingIds.has(t.id)),
+    [transactions, pendingIds]
   );
 
+  const isLoadingPending = paymentsLoading || withdrawalsLoading;
+
   // ── Loading skeleton ───────────────────────────────────────────────────────
-  if (isLoading) {
+  if (isLoading && !pendingItems.length) {
     return (
       <div className="bg-white border border-brand-200 rounded-3xl p-6 shadow-sm space-y-4">
         <div className="h-5 bg-slate-200 rounded-full w-1/3 animate-pulse" />
@@ -112,7 +141,7 @@ const RecentTransactions = () => {
   }
 
   // ── Error state ────────────────────────────────────────────────────────────
-  if (error) {
+  if (error && !pendingItems.length) {
     return (
       <div className="bg-white border border-red-100 rounded-3xl p-8 text-center shadow-sm">
         <p className="text-red-600 font-medium mb-2">Failed to load transactions</p>
@@ -128,7 +157,7 @@ const RecentTransactions = () => {
   }
 
   // ── Empty state (only when no pending AND no history) ──────────────────────
-  if (confirmedTransactions.length === 0 && pendingItems.length === 0) {
+  if (confirmedTransactions.length === 0 && pendingItems.length === 0 && !isLoadingPending) {
     return (
       <div className="bg-white border border-brand-200 rounded-3xl p-12 text-center shadow-sm">
         <div className="mx-auto w-16 h-16 bg-slate-100 rounded-3xl flex items-center justify-center mb-6">
@@ -159,7 +188,7 @@ const RecentTransactions = () => {
           <h3 className="font-semibold text-brand-900 text-base sm:text-lg">Recent Transactions</h3>
           <p className="text-xs text-slate-400 mt-0.5">
             {showPendingSection
-              ? `${data?.count ?? 0} total · ${pendingItems.length} pending`
+              ? `${(data?.count ?? 0) + pendingItems.length} total · ${pendingItems.length} pending`
               : `${data?.count ?? 0} total`
             }
           </p>
