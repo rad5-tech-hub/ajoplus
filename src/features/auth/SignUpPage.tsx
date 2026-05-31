@@ -750,7 +750,7 @@ const SignupPage = () => {
                   />
                   <span className="text-slate-600 leading-relaxed">
                     I agree to the{' '}
-                    <span className="text-brand-600 font-medium">Terms of Service</span> and{' '}
+                    <Link to="/terms" className="text-brand-600 font-medium hover:underline">Terms of Service</Link> and{' '}
                     <span className="text-brand-600 font-medium">Privacy Policy</span>
                   </span>
                 </label>

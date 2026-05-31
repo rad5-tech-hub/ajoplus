@@ -1,6 +1,7 @@
 // src/features/agent/dashboard/components/ReferredUsers.tsx
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Users } from 'lucide-react';
+import { Users, Search } from 'lucide-react';
 import { getAgentDashboard, type ReferredUser } from '@/api/agent';
 import { formatCurrency } from '@/lib/currency';
 
@@ -101,8 +102,17 @@ const ReferredUsers = () => {
     queryFn: getAgentDashboard,
     staleTime: 5 * 60 * 1000,
   });
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const users = data?.referredUsers ?? [];
+  const users = useMemo(() => data?.referredUsers ?? [], [data]);
+  const filteredUsers = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return users;
+    return users.filter((u: ReferredUser) =>
+      u.fullName.toLowerCase().includes(q) ||
+      u.email.toLowerCase().includes(q)
+    );
+  }, [users, searchQuery]);
 
   return (
     <div className="bg-white border border-slate-100 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
@@ -116,12 +126,28 @@ const ReferredUsers = () => {
         )}
       </div>
 
+      {/* ── Search Bar ── */}
+      {!isLoading && users.length > 0 && (
+        <div className="relative mb-5">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by name or email..."
+            className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+          />
+        </div>
+      )}
+
       <div className="space-y-0">
         {isLoading
           ? Array.from({ length: 4 }).map((_, i) => <SkeletonRow key={i} />)
           : users.length === 0
             ? <EmptyState />
-            : users.map((user) => <UserRow key={user.id} user={user} />)
+            : filteredUsers.length === 0
+              ? <div className="py-8 text-center text-slate-400 text-sm font-medium">No referred users match your search.</div>
+              : filteredUsers.map((user) => <UserRow key={user.id} user={user} />)
         }
       </div>
     </div>

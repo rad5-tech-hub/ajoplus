@@ -11,8 +11,9 @@ import WithdrawalRequests from '../components/WithdrawalRequests';
 import PlatformSettings from '../components/PlatformSettings';
 import BannerAdManager from '../components/BannerAdManager';
 import UserManagement from '../components/UserManagement';
+import CreateAdmin from '../components/CreateAdmin';
 
-type Tab = 'packages' | 'products' | 'approvals' | 'regFees' | 'banner' | 'withdrawals' | 'settings' | 'users';
+type Tab = 'packages' | 'products' | 'approvals' | 'regFees' | 'banner' | 'withdrawals' | 'settings' | 'users' | 'createAdmin';
 
 const TABS: { key: Tab; label: string; shortLabel: string }[] = [
   { key: 'packages', label: 'Package Management', shortLabel: 'Packages' },
@@ -23,6 +24,7 @@ const TABS: { key: Tab; label: string; shortLabel: string }[] = [
   // { key: 'expiredRegs', label: 'Expired Registrations', shortLabel: 'Expired' },
   { key: 'banner', label: 'Promotional Banner', shortLabel: 'Banner' },
   { key: 'withdrawals', label: 'Withdrawals', shortLabel: 'Withdrawals' },
+  { key: 'createAdmin', label: 'Create Admin', shortLabel: 'Admin' },
   { key: 'settings', label: 'Settings', shortLabel: 'Settings' },
 ];
 
@@ -93,6 +95,7 @@ const AdminDashboard = () => {
           {activeTab === 'withdrawals' && <WithdrawalRequests />}
           {activeTab === 'settings' && <PlatformSettings />}
           {activeTab === 'users' && <UserManagement />}
+          {activeTab === 'createAdmin' && <CreateAdmin />}
         </div>
 
       </div>

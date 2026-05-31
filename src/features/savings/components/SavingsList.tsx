@@ -1,4 +1,5 @@
-import { PiggyBank } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { PiggyBank, Search } from 'lucide-react';
 import SavingsCard from './SavingsCard';
 import type { SavingsPlan } from '../types';
 
@@ -10,6 +11,16 @@ interface SavingsListProps {
 }
 
 const SavingsList = ({ plans, isLoading, onSetupClick, onWithdraw }: SavingsListProps) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredPlans = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return plans;
+    return plans.filter((p) =>
+      p.name.toLowerCase().includes(q) ||
+      p.status.toLowerCase().includes(q)
+    );
+  }, [plans, searchQuery]);
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -44,10 +55,31 @@ const SavingsList = ({ plans, isLoading, onSetupClick, onWithdraw }: SavingsList
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {plans.map((plan) => (
-        <SavingsCard key={plan.id} plan={plan} onWithdraw={onWithdraw} />
-      ))}
+    <div>
+      {/* ── Search Bar ── */}
+      {plans.length > 0 && (
+        <div className="relative mb-4">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by plan name or status..."
+            className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+          />
+        </div>
+      )}
+      {filteredPlans.length === 0 ? (
+        <div className="bg-white border border-slate-100 rounded-3xl p-8 text-center">
+          <p className="text-slate-400 font-medium text-sm">No savings plans match your search.</p>
+        </div>
+      ) : (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {filteredPlans.map((plan) => (
+          <SavingsCard key={plan.id} plan={plan} onWithdraw={onWithdraw} />
+        ))}
+      </div>
+      )}
     </div>
   );
 };

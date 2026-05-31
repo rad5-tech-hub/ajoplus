@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ChevronLeft, Eye } from 'lucide-react';
+import { ChevronLeft, Eye, Search } from 'lucide-react';
 import { useGetProductTransactions } from '@/app/store/SavingsAdminStore';
 import { formatCurrency } from '@/lib/currency';
 import ReceiptPreviewModal from '@/components/ui/ReceiptPreviewModal';
@@ -25,8 +25,17 @@ const ProductTransactions = () => {
 	const { data, isLoading, isError, error, refetch } = useGetProductTransactions(productId ?? '');
 	const [showReceipt, setShowReceipt] = useState(false);
 	const [receiptUrl, setReceiptUrl] = useState('');
+	const [searchQuery, setSearchQuery] = useState('');
 
-	const transactions = data?.transactions ?? [];
+	const transactions = useMemo(() => data?.transactions ?? [], [data]);
+	const filteredTransactions = useMemo(() => {
+		const q = searchQuery.toLowerCase().trim();
+		if (!q) return transactions;
+		return transactions.filter((t: { user: { fullName: string; email: string } }) =>
+			t.user.fullName.toLowerCase().includes(q) ||
+			t.user.email.toLowerCase().includes(q)
+		);
+	}, [transactions, searchQuery]);
 	const transactionCount = data?.transactionCount ?? 0;
 	const totalRevenue = data?.totalRevenue ?? 0;
 	const productName = data?.product.name ?? 'Product Transactions';
@@ -93,7 +102,18 @@ const ProductTransactions = () => {
 				)}
 
 				{!isLoading && !isError && transactions.length > 0 && (
-					<div className="overflow-hidden rounded-3xl border border-brand-200 bg-white">
+					<>
+						<div className="relative mb-4">
+							<Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+							<input
+								type="text"
+								value={searchQuery}
+								onChange={(e) => setSearchQuery(e.target.value)}
+								placeholder="Search by customer name or email..."
+								className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+							/>
+						</div>
+						<div className="overflow-hidden rounded-3xl border border-brand-200 bg-white">
 						<table className="w-full text-left">
 							<thead className="bg-slate-50">
 								<tr>
@@ -106,7 +126,13 @@ const ProductTransactions = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{transactions.map((transaction) => (
+								{filteredTransactions.length === 0 ? (
+									<tr>
+										<td colSpan={6} className="py-16 text-center">
+											<p className="text-slate-400 font-medium text-sm">No transactions match your search.</p>
+										</td>
+									</tr>
+								) : filteredTransactions.map((transaction) => (
 									<tr key={transaction.id} className="border-t border-slate-100 hover:bg-slate-50 transition-colors">
 										<td className="py-5 px-5">
 											<div className="flex items-center gap-3">
@@ -145,7 +171,7 @@ const ProductTransactions = () => {
 							</tbody>
 						</table>
 					</div>
-				)}
+				</>)}
 			</div>
 
 			<ReceiptPreviewModal isOpen={showReceipt} onClose={() => setShowReceipt(false)} imageUrl={receiptUrl} />

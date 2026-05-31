@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, Edit2, AlertTriangle, PackageSearch } from 'lucide-react';
+import { Trash2, Edit2, AlertTriangle, PackageSearch, Search } from 'lucide-react';
 import CreateProductModal from '@/components/ui/CreateProductModal';
 import CategoryManagement from '@/components/ui/CategoryManagement';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -84,6 +84,7 @@ const ProductManagement = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const queryClient = useQueryClient();
 
@@ -93,7 +94,16 @@ const ProductManagement = () => {
     staleTime: 5 * 60 * 1000,
   });
 
-  const products = productsResp?.products ?? [];
+  const products = useMemo(() => productsResp?.products ?? [], [productsResp]);
+  const filteredProducts = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return products;
+    return products.filter((p: APIProduct) =>
+      p.name.toLowerCase().includes(q) ||
+      (p.description ?? '').toLowerCase().includes(q) ||
+      (p.category?.name ?? '').toLowerCase().includes(q)
+    );
+  }, [products, searchQuery]);
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteProduct(id),
@@ -134,6 +144,20 @@ const ProductManagement = () => {
         </div>
       </div>
 
+      {/* ── Search Bar ── */}
+      {!isLoading && products.length > 0 && (
+        <div className="relative mb-4 sm:mb-6">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search products by name, description or category..."
+            className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+          />
+        </div>
+      )}
+
       {/* ── Desktop Table (md+) ── */}
       <div className="hidden md:block bg-white rounded-3xl overflow-hidden border border-slate-100">
         <table className="w-full">
@@ -151,7 +175,15 @@ const ProductManagement = () => {
             {/* ── Skeleton rows while loading ── */}
             {isLoading
               ? Array.from({ length: SKELETON_COUNT }).map((_, i) => <TableRowSkeleton key={i} />)
-              : products.map((product: APIProduct) => (
+              : filteredProducts.length === 0
+                ? (
+                  <tr>
+                    <td colSpan={6} className="py-16 text-center">
+                      <p className="text-slate-400 font-medium text-sm">No products match your search.</p>
+                    </td>
+                  </tr>
+                )
+                : filteredProducts.map((product: APIProduct) => (
                 <tr
                   key={product.id}
                   onClick={() => handleRowClick(product.id)}
@@ -234,7 +266,13 @@ const ProductManagement = () => {
           ? Array.from({ length: SKELETON_COUNT }).map((_, i) => <CardSkeleton key={i} />)
           : products.length === 0
             ? <EmptyState onCreateClick={() => setIsCreateModalOpen(true)} />
-            : products.map((product: APIProduct) => (
+            : filteredProducts.length === 0
+              ? (
+                <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center">
+                  <p className="text-slate-400 font-medium text-sm">No products match your search.</p>
+                </div>
+              )
+              : filteredProducts.map((product: APIProduct) => (
               <div
                 key={product.id}
                 onClick={() => handleRowClick(product.id)}

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { X, Plus, Trash2, Tag } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { X, Plus, Trash2, Tag, Search } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getCategories, type Category, createCategory, deleteCategory, } from '@/api/categories';
 
@@ -44,6 +44,7 @@ const CategoryManagement = ({ isOpen, onClose }: CategoryManagementProps) => {
   const [newCategory, setNewCategory] = useState({ name: '', description: '' });
   const [isAdding, setIsAdding] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const { data: categories = [], isLoading } = useQuery({
     queryKey: ['categories'],
@@ -51,6 +52,15 @@ const CategoryManagement = ({ isOpen, onClose }: CategoryManagementProps) => {
     staleTime: 15 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
   });
+
+  const filteredCategories = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return categories;
+    return categories.filter((c) =>
+      c.name.toLowerCase().includes(q) ||
+      c.description.toLowerCase().includes(q)
+    );
+  }, [categories, searchQuery]);
   /* ── Optimistic add (replace with real POST endpoint when ready) ── */
 
   /* ── Add mutation — calls the real POST endpoint ── */
@@ -128,6 +138,20 @@ const CategoryManagement = ({ isOpen, onClose }: CategoryManagementProps) => {
         {/* Content */}
         <div className="flex-1 overflow-auto p-5 md:p-6 space-y-5">
 
+          {/* ── Search Bar ── */}
+          {categories.length > 0 && (
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search categories by name or description..."
+                className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+              />
+            </div>
+          )}
+
           {/* Add new — only show the trigger button when not in adding mode and there are existing categories */}
           {!isAdding && categories.length > 0 && (
             <button
@@ -187,8 +211,12 @@ const CategoryManagement = ({ isOpen, onClose }: CategoryManagementProps) => {
               Array.from({ length: 4 }).map((_, i) => <SkeletonRow key={i} />)
             ) : categories.length === 0 && !isAdding ? (
               <EmptyState onAdd={() => setIsAdding(true)} />
+            ) : filteredCategories.length === 0 && searchQuery.trim() ? (
+              <div className="bg-white border border-slate-100 rounded-2xl p-8 text-center">
+                <p className="text-slate-400 font-medium text-sm">No categories match your search.</p>
+              </div>
             ) : (
-              categories.map((category) => (
+              filteredCategories.map((category) => (
                 <div
                   key={category.id}
                   className="bg-white border border-brand-200 rounded-2xl p-4 flex items-start justify-between hover:border-slate-300 transition-colors"

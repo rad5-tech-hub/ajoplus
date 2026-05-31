@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, PiggyBank, ArrowLeft } from 'lucide-react';
+import { Plus, PiggyBank, ArrowLeft, Search } from 'lucide-react';
 import { useCreateSavingPlan } from '@/app/store/SavingPlanStore';
 import { useSavingsPlans } from '@/features/savings/hooks/useSavings';
 import { formatCurrency } from '@/lib/currency';
@@ -13,6 +13,16 @@ const SavingsManagement = () => {
   const [showCreate, setShowCreate] = useState(false);
   const [withdrawPlanId, setWithdrawPlanId] = useState<string | null>(null);
   const [detailId, setDetailId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredPlans = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return plans;
+    return plans.filter((p: { name: string; status: string }) =>
+      p.name.toLowerCase().includes(q) ||
+      p.status.toLowerCase().includes(q)
+    );
+  }, [plans, searchQuery]);
 
   if (isLoading) {
     return (
@@ -66,7 +76,24 @@ const SavingsManagement = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {plans.map((plan) => (
+            {/* ── Search Bar ── */}
+            {plans.length > 0 && (
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by plan name or status..."
+                  className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+                />
+              </div>
+            )}
+            {filteredPlans.length === 0 ? (
+              <div className="bg-white border border-slate-100 rounded-3xl p-8 text-center">
+                <p className="text-slate-400 font-medium text-sm">No savings plans match your search.</p>
+              </div>
+            ) : filteredPlans.map((plan) => (
               <div
                 key={plan.id}
                 onClick={() => handleCardClick(plan.id)}

@@ -1,6 +1,7 @@
 // src/features/agent/dashboard/components/AgentDownlines.tsx
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Users } from 'lucide-react';
+import { Users, Search } from 'lucide-react';
 import { getAgentDashboard, fetchAgentDownline, type AgentDownlineCustomer } from '@/api/agent';
 
 function getInitials(name: string) {
@@ -63,6 +64,7 @@ const AgentDownlines = () => {
   });
 
   const referralCode = dashboard?.referral?.code;
+  const [searchQuery, setSearchQuery] = useState('');
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['agentDownline', referralCode],
@@ -72,7 +74,15 @@ const AgentDownlines = () => {
   });
 
   const totalCustomers = data?.totalCustomers ?? 0;
-  const customers = data?.customers ?? [];
+  const customers = useMemo(() => data?.customers ?? [], [data]);
+  const filteredCustomers = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return customers;
+    return customers.filter((c: AgentDownlineCustomer) =>
+      c.fullName.toLowerCase().includes(q) ||
+      c.email.toLowerCase().includes(q)
+    );
+  }, [customers, searchQuery]);
 
   return (
     <div className="bg-white border border-slate-100 rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8">
@@ -114,11 +124,28 @@ const AgentDownlines = () => {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {customers.map((customer) => (
-            <CustomerCard key={customer.id} customer={customer} />
-          ))}
-        </div>
+        <>
+          {/* ── Search Bar ── */}
+          <div className="relative mb-4">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by name or email..."
+              className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+            />
+          </div>
+        {filteredCustomers.length === 0 ? (
+          <div className="py-8 text-center text-slate-400 text-sm font-medium">No downlines match your search.</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredCustomers.map((customer) => (
+              <CustomerCard key={customer.id} customer={customer} />
+            ))}
+          </div>
+        )}
+        </>
       )}
     </div>
   );

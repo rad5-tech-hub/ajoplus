@@ -1,5 +1,5 @@
-import { Clock, RefreshCw } from 'lucide-react';
-import { useMemo } from 'react';
+import { Clock, RefreshCw, Search } from 'lucide-react';
+import { useState, useMemo } from 'react';
 import { useAgentTransactions } from '@/app/store/WithdrawalStore';
 import { formatCurrency } from '@/lib/currency';
 import type { AgentTransaction } from '@/api/withdrawals';
@@ -63,6 +63,7 @@ const TransactionRow = ({ tx }: { tx: AgentTransaction }) => {
 
 const AgentTransactions = () => {
   const { data, isLoading, error, refetch, isFetching } = useAgentTransactions();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const allTransactions = useMemo(() => data?.transactions ?? [], [data]);
 
@@ -77,6 +78,18 @@ const AgentTransactions = () => {
   );
 
   const summary = data?.summary;
+
+  const filteredItems = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return { pending: pendingItems, confirmed: confirmedTransactions };
+    const filterFn = (tx: AgentTransaction) =>
+      tx.status.toLowerCase().includes(q) ||
+      tx.amount.toString().includes(q);
+    return {
+      pending: pendingItems.filter(filterFn),
+      confirmed: confirmedTransactions.filter(filterFn),
+    };
+  }, [pendingItems, confirmedTransactions, searchQuery]);
 
   // ── Loading skeleton ───────────────────────────────────────────────────────
   if (isLoading) {
@@ -116,24 +129,9 @@ const AgentTransactions = () => {
     );
   }
 
-  // ── Empty state ────────────────────────────────────────────────────────────
-  if (allTransactions.length === 0) {
-    return (
-      <div className="bg-white border border-brand-200 rounded-3xl p-12 text-center shadow-sm">
-        <div className="mx-auto w-16 h-16 bg-slate-100 rounded-3xl flex items-center justify-center mb-6">
-          <Clock className="w-9 h-9 text-slate-400" />
-        </div>
-        <h3 className="text-xl font-semibold text-brand-900 mb-3">No Transactions Yet</h3>
-        <p className="text-slate-500 max-w-xs mx-auto mb-8 leading-relaxed text-sm">
-          Your commission withdrawal transactions will appear here once you start earning.
-        </p>
-      </div>
-    );
-  }
-
   const showPendingSection = pendingItems.length > 0;
 
-  // ── Transactions list ──────────────────────────────────────────────────────
+  // ── Empty / Transactions list ──────────────────────────────────────────────
   return (
     <div className="bg-white border border-brand-200 rounded-3xl shadow-sm p-5 sm:p-6 w-full">
       <div className="flex items-center justify-between mb-2">
@@ -155,28 +153,62 @@ const AgentTransactions = () => {
         </button>
       </div>
 
-      {showPendingSection && (
+      {allTransactions.length === 0 ? (
+        <div className="py-12 text-center">
+          <div className="mx-auto w-16 h-16 bg-slate-100 rounded-3xl flex items-center justify-center mb-6">
+            <Clock className="w-9 h-9 text-slate-400" />
+          </div>
+          <h3 className="text-xl font-semibold text-brand-900 mb-3">No Transactions Yet</h3>
+          <p className="text-slate-500 max-w-xs mx-auto mb-8 leading-relaxed text-sm">
+            Your commission withdrawal transactions will appear here once you start earning.
+          </p>
+        </div>
+      ) : (
+        <>
+      {/* ── Search Bar ── */}
+      <div className="relative mt-4 mb-3">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search by status or amount..."
+          className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+        />
+      </div>
+
+      {filteredItems.pending.length === 0 && filteredItems.confirmed.length === 0 && searchQuery.trim() ? (
+        <div className="py-12 text-center">
+          <p className="text-slate-400 font-medium text-sm">No transactions match your search.</p>
+        </div>
+      ) : (
+        <>
+      {showPendingSection && filteredItems.pending.length > 0 && (
         <>
           <div className="flex items-center gap-2 mt-6 mb-3">
             <Clock className="w-4 h-4 text-amber-500" />
             <span className="text-sm font-semibold text-slate-600">
-              Awaiting Approval ({pendingItems.length})
+              Awaiting Approval ({filteredItems.pending.length})
             </span>
           </div>
           <div className="divide-y divide-slate-100">
-            {pendingItems.map((tx) => (
+            {filteredItems.pending.map((tx) => (
               <TransactionRow key={tx.id} tx={tx} />
             ))}
           </div>
         </>
       )}
 
-      {confirmedTransactions.length > 0 && (
+      {filteredItems.confirmed.length > 0 && (
         <div className="divide-y divide-slate-100">
-          {confirmedTransactions.map((tx) => (
+          {filteredItems.confirmed.map((tx) => (
             <TransactionRow key={tx.id} tx={tx} />
           ))}
         </div>
+      )}
+        </>
+      )}
+        </>
       )}
     </div>
   );

@@ -3,7 +3,7 @@ import {
   Users, X, ChevronRight, Mail, Phone, MapPin, Banknote,
   Building2, CreditCard, UserCircle, Hash, Clock,
   ShieldCheck, AlertTriangle, UserCheck, Gift, ExternalLink,
-  Filter, Copy, Check,
+  Filter, Copy, Check, Search,
 } from 'lucide-react';
 import { useAdminUsers } from '@/app/store/AdminStore';
 import type { AdminUser } from '@/api/adminUsers';
@@ -275,24 +275,25 @@ const UserManagement = () => {
   const [roleFilter, setRoleFilter] = useState<RoleFilter>('all');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const { data, isLoading, isError, refetch } = useAdminUsers(page, 10);
+  const allUsers = useMemo(() => data?.users ?? [], [data]);
   const meta = data?.meta;
 
   const filteredUsers = useMemo(() => {
-    const users = data?.users ?? [];
-    return users.filter((user) => {
+    const q = searchQuery.toLowerCase().trim();
+    return allUsers.filter((user) => {
       if (roleFilter !== 'all' && user.role !== roleFilter) return false;
-
       if (statusFilter === 'active' && user.accountStatus !== 'active') return false;
       if (statusFilter === 'expired') {
         const expiryDate = getEffectiveExpiry(user);
         if (expiryDate >= new Date()) return false;
       }
-
+      if (q && !user.fullName.toLowerCase().includes(q) && !user.email.toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [data?.users, roleFilter, statusFilter]);
+  }, [allUsers, roleFilter, statusFilter, searchQuery]);
 
   const handleRoleFilterChange = (filter: RoleFilter) => {
     setRoleFilter(filter);
@@ -424,15 +425,44 @@ const UserManagement = () => {
         </div>
       </div>
 
+      {/* ── Search Bar ── */}
+      {allUsers.length > 0 && (
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by name or email..."
+            className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+          />
+        </div>
+      )}
+
       {/* ── Cards / Empty ── */}
-      {filteredUsers.length === 0 ? (
+      {allUsers.length === 0 ? (
         <div className="bg-white rounded-3xl border border-slate-100 flex flex-col items-center justify-center py-24 px-6 text-center">
           <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-brand-50 to-brand-100 flex items-center justify-center mb-5 shadow-sm">
             <Users className="w-10 h-10 text-brand-400" />
           </div>
-          <h3 className="text-xl font-bold text-slate-800 mb-2">No users found</h3>
+          <h3 className="text-xl font-bold text-slate-800 mb-2">No users yet</h3>
           <p className="text-slate-500 text-sm max-w-xs">
-            No users match your current filter criteria. Try adjusting the filters above.
+            There are no users registered on the platform yet. Users will appear here once they sign up.
+          </p>
+        </div>
+      ) : filteredUsers.length === 0 ? (
+        <div className="bg-white rounded-3xl border border-slate-100 flex flex-col items-center justify-center py-24 px-6 text-center">
+          <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-brand-50 to-brand-100 flex items-center justify-center mb-5 shadow-sm">
+            <Users className="w-10 h-10 text-brand-400" />
+          </div>
+          <h3 className="text-xl font-bold text-slate-800 mb-2">
+            {searchQuery ? 'No users match your search' : 'No users found'}
+          </h3>
+          <p className="text-slate-500 text-sm max-w-xs">
+            {searchQuery
+              ? 'Try adjusting your search term.'
+              : 'No users match your current filter criteria. Try adjusting the filters above.'
+            }
           </p>
         </div>
       ) : (

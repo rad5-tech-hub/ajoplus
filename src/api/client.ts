@@ -97,16 +97,16 @@ export async function apiCall<T>(
 */
 export function getAuthToken(): string | null {
   try {
-    const auth = localStorage.getItem('AbaGold-auth-storage');
-    if (auth) {
-      const parsed = JSON.parse(auth);
+    const adminAuth = localStorage.getItem('AbaGold-admin-auth-storage');
+    if (adminAuth) {
+      const parsed = JSON.parse(adminAuth);
       const token = parsed.state?.token;
       if (token) return token;
     }
 
-    const adminAuth = localStorage.getItem('AbaGold-admin-auth-storage');
-    if (adminAuth) {
-      const parsed = JSON.parse(adminAuth);
+    const auth = localStorage.getItem('AbaGold-auth-storage');
+    if (auth) {
+      const parsed = JSON.parse(auth);
       const token = parsed.state?.token;
       if (token) return token;
     }

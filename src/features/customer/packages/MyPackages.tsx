@@ -1,4 +1,5 @@
-import { Package as PackageIcon, ChevronRight } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { Package as PackageIcon, ChevronRight, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useUserPackages } from '@/app/store/PackageStore';
 import UserPackageCard from '../components/UserPackageCard';
@@ -6,13 +7,27 @@ import UserPackageCard from '../components/UserPackageCard';
 const MyPackages = () => {
   const navigate = useNavigate();
   const { data: userPackages, isLoading, error } = useUserPackages();
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const sortedPackages = [...(userPackages ?? [])].sort((a, b) => {
-    const order = { active: 0, pending: 1, completed: 2, inactive: 3, suspended: 4 };
-    const statusDiff = (order[a.status] ?? 1) - (order[b.status] ?? 1);
-    if (statusDiff !== 0) return statusDiff;
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
+  const sortedPackages = useMemo(() => {
+    const pkgs = userPackages ?? [];
+    return [...pkgs].sort((a, b) => {
+      const order = { active: 0, pending: 1, completed: 2, inactive: 3, suspended: 4 };
+      const statusDiff = (order[a.status] ?? 1) - (order[b.status] ?? 1);
+      if (statusDiff !== 0) return statusDiff;
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+  }, [userPackages]);
+
+  const filteredPackages = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return sortedPackages;
+    return sortedPackages.filter((p) =>
+      p.package.name.toLowerCase().includes(q) ||
+      p.status.toLowerCase().includes(q) ||
+      p.package.description?.toLowerCase().includes(q)
+    );
+  }, [sortedPackages, searchQuery]);
 
   if (isLoading) {
     return (
@@ -69,9 +84,26 @@ const MyPackages = () => {
 
   return (
     <div className="space-y-6">
-      {sortedPackages.map((pkg) => (
-        <UserPackageCard key={pkg.id} pkg={pkg} />
-      ))}
+      {/* ── Search Bar ── */}
+      <div className="relative">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search by package name or status..."
+          className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+        />
+      </div>
+      {filteredPackages.length === 0 ? (
+        <div className="bg-white border border-slate-100 rounded-3xl p-8 text-center">
+          <p className="text-slate-400 font-medium text-sm">No packages match your search.</p>
+        </div>
+      ) : (
+        filteredPackages.map((pkg) => (
+          <UserPackageCard key={pkg.id} pkg={pkg} />
+        ))
+      )}
     </div>
   );
 };

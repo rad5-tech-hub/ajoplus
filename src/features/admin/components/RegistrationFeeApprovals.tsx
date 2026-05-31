@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Check, X, Eye } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { Check, X, Eye, Search } from 'lucide-react';
 import { formatCurrency } from '@/lib/currency';
 import {
   useAdminPendingRegistrationFees,
@@ -15,6 +15,7 @@ type TabValue = 'pending' | 'history';
 
 const RegistrationFeeApprovals = () => {
   const [activeTab, setActiveTab] = useState<TabValue>('pending');
+  const [searchQuery, setSearchQuery] = useState('');
   const [rejectId, setRejectId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
   const [showReceipt, setShowReceipt] = useState(false);
@@ -27,11 +28,29 @@ const RegistrationFeeApprovals = () => {
   const approveMutation = useApproveRegistrationFee();
   const rejectMutation = useRejectRegistrationFee();
 
-  const pending = pendingData?.fees ?? [];
-  const history = [
+  const pending = useMemo(() => pendingData?.fees ?? [], [pendingData]);
+  const history = useMemo(() => [
     ...(approvedData?.fees ?? []),
     ...(rejectedData?.fees ?? []),
-  ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()), [approvedData, rejectedData]);
+
+  const filteredPending = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return pending;
+    return pending.filter((f) =>
+      f.user.fullName.toLowerCase().includes(q) ||
+      f.user.email.toLowerCase().includes(q)
+    );
+  }, [pending, searchQuery]);
+
+  const filteredHistory = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return history;
+    return history.filter((f) =>
+      f.user.fullName.toLowerCase().includes(q) ||
+      f.user.email.toLowerCase().includes(q)
+    );
+  }, [history, searchQuery]);
 
   const handleApprove = (id: string) => {
     approveMutation.mutate(id);
@@ -150,11 +169,25 @@ const RegistrationFeeApprovals = () => {
         </button>
       </div>
 
+      {/* ── Search Bar ── */}
+      {((activeTab === 'pending' && pending.length > 0) || (activeTab === 'history' && history.length > 0)) && (
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by name or email..."
+            className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+          />
+        </div>
+      )}
+
       {activeTab === 'pending' && (
         pendingLoading ? (
           <div className="space-y-3">{[1, 2, 3].map((i) => <div key={i} className="h-16 bg-slate-100 rounded-3xl animate-pulse" />)}</div>
         ) : (
-          renderTable(pending, false)
+          renderTable(filteredPending, false)
         )
       )}
 
@@ -162,7 +195,7 @@ const RegistrationFeeApprovals = () => {
         approvedLoading || rejectedLoading ? (
           <div className="space-y-3">{[1, 2, 3].map((i) => <div key={i} className="h-16 bg-slate-100 rounded-3xl animate-pulse" />)}</div>
         ) : (
-          renderTable(history, true)
+          renderTable(filteredHistory, true)
         )
       )}
       <ReceiptPreviewModal isOpen={showReceipt} onClose={() => setShowReceipt(false)} imageUrl={receiptUrl} />

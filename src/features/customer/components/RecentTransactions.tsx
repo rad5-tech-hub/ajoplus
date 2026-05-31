@@ -1,6 +1,6 @@
-import { ArrowUpDown, Clock, RefreshCw } from 'lucide-react';
+import { ArrowUpDown, Clock, RefreshCw, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useGetTransactions } from '@/app/store/TransactionStore';
 import { useMyPendingPayments } from '@/app/store/PaymentStore';
 import { useMyPendingWithdrawals } from '@/app/store/WithdrawalStore';
@@ -78,6 +78,7 @@ const TransactionRow = ({ tx }: { tx: Transaction }) => {
 const RecentTransactions = () => {
   const navigate = useNavigate();
   const { data, isLoading, error, refetch, isFetching } = useGetTransactions();
+  const [searchQuery, setSearchQuery] = useState('');
   const { data: pendingPaymentsData, isLoading: paymentsLoading } = useMyPendingPayments();
   const { data: pendingWithdrawalsData, isLoading: withdrawalsLoading } = useMyPendingWithdrawals();
 
@@ -118,6 +119,23 @@ const RecentTransactions = () => {
 
   const isLoadingPending = paymentsLoading || withdrawalsLoading;
 
+  const allListItems = useMemo(() => {
+    return [...pendingItems, ...confirmedTransactions];
+  }, [pendingItems, confirmedTransactions]);
+
+  const filteredItems = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return { pending: pendingItems, confirmed: confirmedTransactions };
+    const filterFn = (tx: Transaction) =>
+      (TITLE_LABELS[tx.title] ?? tx.title).toLowerCase().includes(q) ||
+      tx.status.toLowerCase().includes(q) ||
+      tx.amount.toString().includes(q);
+    return {
+      pending: pendingItems.filter(filterFn),
+      confirmed: confirmedTransactions.filter(filterFn),
+    };
+  }, [pendingItems, confirmedTransactions, searchQuery]);
+
   // ── Loading skeleton ───────────────────────────────────────────────────────
   if (isLoading && !pendingItems.length) {
     return (
@@ -156,28 +174,6 @@ const RecentTransactions = () => {
     );
   }
 
-  // ── Empty state (only when no pending AND no history) ──────────────────────
-  if (confirmedTransactions.length === 0 && pendingItems.length === 0 && !isLoadingPending) {
-    return (
-      <div className="bg-white border border-brand-200 rounded-3xl p-12 text-center shadow-sm">
-        <div className="mx-auto w-16 h-16 bg-slate-100 rounded-3xl flex items-center justify-center mb-6">
-          <Clock className="w-9 h-9 text-slate-400" />
-        </div>
-        <h3 className="text-xl font-semibold text-brand-900 mb-3">No Transactions Yet</h3>
-        <p className="text-slate-500 max-w-xs mx-auto mb-8 leading-relaxed text-sm">
-          Your savings, payments, and withdrawals will appear here once you start using AbaGold.
-        </p>
-        <button
-          onClick={() => navigate('/browse')}
-          className="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold px-8 py-3.5 rounded-2xl transition-all active:scale-[0.985]"
-        >
-          Browse Packages
-          <ArrowUpDown className="w-4 h-4" />
-        </button>
-      </div>
-    );
-  }
-
   const showPendingSection = pendingItems.length > 0;
 
   // ── Transactions list ──────────────────────────────────────────────────────
@@ -202,28 +198,69 @@ const RecentTransactions = () => {
         </button>
       </div>
 
-      {showPendingSection && (
+      {allListItems.length === 0 && !isLoadingPending ? (
+        <div className="py-12 text-center">
+          <div className="mx-auto w-16 h-16 bg-slate-100 rounded-3xl flex items-center justify-center mb-6">
+            <Clock className="w-9 h-9 text-slate-400" />
+          </div>
+          <h3 className="text-xl font-semibold text-brand-900 mb-3">No Transactions Yet</h3>
+          <p className="text-slate-500 max-w-xs mx-auto mb-8 leading-relaxed text-sm">
+            Your savings, payments, and withdrawals will appear here once you start using AbaGold.
+          </p>
+          <button
+            onClick={() => navigate('/browse')}
+            className="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold px-8 py-3.5 rounded-2xl transition-all active:scale-[0.985]"
+          >
+            Browse Packages
+            <ArrowUpDown className="w-4 h-4" />
+          </button>
+        </div>
+      ) : (
+        <>
+      {/* ── Search Bar ── */}
+      <div className="relative mt-4 mb-3">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search by type, status or amount..."
+          className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+        />
+      </div>
+
+      {filteredItems.pending.length === 0 && filteredItems.confirmed.length === 0 && searchQuery.trim() ? (
+        <div className="py-12 text-center">
+          <p className="text-slate-400 font-medium text-sm">No transactions match your search.</p>
+        </div>
+      ) : (
+        <>
+      {showPendingSection && filteredItems.pending.length > 0 && (
         <>
           <div className="flex items-center gap-2 mt-6 mb-3">
             <Clock className="w-4 h-4 text-amber-500" />
             <span className="text-sm font-semibold text-slate-600">
-              Awaiting Approval ({pendingItems.length})
+              Awaiting Approval ({filteredItems.pending.length})
             </span>
           </div>
           <div className="divide-y divide-slate-100">
-            {pendingItems.map((tx) => (
+            {filteredItems.pending.map((tx) => (
               <TransactionRow key={tx.id} tx={tx} />
             ))}
           </div>
         </>
       )}
 
-      {confirmedTransactions.length > 0 && (
+      {filteredItems.confirmed.length > 0 && (
         <div className="divide-y divide-slate-100">
-          {confirmedTransactions.map((tx) => (
+          {filteredItems.confirmed.map((tx) => (
             <TransactionRow key={tx.id} tx={tx} />
           ))}
         </div>
+      )}
+        </>
+      )}
+        </>
       )}
     </div>
   );

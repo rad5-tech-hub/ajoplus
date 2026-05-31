@@ -1,7 +1,7 @@
 // src/features/admin/components/PackageManagement.tsx
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, Edit2, AlertTriangle } from 'lucide-react';
+import { Trash2, Edit2, AlertTriangle, Search } from 'lucide-react';
 import CreatePackageModal from '@/components/ui/CreatePackageModal';
 import CategoryManagement from '@/components/ui/CategoryManagement';
 import { useAvailablePackages } from '@/app/store/PackageStore';
@@ -63,7 +63,17 @@ function SkeletonCard() {
 
 const PackageManagement = () => {
   const { data: apiPackages, isLoading, error, refetch } = useAvailablePackages();
+  const [searchQuery, setSearchQuery] = useState('');
   const packages = useMemo(() => (apiPackages ?? []).map(toDisplay), [apiPackages]);
+  const filteredPackages = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return packages;
+    return packages.filter((p) =>
+      p.name.toLowerCase().includes(q) ||
+      p.desc.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q)
+    );
+  }, [packages, searchQuery]);
 
   const navigate = useNavigate();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -144,6 +154,20 @@ const PackageManagement = () => {
         </div>
       )}
 
+      {/* ── Search Bar ── */}
+      {!isLoading && !error && packages.length > 0 && (
+        <div className="relative mb-4 sm:mb-6">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search packages by name, description or category..."
+            className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+          />
+        </div>
+      )}
+
       {/* ── Desktop Table (md+) ── */}
       {(isLoading || packages.length > 0) && (
         <div className="hidden md:block bg-white rounded-3xl overflow-hidden border border-slate-100">
@@ -161,7 +185,15 @@ const PackageManagement = () => {
             <tbody>
               {isLoading
                 ? [1, 2, 3, 4].map((i) => <SkeletonRow key={i} />)
-                : packages.map((pkg) => (
+                : filteredPackages.length === 0
+                  ? (
+                    <tr>
+                      <td colSpan={6} className="py-16 text-center">
+                        <p className="text-slate-400 font-medium text-sm">No packages match your search.</p>
+                      </td>
+                    </tr>
+                  )
+                  : filteredPackages.map((pkg) => (
                   <tr
                     key={pkg.id}
                     onClick={() => handleRowClick(pkg.id)}
@@ -213,7 +245,13 @@ const PackageManagement = () => {
         <div className="md:hidden space-y-3">
           {isLoading
             ? [1, 2, 3].map((i) => <SkeletonCard key={i} />)
-            : packages.map((pkg) => (
+            : filteredPackages.length === 0
+              ? (
+                <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center">
+                  <p className="text-slate-400 font-medium text-sm">No packages match your search.</p>
+                </div>
+              )
+              : filteredPackages.map((pkg) => (
               <div
                 key={pkg.id}
                 onClick={() => handleRowClick(pkg.id)}

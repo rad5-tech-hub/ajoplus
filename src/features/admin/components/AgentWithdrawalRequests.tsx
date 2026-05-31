@@ -1,6 +1,6 @@
 // src/features/admin/dashboard/components/AgentWithdrawalRequests.tsx
-import { useState, useRef, useEffect } from 'react';
-import { Inbox, Check, X, AlertCircle } from 'lucide-react';
+import { useState, useRef, useEffect, useMemo } from 'react';
+import { Inbox, Check, X, AlertCircle, Search } from 'lucide-react';
 import { usePendingAgentWithdrawals, useApproveAgentWithdrawal, useRejectAgentWithdrawal } from '@/app/store/WithdrawalStore';
 import { formatCurrency } from '@/lib/currency';
 import type { AgentWithdrawalRequest } from '@/api/withdrawals';
@@ -78,12 +78,21 @@ const RejectModal = ({ withdrawal, onConfirm, onClose, isPending }: {
 
 const AgentWithdrawalRequests = () => {
   const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
   const { data, isLoading, isError, refetch } = usePendingAgentWithdrawals(page);
   const approveMutation = useApproveAgentWithdrawal();
   const rejectMutation = useRejectAgentWithdrawal();
 
-  const withdrawals = data?.withdrawals ?? [];
+  const withdrawals = useMemo(() => data?.withdrawals ?? [], [data]);
   const pagination = data?.pagination;
+  const filteredWithdrawals = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return withdrawals;
+    return withdrawals.filter((w: AgentWithdrawalRequest) =>
+      w.agent.fullName.toLowerCase().includes(q) ||
+      w.agent.email.toLowerCase().includes(q)
+    );
+  }, [withdrawals, searchQuery]);
   const [approvedIds, setApprovedIds] = useState<Record<string, boolean>>({});
   const [rejectedIds, setRejectedIds] = useState<Record<string, boolean>>({});
   const [errorIds, setErrorIds] = useState<Record<string, string>>({});
@@ -141,14 +150,32 @@ const AgentWithdrawalRequests = () => {
 
   return (
     <div className="space-y-4">
+      {/* ── Search Bar ── */}
+      {withdrawals.length > 0 && (
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by agent name or email..."
+            className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+          />
+        </div>
+      )}
+
       {withdrawals.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12">
           <Inbox className="w-12 h-12 text-amber-300 mb-3" />
           <p className="text-slate-500 font-medium text-sm">No pending agent withdrawal requests</p>
         </div>
+      ) : filteredWithdrawals.length === 0 ? (
+        <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center">
+          <p className="text-slate-400 font-medium text-sm">No withdrawals match your search.</p>
+        </div>
       ) : (
         <div className="space-y-3">
-          {withdrawals.map((w: AgentWithdrawalRequest) => {
+          {filteredWithdrawals.map((w: AgentWithdrawalRequest) => {
             const isApproved = approvedIds[w.id];
             const isRejected = rejectedIds[w.id];
             const error = errorIds[w.id];

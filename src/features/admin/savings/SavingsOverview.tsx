@@ -1,3 +1,5 @@
+import { useState, useMemo } from 'react';
+import { Search } from 'lucide-react';
 import { useGetSavingsOverview } from '@/app/store/SavingsAdminStore';
 import { formatCurrency } from '@/lib/currency';
 
@@ -10,9 +12,18 @@ const SummaryCard = ({ label, value }: { label: string; value: string }) => (
 
 const SavingsOverview = () => {
 	const { data, isLoading, isError, error, refetch } = useGetSavingsOverview();
+	const [searchQuery, setSearchQuery] = useState('');
 
 	const summary = data?.summary;
-	const savers = data?.savers ?? [];
+	const savers = useMemo(() => data?.savers ?? [], [data]);
+	const filteredSavers = useMemo(() => {
+		const q = searchQuery.toLowerCase().trim();
+		if (!q) return savers;
+		return savers.filter((s: { name: string; email: string }) =>
+			s.name.toLowerCase().includes(q) ||
+			s.email.toLowerCase().includes(q)
+		);
+	}, [savers, searchQuery]);
 
 	return (
 		<div className="min-h-screen bg-slate-50 py-6">
@@ -69,6 +80,17 @@ const SavingsOverview = () => {
 							<SummaryCard label="Total Payable" value={formatCurrency(summary.totalPayable)} />
 						</div>
 
+						{/* ── Search Bar ── */}
+						<div className="relative mb-4">
+							<Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+							<input
+								type="text"
+								value={searchQuery}
+								onChange={(e) => setSearchQuery(e.target.value)}
+								placeholder="Search savers by name or email..."
+								className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
+							/>
+						</div>
 						<div className="overflow-hidden rounded-3xl border border-brand-200 bg-white">
 							<table className="w-full text-left">
 								<thead className="bg-slate-50">
@@ -83,7 +105,13 @@ const SavingsOverview = () => {
 									</tr>
 								</thead>
 								<tbody>
-									{savers.map((saver) => (
+									{filteredSavers.length === 0 ? (
+										<tr>
+											<td colSpan={7} className="py-16 text-center">
+												<p className="text-slate-400 font-medium text-sm">No savers match your search.</p>
+											</td>
+										</tr>
+									) : filteredSavers.map((saver) => (
 										<tr key={saver.id} className="border-t border-slate-100 hover:bg-slate-50 transition-colors">
 											<td className="py-5 px-5">
 												<p className="font-semibold text-brand-900">{saver.name}</p>
