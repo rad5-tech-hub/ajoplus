@@ -623,19 +623,21 @@ const SignupPage = () => {
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Referral Code{' '}
-                    <span className="text-slate-400 font-normal">(optional)</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter referral code"
-                    className={inputCls}
-                    value={formData.referralCode}
-                    onChange={(e) => setFormData({ ...formData, referralCode: e.target.value })}
-                  />
-                </div>
+                {formData.accountType === 'customer' && (
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Referral Code{' '}
+                      <span className="text-slate-400 font-normal">(optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter referral code"
+                      className={inputCls}
+                      value={formData.referralCode}
+                      onChange={(e) => setFormData({ ...formData, referralCode: e.target.value })}
+                    />
+                  </div>
+                )}
 
                 <div className="flex gap-3">
                   <button
@@ -688,19 +690,19 @@ const SignupPage = () => {
                           <div
                             key={i}
                             className={`flex-1 h-1.5 rounded-full transition-all ${formData.password.length >= i * 4
-                                ? i === 1
-                                  ? 'bg-red-500'
-                                  : i === 2
-                                    ? 'bg-brand-500'
-                                    : 'bg-green-500'
-                                : 'bg-slate-200'
+                              ? i === 1
+                                ? 'bg-red-500'
+                                : i === 2
+                                  ? 'bg-brand-500'
+                                  : 'bg-green-500'
+                              : 'bg-slate-200'
                               }`}
                           />
                         ))}
                       </div>
                       <p className={`text-xs font-medium ${formData.password.length < 4 ? 'text-red-500' :
-                          formData.password.length < 8 ? 'text-brand-500' :
-                            'text-green-600'
+                        formData.password.length < 8 ? 'text-brand-500' :
+                          'text-green-600'
                         }`}>
                         {formData.password.length < 4 ? 'Weak' :
                           formData.password.length < 8 ? 'Fair' :
@@ -767,8 +769,8 @@ const SignupPage = () => {
                     type="submit"
                     disabled={isLoading || !formData.agreeTerms}
                     className={`flex-1 py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 ${isLoading || !formData.agreeTerms
-                        ? 'bg-[var(--color-disabled-bg)] text-[var(--color-disabled-text)] cursor-not-allowed opacity-60'
-                        : 'bg-brand-600 hover:bg-brand-700 text-white cursor-pointer'
+                      ? 'bg-[var(--color-disabled-bg)] text-[var(--color-disabled-text)] cursor-not-allowed opacity-60'
+                      : 'bg-brand-600 hover:bg-brand-700 text-white cursor-pointer'
                       }`}
                   >
                     {isLoading ? (
