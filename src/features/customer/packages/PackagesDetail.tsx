@@ -20,7 +20,7 @@ import { RefreshCw, Loader2 } from 'lucide-react';
 interface DisplayData {
   title: string;
   subtitle: string;
-  status: 'active' | 'inactive' | 'completed' | 'suspended';
+  status: 'active' | 'inactive' | 'completed' | 'finalised' | 'suspended';
   totalAmount: string;
   category: string;
   totalPaid: string;
@@ -368,14 +368,20 @@ const PackageDetail = () => {
                       className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full shrink-0 border
                         ${displayData.status === 'active'
                           ? 'bg-blue-100 border-blue-200 text-blue-700'
-                          : 'bg-brand-100 border-brand-200 text-brand-700'
+                          : displayData.status === 'finalised'
+                            ? 'bg-brand-100 border-brand-200 text-brand-700'
+                            : displayData.status === 'completed'
+                              ? 'bg-slate-200 border-slate-300 text-slate-500'
+                              : displayData.status === 'inactive'
+                                ? 'bg-slate-100 border-slate-200 text-slate-500'
+                                : 'bg-amber-50 border-amber-200 text-amber-700'
                         }`}
                     >
                       <span
-                        className={`w-2 h-2 rounded-full ${displayData.status === 'active' ? 'bg-blue-700' : 'bg-brand-500'
+                        className={`w-2 h-2 rounded-full ${displayData.status === 'active' ? 'bg-blue-700' : displayData.status === 'finalised' ? 'bg-brand-500' : displayData.status === 'completed' ? 'bg-slate-400' : displayData.status === 'inactive' ? 'bg-slate-400' : 'bg-amber-500'
                           }`}
                       />
-                      {displayData.status.charAt(0).toUpperCase() + displayData.status.slice(1)}
+                      {displayData.status === 'finalised' ? 'Finalised' : displayData.status === 'completed' ? 'Completed' : displayData.status.charAt(0).toUpperCase() + displayData.status.slice(1)}
                     </span>
                   </div>
                   <p className="text-slate-500 mt-1.5 text-sm sm:text-base">{displayData.subtitle}</p>
@@ -450,13 +456,29 @@ const PackageDetail = () => {
                 </div>
               </div>
 
-              {displayData.status === 'completed' ? (
+              {displayData.status === 'finalised' ? (
+                <div className="bg-brand-50 border border-brand-200 rounded-2xl p-5 sm:p-6 text-center">
+                  <div className="w-12 h-12 rounded-2xl bg-brand-100 flex items-center justify-center mx-auto mb-3">
+                    <CheckCircle className="w-6 h-6 text-brand-600" />
+                  </div>
+                  <p className="font-bold text-brand-800 text-base sm:text-lg">Package Finalised</p>
+                  <p className="text-brand-600 text-sm mt-1">This package has been completed and finalised.</p>
+                </div>
+              ) : displayData.status === 'completed' ? (
                 <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-5 sm:p-6 text-center">
                   <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center mx-auto mb-3">
                     <CheckCircle className="w-6 h-6 text-emerald-600" />
                   </div>
                   <p className="font-bold text-emerald-800 text-base sm:text-lg">Package Completed</p>
                   <p className="text-emerald-600 text-sm mt-1">All payments have been fulfilled for this package.</p>
+                </div>
+              ) : displayData.status !== 'active' ? (
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-6 text-center">
+                  <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-3">
+                    <PackageIcon className="w-6 h-6 text-slate-400" />
+                  </div>
+                  <p className="font-bold text-slate-600 text-base sm:text-lg">Package {displayData.status.charAt(0).toUpperCase() + displayData.status.slice(1)}</p>
+                  <p className="text-slate-400 text-sm mt-1">Payments are disabled for this package.</p>
                 </div>
               ) : (
                 <div className="flex flex-row gap-3">
@@ -471,16 +493,16 @@ const PackageDetail = () => {
                       })
                     }
                     className="bg-brand-600 hover:bg-brand-700 w-[50%] cursor-pointer transition-colors
-                               text-white font-semibold py-3 sm:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl
-                               flex items-center justify-center gap-2 text-sm sm:text-base active:scale-[0.985]"
+                                text-white font-semibold py-3 sm:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl
+                                flex items-center justify-center gap-2 text-sm sm:text-base active:scale-[0.985]"
                   >
                     Make Payment
                   </button>
                   <button
                     onClick={() => setShowUploadModal(true)}
                     className="border-2 border-brand-600 text-brand-600 w-[50%] cursor-pointer
-                               hover:bg-brand-50 font-semibold py-3 sm:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl
-                               flex items-center justify-center gap-2 text-sm sm:text-base transition-colors active:scale-[0.985]"
+                                hover:bg-brand-50 font-semibold py-3 sm:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl
+                                flex items-center justify-center gap-2 text-sm sm:text-base transition-colors active:scale-[0.985]"
                   >
                     Upload Receipt
                   </button>

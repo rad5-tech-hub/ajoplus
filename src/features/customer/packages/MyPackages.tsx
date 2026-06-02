@@ -9,25 +9,26 @@ const MyPackages = () => {
   const { data: userPackages, isLoading, error } = useUserPackages();
   const [searchQuery, setSearchQuery] = useState('');
 
-  const sortedPackages = useMemo(() => {
+  const displayPackages = useMemo(() => {
     const pkgs = userPackages ?? [];
-    return [...pkgs].sort((a, b) => {
-      const order = { active: 0, pending: 1, completed: 2, inactive: 3, suspended: 4 };
-      const statusDiff = (order[a.status] ?? 1) - (order[b.status] ?? 1);
-      if (statusDiff !== 0) return statusDiff;
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    });
+    return [...pkgs]
+      .filter((p) => p.status !== 'finalised')
+      .sort((a, b) => {
+        if (a.status === 'active' && b.status !== 'active') return -1;
+        if (a.status !== 'active' && b.status === 'active') return 1;
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
   }, [userPackages]);
 
   const filteredPackages = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
-    if (!q) return sortedPackages;
-    return sortedPackages.filter((p) =>
+    if (!q) return displayPackages;
+    return displayPackages.filter((p) =>
       p.package.name.toLowerCase().includes(q) ||
       p.status.toLowerCase().includes(q) ||
       p.package.description?.toLowerCase().includes(q)
     );
-  }, [sortedPackages, searchQuery]);
+  }, [displayPackages, searchQuery]);
 
   if (isLoading) {
     return (
@@ -61,7 +62,7 @@ const MyPackages = () => {
     );
   }
 
-  if (sortedPackages.length === 0) {
+  if (displayPackages.length === 0) {
     return (
       <div className="bg-white border border-brand-200 rounded-3xl p-12 text-center">
         <div className="mx-auto w-20 h-20 bg-brand-100 rounded-3xl flex items-center justify-center mb-6">

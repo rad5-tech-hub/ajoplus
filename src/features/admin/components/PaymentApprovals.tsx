@@ -7,11 +7,9 @@ import PaymentRejectedModal from '@/components/ui/PaymentRejectedModal';
 import { formatCurrency } from '@/lib/currency';
 import DateRangeFilter, { type DateRange } from '@/components/ui/DateRangeFilter';
 import { useApprovePayment, useRejectPayment, useGetPendingPayments, useGetApprovedPayments, useGetRejectedPayments } from '@/app/store/PaymentStore';
-import { useAdminPendingFees, useApproveAdminFee } from '@/app/store/RegistrationFeeStore';
 import type { Payment } from '@/api/payments';
-import type { AdminPendingFee } from '@/api/registrationFee';
 
-type FilterValue = 'all' | 'package' | 'product' | 'saving' | 'registration';
+type FilterValue = 'all' | 'package' | 'product' | 'saving';
 type TabValue = 'pending' | 'history';
 
 const PAYMENT_TYPE_LABELS: Record<string, string> = {
@@ -25,19 +23,16 @@ const filterOptions: { value: FilterValue; label: string }[] = [
   { value: 'package', label: 'Packages' },
   { value: 'product', label: 'Products' },
   { value: 'saving', label: 'Ajo Savings' },
-  { value: 'registration', label: 'Reg. Fees' },
 ];
 
 const PaymentApprovals = () => {
   const { data, isLoading, error } = useGetPendingPayments();
   const { data: approvedData, isLoading: approvedLoading } = useGetApprovedPayments();
   const { data: rejectedData, isLoading: rejectedLoading } = useGetRejectedPayments();
-  const { data: regPendingData } = useAdminPendingFees();
 
   const payments = data?.payments || [];
   const approveMutation = useApprovePayment();
   const rejectMutation = useRejectPayment();
-  const approveRegMutation = useApproveAdminFee();
   const [rejectId, setRejectId] = useState<string | null>(null);
 
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
@@ -81,9 +76,6 @@ const PaymentApprovals = () => {
 
   const displayPayments = activeTab === 'pending' ? payments : historyPayments;
   const filteredPayments = selectedFilter === 'all' ? displayPayments : displayPayments.filter((p) => p.paymentType === selectedFilter);
-  const showRegFees = selectedFilter === 'all' || selectedFilter === 'registration';
-  const regFees = regPendingData?.fees ?? [];
-  const showRegBlock = activeTab === 'pending' && showRegFees && regFees.length > 0;
 
   return (
     <div className="space-y-4">
@@ -114,10 +106,6 @@ const PaymentApprovals = () => {
         </button>
       </div>
 
-      {activeTab === 'pending' && showRegBlock && (
-        <RegFeeBlock fees={regFees} onApprove={(id) => approveRegMutation.mutate(id)} onViewReceipt={(url) => { setReceiptUrl(url); setShowReceiptModal(true); }} isPending={approveRegMutation.isPending} />
-      )}
-
       {activeTab === 'pending' ? (
         isLoading ? (
           <div className="space-y-3">
@@ -144,7 +132,7 @@ const PaymentApprovals = () => {
             <button onClick={() => window.location.reload()} className="px-5 py-2 rounded-xl bg-brand-600 text-white text-xs font-semibold hover:bg-brand-700 transition-colors cursor-pointer">Retry</button>
           </div>
         ) : (
-          filteredPayments.length === 0 && !showRegFees ? (
+          filteredPayments.length === 0 ? (
             <div className="bg-white rounded-2xl border border-slate-100 p-10 text-center shadow-sm">
               <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mx-auto mb-3">
                 <SearchX className="w-6 h-6 text-slate-300" />
@@ -499,29 +487,5 @@ const PaymentApprovals = () => {
     </div>
   );
 };
-
-const RegFeeBlock = ({ fees, onApprove, onViewReceipt, isPending }: {
-  fees: AdminPendingFee[];
-  onApprove: (id: string) => void;
-  onViewReceipt: (url: string) => void;
-  isPending: boolean;
-}) => (
-  <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3">
-    <p className="text-xs font-semibold text-amber-700 mb-2">Registration Fees ({fees.length} pending)</p>
-    <div className="space-y-1.5">
-      {fees.slice(0, 5).map((fee) => (
-        <div key={fee.id} className="flex items-center justify-between bg-white rounded-xl px-3 py-2 text-xs">
-          <span className="font-medium text-slate-800 truncate max-w-[200px]">{fee.user?.fullName || fee.user?.email || '—'}</span>
-          <div className="flex items-center gap-1.5 shrink-0 ml-2">
-            <button onClick={() => onViewReceipt(fee.proofFile)}
-              className="p-1 text-brand-600 hover:bg-brand-100 rounded-lg transition-colors cursor-pointer"><Eye className="w-3.5 h-3.5" /></button>
-            <button onClick={() => onApprove(fee.id)} disabled={isPending}
-              className="p-1 bg-brand-100 text-brand-600 hover:bg-brand-200 rounded-lg transition-colors disabled:opacity-50 cursor-pointer"><Check className="w-3.5 h-3.5" /></button>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
 
 export default PaymentApprovals;

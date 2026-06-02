@@ -235,18 +235,18 @@ const ProductManagement = () => {
                         event.stopPropagation();
                         // TODO: open edit product flow
                       }}
-                      className="text-brand-600 hover:text-brand-700 hover:underline cursor-pointer mr-4 text-sm font-medium transition-colors inline-flex items-center gap-1"
+                      className="cursor-pointer px-3 py-1.5 rounded-2xl bg-brand-50 text-brand-600 hover:bg-brand-100 transition-colors text-sm font-medium inline-flex items-center gap-1.5"
                     >
-                      <Edit2 className="w-3 h-3" /> Edit
+                      <Edit2 className="w-3.5 h-3.5" /> Edit
                     </button>
                     <button
                       onClick={(event) => {
                         event.stopPropagation();
                         setDeleteConfirmId(product.id);
                       }}
-                      className="text-red-500 hover:text-red-700 hover:underline cursor-pointer text-sm font-medium transition-colors inline-flex items-center gap-1"
+                      className="cursor-pointer ml-2 px-3 py-1.5 rounded-2xl bg-red-50 text-red-600 hover:bg-red-100 transition-colors text-sm font-medium inline-flex items-center gap-1.5"
                     >
-                      <Trash2 className="w-3 h-3" /> Delete
+                      <Trash2 className="w-3.5 h-3.5" /> Delete
                     </button>
                   </td>
                 </tr>
@@ -322,7 +322,7 @@ const ProductManagement = () => {
                           event.stopPropagation();
                           setIsCreateModalOpen(true);
                         }}
-                        className="px-3 py-2 text-brand-600 hover:bg-brand-50 rounded-xl text-sm font-medium transition-colors inline-flex items-center gap-1"
+                        className="px-3 py-2 rounded-2xl bg-brand-50 text-brand-600 hover:bg-brand-100 transition-colors text-sm font-medium inline-flex items-center gap-1.5"
                       >
                         <Edit2 className="w-4 h-4" /> Edit
                       </button>
@@ -331,7 +331,7 @@ const ProductManagement = () => {
                           event.stopPropagation();
                           setDeleteConfirmId(product.id);
                         }}
-                        className="px-3 py-2 text-red-500 hover:bg-red-50 rounded-xl text-sm font-medium transition-colors inline-flex items-center gap-1"
+                        className="px-3 py-2 rounded-2xl bg-red-50 text-red-600 hover:bg-red-100 transition-colors text-sm font-medium inline-flex items-center gap-1.5"
                       >
                         <Trash2 className="w-4 h-4" /> Delete
                       </button>

@@ -55,7 +55,7 @@ export interface UserPackage {
 	totalPaid: string;
 	paymentFrequency: 'daily' | 'weekly' | 'monthly';
 	nextPaymentDate: string;
-	status: 'active' | 'inactive' | 'completed' | 'suspended';
+	status: 'active' | 'inactive' | 'completed' | 'finalised' | 'suspended';
 	startDate: string;
 	createdAt: string;
 	updatedAt: string;

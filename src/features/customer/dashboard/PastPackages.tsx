@@ -9,10 +9,10 @@ const PastPackages = () => {
   const navigate = useNavigate();
   const { data: userPackages, isLoading, error } = useUserPackages();
 
-  const finalisedPackages = useMemo(() => {
+  const pastPackages = useMemo(() => {
     const pkgs = userPackages ?? [];
     return pkgs
-      .filter((p) => p.status === 'completed')
+      .filter((p) => p.status === 'finalised')
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }, [userPackages]);
 
@@ -66,19 +66,19 @@ const PastPackages = () => {
           <div>
             <h1 className="text-2xl font-bold text-brand-900">Past Packages</h1>
             <p className="text-slate-500 text-sm mt-0.5">
-              {finalisedPackages.length} completed package{finalisedPackages.length !== 1 ? 's' : ''}
+              {pastPackages.length} completed package{pastPackages.length !== 1 ? 's' : ''}
             </p>
           </div>
         </div>
 
-        {finalisedPackages.length === 0 ? (
+        {pastPackages.length === 0 ? (
           <div className="bg-white border border-brand-200 rounded-3xl p-12 text-center">
             <div className="mx-auto w-20 h-20 bg-slate-100 rounded-3xl flex items-center justify-center mb-6">
               <PackageIcon className="w-10 h-10 text-slate-400" />
             </div>
             <h3 className="text-2xl font-semibold text-brand-900 mb-3">No Past Packages Yet</h3>
             <p className="text-slate-600 max-w-sm mx-auto mb-8 leading-relaxed">
-              Once you complete an Ajo package, it will appear here for your records.
+              Completed and finalised packages will appear here.
             </p>
             <button
               onClick={() => navigate('/browse')}
@@ -89,7 +89,7 @@ const PastPackages = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {finalisedPackages.map((pkg) => (
+            {pastPackages.map((pkg) => (
               <UserPackageCard key={pkg.id} pkg={pkg} />
             ))}
           </div>

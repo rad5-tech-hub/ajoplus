@@ -73,7 +73,7 @@ const SavingsOverview = () => {
 
 				{!isLoading && !isError && summary && (
 					<>
-						<div className="grid grid-cols-1 gap-4 lg:grid-cols-4 mb-8">
+						<div className="grid grid-cols-2 gap-4 mb-8">
 							<SummaryCard label="Total Savers" value={`${summary.totalSavers}`} />
 							<SummaryCard label="Total Saved" value={formatCurrency(summary.totalSaved)} />
 							<SummaryCard label="Total Commission" value={formatCurrency(summary.totalCommission)} />
@@ -91,7 +91,8 @@ const SavingsOverview = () => {
 								className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 text-sm text-slate-700 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all"
 							/>
 						</div>
-						<div className="overflow-hidden rounded-3xl border border-brand-200 bg-white">
+						<div className="overflow-x-auto rounded-3xl border border-brand-200 bg-white">
+							<div className="max-h-96 overflow-y-auto">
 							<table className="w-full text-left">
 								<thead className="bg-slate-50">
 									<tr>
@@ -128,6 +129,7 @@ const SavingsOverview = () => {
 									))}
 								</tbody>
 							</table>
+							</div>
 						</div>
 					</>
 				)}
