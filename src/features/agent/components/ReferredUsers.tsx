@@ -82,15 +82,15 @@ const UserRow = ({ user, onClick }: { user: ReferredUser; onClick: () => void })
           <p className="font-semibold text-brand-600 mt-0.5">{formatCurrency(user.earnings)}</p>
         </div>
         <div className="sm:text-right">
-          <p className="text-slate-400 text-[10px]">Pkg Comm.</p>
-          <p className="font-medium text-brand-900 mt-0.5">{formatCurrency(user.packageCommissions)}</p>
+          <p className="text-slate-400 text-[10px]">Pkgs.</p>
+          <p className="font-medium text-brand-900 mt-0.5">{(user.packageCommissions)}</p>
         </div>
         <div className="sm:text-right">
-          <p className="text-slate-400 text-[10px]">Sav. Comm.</p>
-          <p className="font-medium text-brand-900 mt-0.5">{formatCurrency(user.savingCommissions)}</p>
+          <p className="text-slate-400 text-[10px]">Savs.</p>
+          <p className="font-medium text-brand-900 mt-0.5">{(user.savingCommissions)}</p>
         </div>
         <div className="sm:text-right">
-          <p className="text-slate-400 text-[10px]">Comm.</p>
+          <p className="text-slate-400 text-[10px]">total comms.</p>
           <p className="font-medium text-brand-900 mt-0.5">{user.commissions}</p>
         </div>
         <div className="sm:text-right">
