@@ -1,5 +1,5 @@
 import { useAuthStore } from '@/app/store/authStore';
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/CustomerNavbar';
 import OverviewCards from '../components/OverviewCards';
@@ -9,69 +9,22 @@ import RecentTransactions from '../components/RecentTransactions';
 import NeedHelp from '../components/NeedHelp';
 import PaymentStatusBanner from '@/components/ui/PaymentStatusBanner';
 import DailyAjoSetupModal from '@/components/ui/DailyAjoSetupModal';
-import AjoSetupBlockModal from '@/features/auth/components/AjoSetupBlockModal';
-import RegistrationFeeModal from '@/features/auth/components/RegistrationFeeModal';
-import { useRegistrationFeeStatus } from '@/app/store/RegistrationFeeStore';
 
 const CustomerDashboard = () => {
   const { user } = useAuthStore();
-  const { data: feeStatus } = useRegistrationFeeStatus();
   const [searchParams] = useSearchParams();
   const [showDailyAjoModal, setShowDailyAjoModal] = useState(false);
-  const [showBlockModal, setShowBlockModal] = useState(false);
-  const [showRegistrationFeeModal, setShowRegistrationFeeModal] = useState(false);
 
-  const isFeeApproved = feeStatus?.user?.registrationFeeStatus === 'approved';
-  const hasPendingSubmission = feeStatus?.latestFee?.status === 'pending';
-  const feeStatusLoaded = feeStatus !== undefined;
+  const openDailyAjoFromParam = searchParams.get('openDailyAjo') === 'true';
+  const showDailyAjo = showDailyAjoModal || openDailyAjoFromParam;
 
-  const openCorrectModal = useCallback(() => {
-    // 1. Approved → go straight to Ajo setup
-    if (isFeeApproved) {
-      setShowDailyAjoModal(true);
-      return;
-    }
-    // 2. A fee has been submitted and is pending admin review → show block modal
-    if (hasPendingSubmission) {
-      setShowBlockModal(true);
-      return;
-    }
-    // 3. Never submitted, no latestFee, or was rejected → show payment form
-    setShowRegistrationFeeModal(true);
-  }, [isFeeApproved, hasPendingSubmission]);
-
-  useEffect(() => {
-    if (searchParams.get('openDailyAjo') === 'true' && feeStatusLoaded) {
-      openCorrectModal();
-    }
-  }, [searchParams, feeStatusLoaded, openCorrectModal]);
-
-  const closeDailyAjoModal = () => setShowDailyAjoModal(false);
-
-  const handleOpenAjoSetup = useMemo(() => () => {
-    openCorrectModal();
-  }, [openCorrectModal]);
-
-  const handleRegFeeComplete = useCallback(() => {
-    setShowRegistrationFeeModal(false);
-  }, []);
+  const handleOpenAjoSetup = () => setShowDailyAjoModal(true);
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
-      <RegistrationFeeModal
-        isOpen={showRegistrationFeeModal}
-        userName={user?.fullName ?? ''}
-        onComplete={handleRegFeeComplete}
-      />
-
       <DailyAjoSetupModal
-        isOpen={showDailyAjoModal}
-        onClose={closeDailyAjoModal}
-      />
-
-      <AjoSetupBlockModal
-        isOpen={showBlockModal}
-        onClose={() => setShowBlockModal(false)}
+        isOpen={showDailyAjo}
+        onClose={() => setShowDailyAjoModal(false)}
       />
 
       <Navbar />

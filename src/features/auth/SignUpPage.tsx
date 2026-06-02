@@ -752,8 +752,8 @@ const SignupPage = () => {
                   />
                   <span className="text-slate-600 leading-relaxed">
                     I agree to the{' '}
-                    <Link to="/terms" className="text-brand-600 font-medium hover:underline">Terms of Service</Link> and{' '}
-                    <span className="text-brand-600 font-medium">Privacy Policy</span>
+                    <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-brand-600 font-medium hover:underline">Terms of Service</a> and{' '}
+                    <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-brand-600 font-medium hover:underline">Privacy Policy</a>
                   </span>
                 </label>
 

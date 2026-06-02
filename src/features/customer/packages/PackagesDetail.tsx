@@ -178,8 +178,7 @@ const PackageDetail = () => {
               <div className="px-4 pb-3 space-y-1.5 max-h-48 overflow-y-auto">
                 <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>For global food contribution, food items you contributed will get to you on or before 30 days of completion.</p>
                 <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>No refund of money is accepted on global food contribution.</p>
-                <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>The N1,000 registration fee is based on each package.</p>
-                <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>The N1,000 registration fee is added to each package price.</p>
+
                 <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>One is allowed to register multiple packages.</p>
               </div>
             </details>
@@ -312,7 +311,6 @@ const PackageDetail = () => {
         </div>
         <ul className="space-y-2 sm:space-y-3 text-xs sm:text-sm text-slate-500">
           {[
-            'A N1,000 registration fee is added to each package price.',
             'Food items will be delivered on or before 30 days of completion.',
             'No refund of money is accepted on package contributions.',
             'Multiple packages can be registered at the same time.',

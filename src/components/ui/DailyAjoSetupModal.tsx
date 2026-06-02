@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Loader2 } from 'lucide-react';
 import { useCreateSavingPlan } from '@/app/store/SavingPlanStore';
+import { useFormattedCurrencyInput } from '@/hooks/useFormattedCurrencyInput';
 
 interface DailyAjoSetupModalProps {
   isOpen: boolean;
@@ -10,7 +11,7 @@ interface DailyAjoSetupModalProps {
 
 const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
   const navigate = useNavigate();
-  const [dailyAmount, setDailyAmount] = useState<string>('');
+  const { displayValue: dailyAmountDisplay, rawValue: dailyAmount, onChange: onDailyAmountChange } = useFormattedCurrencyInput();
   const [description, setDescription] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -147,7 +148,7 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
               </summary>
               <div className="px-4 pb-3 space-y-1.5 max-h-48 overflow-y-auto">
                 <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>Global daily contribution has a monthly charge of 3.1% which is equivalent to the person's daily contribution amount.</p>
-                <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>An annual registration fee of N1,000 applies.</p>
+
                 <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>In global daily contributions, a withdrawal notice of 2-3 working days must be given before withdrawals will be successful.</p>
                 <p className="flex gap-2 leading-relaxed"><span className="text-brand-500 shrink-0">•</span>For those on global daily contributions, you are free to request for your money anytime you want but the withdrawal process will take effect on or before 3 working days of your request.</p>
               </div>
