@@ -219,18 +219,18 @@ const PackageManagement = () => {
                           event.stopPropagation();
                           handleEditClick(pkg.id);
                         }}
-                        className="cursor-pointer px-3 py-1.5 rounded-2xl bg-brand-50 text-brand-600 hover:bg-brand-100 transition-colors text-sm font-medium inline-flex items-center gap-1.5"
+                        className="cursor-pointer px-4 py-2 rounded-2xl bg-brand-600 text-white hover:bg-brand-700 active:scale-95 transition-all text-sm font-semibold inline-flex items-center gap-1.5 shadow-sm"
                       >
-                        <Edit2 className="w-3.5 h-3.5" /> Edit
+                        <Edit2 className="w-4 h-4" /> Edit
                       </button>
                       <button
                         onClick={(event) => {
                           event.stopPropagation();
                           setDeleteConfirmId(pkg.id);
                         }}
-                        className="cursor-pointer ml-2 px-3 py-1.5 rounded-2xl bg-red-50 text-red-600 hover:bg-red-100 transition-colors text-sm font-medium inline-flex items-center gap-1.5"
+                        className="cursor-pointer ml-2 px-4 py-2 rounded-2xl bg-red-600 text-white hover:bg-red-700 active:scale-95 transition-all text-sm font-semibold inline-flex items-center gap-1.5 shadow-sm"
                       >
-                        <Trash2 className="w-3.5 h-3.5" /> Delete
+                        <Trash2 className="w-4 h-4" /> Delete
                       </button>
                     </td>
                   </tr>
@@ -273,13 +273,13 @@ const PackageManagement = () => {
                   <span className="text-slate-300">·</span>
                   <span>{pkg.frequency}</span>
                 </div>
-                <div className="flex gap-2 border-t border-slate-100 pt-3">
+                <div className="flex gap-3 border-t border-slate-100 pt-3">
                   <button
                     onClick={(event) => {
                       event.stopPropagation();
                       handleEditClick(pkg.id);
                     }}
-                    className="flex-1 text-center cursor-pointer px-3 py-2 rounded-2xl bg-brand-50 text-brand-600 hover:bg-brand-100 transition-colors text-sm font-medium inline-flex items-center justify-center gap-1.5"
+                    className="flex-1 text-center cursor-pointer px-4 py-3 rounded-2xl bg-brand-600 text-white hover:bg-brand-700 active:scale-95 transition-all text-sm font-semibold inline-flex items-center justify-center gap-2 shadow-sm"
                   >
                     <Edit2 className="w-4 h-4" /> Edit
                   </button>
@@ -288,7 +288,7 @@ const PackageManagement = () => {
                       event.stopPropagation();
                       setDeleteConfirmId(pkg.id);
                     }}
-                    className="flex-1 text-center cursor-pointer px-3 py-2 rounded-2xl bg-red-50 text-red-600 hover:bg-red-100 transition-colors text-sm font-medium inline-flex items-center justify-center gap-1.5"
+                    className="flex-1 text-center cursor-pointer px-4 py-3 rounded-2xl bg-red-600 text-white hover:bg-red-700 active:scale-95 transition-all text-sm font-semibold inline-flex items-center justify-center gap-2 shadow-sm"
                   >
                     <Trash2 className="w-4 h-4" /> Delete
                   </button>

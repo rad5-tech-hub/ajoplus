@@ -79,17 +79,6 @@ const PaymentApprovals = () => {
 
   return (
     <div className="space-y-4">
-      {/* Filter pills */}
-      <div className="flex flex-wrap gap-2">
-        {filterOptions.map(({ value, label }) => (
-          <button key={value} onClick={() => setSelectedFilter(value)}
-            className={`px-3 py-1.5 rounded-2xl text-xs font-medium transition-colors cursor-pointer whitespace-nowrap
-              ${selectedFilter === value ? 'bg-brand-600 text-white' : 'bg-white text-slate-600 border border-brand-200 hover:bg-slate-50'}`}>
-            {label}
-          </button>
-        ))}
-      </div>
-
       {/* Pending / History toggle */}
       <div className="flex gap-4 border-b border-brand-200">
         <button onClick={() => setActiveTab('pending')}
@@ -107,7 +96,17 @@ const PaymentApprovals = () => {
       </div>
 
       {activeTab === 'pending' ? (
-        isLoading ? (
+        <>
+          <div className="flex flex-wrap gap-2">
+            {filterOptions.map(({ value, label }) => (
+              <button key={value} onClick={() => setSelectedFilter(value)}
+                className={`px-3 py-1.5 rounded-2xl text-xs font-medium transition-colors cursor-pointer whitespace-nowrap
+                  ${selectedFilter === value ? 'bg-brand-600 text-white' : 'bg-white text-slate-600 border border-brand-200 hover:bg-slate-50'}`}>
+                {label}
+              </button>
+            ))}
+          </div>
+        {isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
               <div key={i} className="bg-white rounded-2xl border border-slate-100 p-5 animate-pulse">
@@ -262,6 +261,8 @@ const PaymentApprovals = () => {
             </div>
           )
         )
+        }
+        </>
       ) : (
         /* ── History tab: Approved / Rejected sub-tabs with date filtering ── */
         <>

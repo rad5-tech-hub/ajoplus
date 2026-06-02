@@ -6,19 +6,21 @@ import OverviewCards from '../components/OverviewCards';
 import PackageManagement from '../components/PackageManagement';
 import ProductManagement from '../components/ProductManagement';
 import PaymentApprovals from '../components/PaymentApprovals';
+import PendingRegistrationFees from '../components/PendingRegistrationFees';
 import WithdrawalRequests from '../components/WithdrawalRequests';
 import PlatformSettings from '../components/PlatformSettings';
 import BannerAdManager from '../components/BannerAdManager';
 import UserManagement from '../components/UserManagement';
 import CreateAdmin from '../components/CreateAdmin';
 
-type Tab = 'packages' | 'products' | 'approvals' | 'banner' | 'withdrawals' | 'settings' | 'users' | 'createAdmin';
+type Tab = 'packages' | 'products' | 'approvals' | 'regFees' | 'banner' | 'withdrawals' | 'settings' | 'users' | 'createAdmin';
 
 const TABS: { key: Tab; label: string; shortLabel: string }[] = [
   { key: 'packages', label: 'Package Management', shortLabel: 'Packages' },
   { key: 'products', label: 'Product Management', shortLabel: 'Products' },
   { key: 'users', label: 'User Management', shortLabel: 'Users' },
   { key: 'approvals', label: 'Payment Approvals', shortLabel: 'Approvals' },
+  { key: 'regFees', label: 'Registration Fees', shortLabel: 'Reg. Fees' },
   { key: 'banner', label: 'Promotional Banner', shortLabel: 'Banner' },
   { key: 'withdrawals', label: 'Withdrawals', shortLabel: 'Withdrawals' },
   { key: 'createAdmin', label: 'Create Admin', shortLabel: 'Admin' },
@@ -87,6 +89,7 @@ const AdminDashboard = () => {
           {activeTab === 'packages' && <PackageManagement />}
           {activeTab === 'products' && <ProductManagement />}
           {activeTab === 'approvals' && <PaymentApprovals />}
+          {activeTab === 'regFees' && <PendingRegistrationFees />}
           {activeTab === 'banner' && <BannerAdManager />}
           {activeTab === 'withdrawals' && <WithdrawalRequests />}
           {activeTab === 'settings' && <PlatformSettings />}
