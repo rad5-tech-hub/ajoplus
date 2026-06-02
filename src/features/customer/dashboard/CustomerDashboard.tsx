@@ -1,6 +1,7 @@
 import { useAuthStore } from '@/app/store/authStore';
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { History } from 'lucide-react';
 import Navbar from '../components/CustomerNavbar';
 import OverviewCards from '../components/OverviewCards';
 import MyPackages from '../packages/MyPackages';
@@ -11,6 +12,7 @@ import PaymentStatusBanner from '@/components/ui/PaymentStatusBanner';
 import DailyAjoSetupModal from '@/components/ui/DailyAjoSetupModal';
 
 const CustomerDashboard = () => {
+  const navigate = useNavigate();
   const { user } = useAuthStore();
   const [searchParams] = useSearchParams();
   const [showDailyAjoModal, setShowDailyAjoModal] = useState(false);
@@ -46,14 +48,20 @@ const CustomerDashboard = () => {
 
         <div className="grid lg:grid-cols-11 gap-8 mt-10">
           <div className="lg:col-span-7 space-y-8">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap gap-3">
               <h2 className="text-2xl font-semibold text-brand-900">My Packages</h2>
-
-              <a href="/browse"
-                className="px-4 py-2 border-2 cursor-pointer border-brand-600 text-brand-600 rounded-2xl hover:bg-brand-50 transition-colors text-sm font-medium">
-
-                View All
-              </a>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => navigate('/dashboard/customer/past-packages')}
+                  className="px-4 py-2 border-2 cursor-pointer border-slate-300 text-slate-700 rounded-2xl hover:bg-slate-50 transition-colors text-sm font-medium flex items-center gap-2"
+                >
+                  <History className="w-4 h-4" /> View Past Packages
+                </button>
+                <a href="/browse"
+                  className="px-4 py-2 border-2 cursor-pointer border-brand-600 text-brand-600 rounded-2xl hover:bg-brand-50 transition-colors text-sm font-medium">
+                  View All
+                </a>
+              </div>
             </div>
             <MyPackages />
           </div>

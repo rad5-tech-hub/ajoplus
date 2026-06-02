@@ -4,6 +4,7 @@ import { Plus, PiggyBank, ArrowLeft, Search } from 'lucide-react';
 import { useCreateSavingPlan } from '@/app/store/SavingPlanStore';
 import { useSavingsPlans } from '@/features/savings/hooks/useSavings';
 import { formatCurrency } from '@/lib/currency';
+import { useFormattedCurrencyInput } from '@/hooks/useFormattedCurrencyInput';
 import DailyAjoWithdrawModal from '@/components/ui/DailyAjoWithdrawModal';
 import SavingsDetailPanel from '@/features/savings/components/SavingsDetailPanel';
 
@@ -163,7 +164,7 @@ const SavingsManagement = () => {
 };
 
 const CreatePlanInline = ({ onClose }: { onClose: () => void }) => {
-  const [amount, setAmount] = useState('');
+  const { displayValue: amountDisplay, rawValue: amount, onChange: onAmountChange } = useFormattedCurrencyInput();
   const [desc, setDesc] = useState('');
   const [error, setError] = useState<string | null>(null);
   const { mutate: createPlan, isPending } = useCreateSavingPlan();
@@ -171,7 +172,7 @@ const CreatePlanInline = ({ onClose }: { onClose: () => void }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const parsed = parseInt(amount, 10);
-    if (!parsed || parsed < 100) { setError('Minimum ₦100 per day'); return; }
+    if (!parsed || parsed < 500) { setError('Minimum ₦500 per day'); return; }
     createPlan(
       { amount: parsed, description: desc.trim() || undefined },
       { onSuccess: () => onClose(), onError: (err: unknown) => { setError(err instanceof Error ? err.message : 'Failed to create plan'); } }
@@ -186,11 +187,11 @@ const CreatePlanInline = ({ onClose }: { onClose: () => void }) => {
           <label className="block text-sm font-medium text-slate-700 mb-1.5">Daily Amount</label>
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">₦</span>
-            <input type="number" value={amount} min="100" onKeyDown={(e) => { if (e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '-') e.preventDefault(); }} onChange={(e) => { setAmount(e.target.value.replace(/\D/g, '')); setError(null); }}
+            <input type="text" inputMode="numeric" value={amountDisplay} onChange={(e) => { onAmountChange(e); setError(null); }}
               placeholder="500" disabled={isPending}
               className="w-full pl-9 pr-4 py-3 border border-brand-200 focus:border-brand-600 rounded-2xl focus:outline-none text-base disabled:opacity-50" />
           </div>
-          <p className="text-xs text-slate-400 mt-1">Minimum ₦100/day</p>
+          <p className="text-xs text-slate-400 mt-1">Minimum ₦500/day</p>
         </div>
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1.5">Purpose <span className="text-slate-400 font-normal">(Optional)</span></label>

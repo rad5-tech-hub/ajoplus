@@ -1,5 +1,5 @@
 // src/components/ui/AgentWithdrawModal.tsx
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { X, CheckCircle, AlertCircle } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import { submitAgentWithdrawal } from '@/api/agent';
@@ -33,6 +33,12 @@ const AgentWithdrawModal = ({ isOpen, onClose, availableBalance }: AgentWithdraw
     },
   });
 
+  const handleClose = useCallback(() => {
+    setIsSuccess(false);
+    setErrorMessage('');
+    onClose();
+  }, [onClose]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -41,7 +47,7 @@ const AgentWithdrawModal = ({ isOpen, onClose, availableBalance }: AgentWithdraw
     };
     if (isOpen) document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen, isPending]);
+  }, [isOpen, isPending, handleClose]);
 
   useEffect(() => {
     if (isOpen) {
@@ -52,12 +58,6 @@ const AgentWithdrawModal = ({ isOpen, onClose, availableBalance }: AgentWithdraw
       setErrorMessage('');
     }
   }, [isOpen]);
-
-  const handleClose = () => {
-    setIsSuccess(false);
-    setErrorMessage('');
-    onClose();
-  };
 
   const parsedAmount = parseInt(amount) || 0;
   const isExceeding = parsedAmount > availableBalance;

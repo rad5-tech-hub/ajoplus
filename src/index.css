@@ -49,3 +49,26 @@
   scrollbar-width: thin;
   scrollbar-color: var(--color-brand-600) #f1f5f9;
 }
+
+/* Hide number input spinners globally */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Prevent mouse wheel from changing number/range inputs */
+input[type="number"],
+input[type="range"] {
+  pointer-events: auto;
+}
+
+input[type="number"]:focus,
+input[type="range"]:focus {
+  pointer-events: auto;
+}

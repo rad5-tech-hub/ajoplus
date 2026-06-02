@@ -22,6 +22,7 @@ const AdminLoginPage = lazy(() => import('@/features/admin/auth/AdminLoginPage')
 
 // Protected routes (lazy-loaded)
 const CustomerDashboard = lazy(() => import('@/features/customer/dashboard/CustomerDashboard'));
+const PastPackages = lazy(() => import('@/features/customer/dashboard/PastPackages'));
 const AgentDashboard = lazy(() => import('@/features/agent/dashboard/AgentDashboard'));
 const AdminDashboard = lazy(() => import('@/features/admin/dashboard/AdminDashboard'));
 const PackageMemberList = lazy(() => import('@/features/admin/packages/PackageMemberList'));
@@ -144,6 +145,14 @@ const AppRouter = () => {
           element={
             <Suspense fallback={<RouteSuspenseFallback />}>
               <MakePayment />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/dashboard/customer/past-packages"
+          element={
+            <Suspense fallback={<RouteSuspenseFallback />}>
+              <PastPackages />
             </Suspense>
           }
         />

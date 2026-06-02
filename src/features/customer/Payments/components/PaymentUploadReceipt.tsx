@@ -160,8 +160,13 @@ const PaymentUploadReceipt = ({
           </label>
           <input
             type="text"
-            value={amountPaid}
-            onChange={(e) => { setAmountPaid(e.target.value.replace(/[^0-9.]/g, '')); setSubmitError(null); }}
+            inputMode="numeric"
+            value={amountPaid ? Number(amountPaid).toLocaleString('en-US') : ''}
+            onChange={(e) => {
+              const digits = e.target.value.replace(/\D/g, '');
+              setAmountPaid(digits);
+              setSubmitError(null);
+            }}
             placeholder="Enter amount"
             disabled={isSubmitting}
             className="w-full bg-white border-2 border-brand-500 focus:border-brand-600 rounded-2xl px-5 py-4 text-lg focus:outline-none transition-all disabled:opacity-50"

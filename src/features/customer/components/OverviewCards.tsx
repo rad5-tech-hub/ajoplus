@@ -21,7 +21,7 @@ const OverviewCards = () => {
         <div className="bg-white p-5 sm:p-6 rounded-3xl border border-brand-200/50 shadow-md flex flex-col">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm text-slate-500">Total Saved</p>
+              <p className="text-sm font-semibold text-slate-600">Total Saved</p>
               <p className="text-xs text-slate-400 mt-1">All contributions combined</p>
             </div>
             <div className="w-10 h-10 bg-brand-100 rounded-2xl flex items-center justify-center shrink-0">
@@ -29,7 +29,7 @@ const OverviewCards = () => {
             </div>
           </div>
           <div className="mt-auto pt-6">
-            <p className="text-2xl sm:text-3xl font-semibold text-brand-900">
+            <p className="text-2xl sm:text-3xl font-medium text-brand-900">
               {formatCurrency(totalSaved)}
             </p>
             {isEmpty ? (
@@ -44,7 +44,7 @@ const OverviewCards = () => {
         <div className="bg-white p-5 sm:p-6 rounded-3xl border border-brand-200/50 shadow-md flex flex-col">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm text-slate-500">Pending Payments</p>
+              <p className="text-sm font-semibold text-slate-600">Pending Payments</p>
               <p className="text-xs text-slate-400 mt-1">Awaiting admin approval</p>
             </div>
             <div className="w-10 h-10 bg-brand-100 rounded-2xl flex items-center justify-center shrink-0">
@@ -52,7 +52,7 @@ const OverviewCards = () => {
             </div>
           </div>
           <div className="mt-auto pt-6">
-            <p className="text-2xl sm:text-3xl font-bold text-brand-900">{pendingPayments}</p>
+            <p className="text-2xl sm:text-3xl font-medium text-brand-900">{pendingPayments}</p>
             {isEmpty && <p className="text-slate-400 text-sm mt-1">No pending payments</p>}
           </div>
         </div>
@@ -61,7 +61,7 @@ const OverviewCards = () => {
         <div className="bg-white p-5 sm:p-6 rounded-3xl border border-brand-200/50 shadow-md flex flex-col">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm text-slate-500">Available Balance</p>
+              <p className="text-sm font-semibold text-slate-600">Available Balance</p>
               <p className="text-xs text-slate-400 mt-1">Ready to withdraw</p>
             </div>
             <div className="w-10 h-10 bg-brand-100 rounded-2xl flex items-center justify-center shrink-0">
@@ -69,7 +69,7 @@ const OverviewCards = () => {
             </div>
           </div>
           <div className="mt-auto pt-6">
-            <p className="text-2xl sm:text-3xl font-bold text-brand-900">
+            <p className="text-2xl sm:text-3xl font-medium text-brand-900">
               {formatCurrency(availableBalance)}
             </p>
             {isEmpty && <p className="text-slate-400 text-sm mt-1">Nothing available yet</p>}
@@ -80,7 +80,7 @@ const OverviewCards = () => {
         <div className="bg-white p-5 sm:p-6 rounded-3xl border border-brand-200/50 shadow-md flex flex-col">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm text-slate-500">Active Packages</p>
+              <p className="text-sm font-semibold text-slate-600">Active Packages</p>
               <p className="text-xs text-slate-400 mt-1">Currently contributing to</p>
             </div>
             <div className="w-10 h-10 bg-brand-100 rounded-2xl flex items-center justify-center shrink-0">
@@ -88,7 +88,7 @@ const OverviewCards = () => {
             </div>
           </div>
           <div className="mt-auto pt-6">
-            <p className="text-2xl sm:text-3xl font-bold text-brand-900">{activePackages}</p>
+            <p className="text-2xl sm:text-3xl font-medium text-brand-900">{activePackages}</p>
             {isEmpty && <p className="text-slate-400 text-sm mt-1">No active packages</p>}
           </div>
         </div>

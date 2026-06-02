@@ -11,7 +11,7 @@ interface DailyAjoSetupModalProps {
 
 const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
   const navigate = useNavigate();
-  const { displayValue: dailyAmountDisplay, rawValue: dailyAmount, onChange: onDailyAmountChange } = useFormattedCurrencyInput();
+  const { displayValue: dailyAmountDisplay, rawValue: dailyAmount, onChange: onDailyAmountChange, setValue: setDailyAmount } = useFormattedCurrencyInput();
   const [description, setDescription] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -37,14 +37,15 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
       setError(null);
       setSuccess(false);
     }
-  }, [isOpen]);
+  }, [isOpen, setDailyAmount]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const amount = parseInt(dailyAmount, 10);
 
-    if (!amount || amount < 100) {
-      setError('Please enter a valid amount of at least ₦100.');
+
+    if (!amount || amount < 500) {
+      setError('Please enter a valid amount of at least ₦500.');
       return;
     }
 
@@ -94,8 +95,7 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
         {/* Content */}
         <div className="px-5 py-4 sm:px-7">
           <p className="text-slate-500 text-sm text-center mb-4">
-            How much would you like to save daily?{' '}
-            <span className="font-medium text-brand-700">5% monthly service fee</span> applies.
+              How much would you like to save daily?
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-3.5">
@@ -107,18 +107,17 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium">₦</span>
                 <input
-                  type="number"
-                  value={dailyAmount}
-                  onKeyDown={(e) => { if (e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '-') e.preventDefault(); }}
-                  onChange={(e) => { setDailyAmount(e.target.value.replace(/\D/g, '')); setError(null); }}
+                  type="text"
+                  inputMode="numeric"
+                  value={dailyAmountDisplay}
+                  onChange={(e) => { onDailyAmountChange(e); setError(null); }}
                   placeholder="500"
                   disabled={isPending}
                   className="w-full pl-9 pr-5 py-3 border border-brand-200 rounded-2xl focus:outline-none focus:border-brand-600 text-base font-medium placeholder:text-slate-400 disabled:opacity-50"
-                  min="100"
                   required
                 />
               </div>
-              <p className="text-xs text-slate-400 mt-1 pl-1">Minimum ₦100 per day</p>
+              <p className="text-xs text-slate-400 mt-1 pl-1">Minimum ₦500 per day</p>
             </div>
 
             {/* Description */}
@@ -133,12 +132,6 @@ const DailyAjoSetupModal = ({ isOpen, onClose }: DailyAjoSetupModalProps) => {
                 placeholder="e.g. School fees, business capital, emergency fund..."
                 className="w-full px-4 py-3 border border-brand-200 rounded-2xl focus:outline-none focus:border-brand-600 h-20 resize-none text-sm leading-relaxed disabled:opacity-50"
               />
-            </div>
-
-            {/* Example Note */}
-            <div className="bg-brand-50 border border-brand-100 rounded-2xl px-4 py-3 text-sm">
-              <span className="text-brand-700 font-medium">Example: </span>
-              <span className="text-slate-600">₦500/day = ₦15,000/month → ₦750 fee → You keep ₦14,250</span>
             </div>
 
             {/* Ajo Terms */}

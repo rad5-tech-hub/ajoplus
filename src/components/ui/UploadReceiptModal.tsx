@@ -3,6 +3,7 @@ import { useState, useRef, DragEvent, ChangeEvent } from 'react';
 import { Upload, X, Loader2, AlertCircle } from 'lucide-react';
 import { useSubmitPayment } from '@/app/store/PaymentStore';
 import type { PaymentType } from '@/api/payments';
+import { useFormattedCurrencyInput } from '@/hooks/useFormattedCurrencyInput';
 
 interface UploadReceiptModalProps {
   isOpen: boolean;
@@ -23,7 +24,7 @@ const UploadReceiptModal = ({
   cartId,
   onSuccess,
 }: UploadReceiptModalProps) => {
-  const [amount, setAmount] = useState('');
+  const { displayValue: amountDisplay, rawValue: amount, onChange: onAmountChange } = useFormattedCurrencyInput();
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -151,9 +152,10 @@ const UploadReceiptModal = ({
             <p className="text-sm font-medium text-slate-700 mb-2">Amount Paid</p>
             <input
               type="text"
-              value={amount}
+              inputMode="numeric"
+              value={amountDisplay}
               onChange={(e) => {
-                setAmount(e.target.value.replace(/[^0-9.]/g, ''));
+                onAmountChange(e);
                 setSubmitError(null);
               }}
               placeholder="Enter amount"
@@ -161,7 +163,7 @@ const UploadReceiptModal = ({
               className="w-full border border-brand-200 focus:border-brand-500 rounded-2xl px-5 py-4
                 text-lg focus:outline-none transition-colors disabled:opacity-50"
             />
-            <p className="text-xs text-slate-500 mt-2">Recommended: {recommendedAmount}</p>
+            <p className="text-xs text-slate-500 mt-2">Expected: {recommendedAmount}</p>
           </div>
         </div>
 

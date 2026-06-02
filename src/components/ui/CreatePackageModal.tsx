@@ -254,12 +254,15 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
               </label>
               <input
                 name="totalPrice"
-                type="number"
-                min="1"
-                placeholder="e.g., 350000"
-                value={formData.totalPrice}
-                onKeyDown={(e) => { if (e.key === 'e' || e.key === 'E' || e.key === '+' || e.key === '-') e.preventDefault(); }}
-                onChange={(e) => { e.target.value = e.target.value.replace(/\D/g, ''); handleInputChange(e); }}
+                type="text"
+                inputMode="numeric"
+                placeholder="e.g., 350,000"
+                value={formData.totalPrice ? Number(formData.totalPrice).toLocaleString('en-US') : ''}
+                onChange={(e) => {
+                  const digits = e.target.value.replace(/\D/g, '');
+                  setFormData((prev) => ({ ...prev, totalPrice: digits }));
+                  if (formError) setFormError('');
+                }}
                 disabled={isSaving}
                 className="w-full px-4 py-3 text-base border border-brand-200 rounded-2xl focus:outline-none focus:border-brand-600 disabled:bg-slate-50"
               />

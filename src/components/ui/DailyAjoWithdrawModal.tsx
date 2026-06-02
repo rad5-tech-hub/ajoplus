@@ -1,5 +1,5 @@
 // src/components/ui/DailyAjoWithdrawModal.tsx
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { X, CheckCircle } from 'lucide-react';
 import { useModalStore } from '@/app/store/ModalStore';
 import { useSubmitWithdrawal } from '@/app/store/WithdrwalStore';
@@ -23,6 +23,11 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 
 	const modalRef = useRef<HTMLDivElement>(null);
 
+	const handleClose = useCallback(() => {
+		setIsSuccess(false);
+		onClose();
+	}, [onClose]);
+
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -31,7 +36,7 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 		};
 		if (isOpen) document.addEventListener('mousedown', handleClickOutside);
 		return () => document.removeEventListener('mousedown', handleClickOutside);
-	}, [isOpen, isPending]);
+	}, [isOpen, isPending, handleClose]);
 
 	useEffect(() => {
 		if (isOpen) {
@@ -41,11 +46,6 @@ const DailyAjoWithdrawModal = ({ isOpen, onClose, availableBalance, walletId }: 
 			setSubmittedAmount(0);
 		}
 	}, [isOpen]);
-
-	const handleClose = () => {
-		setIsSuccess(false);
-		onClose();
-	};
 
 	const parsedAmount = parseInt(amount) || 0;
 	const isExceeding = parsedAmount > availableBalance;
