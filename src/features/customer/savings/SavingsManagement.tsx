@@ -77,6 +77,8 @@ const SavingsManagement = () => {
           </div>
         ) : (
           <div className="space-y-4">
+            {showCreate && <CreatePlanInline onClose={() => setShowCreate(false)} />}
+
             {/* ── Search Bar ── */}
             {plans.length > 0 && (
               <div className="relative">
@@ -149,8 +151,6 @@ const SavingsManagement = () => {
           isOpen={detailId !== null}
           onClose={() => setDetailId(null)}
         />
-
-        {showCreate && <CreatePlanInline onClose={() => setShowCreate(false)} />}
 
         <DailyAjoWithdrawModal
           isOpen={withdrawPlanId !== null}

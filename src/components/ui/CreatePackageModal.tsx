@@ -69,7 +69,7 @@ const CreatePackageModal = ({ isOpen, onClose, initialPackage }: CreatePackageMo
 
   // ─── Item helpers ─────────────────────────────────────────────────────────
 
-  const addItem = () => setPackageItems((prev) => [...prev, EMPTY_ITEM()]);
+  const addItem = () => setPackageItems((prev) => [EMPTY_ITEM(), ...prev]);
 
   const removeItem = (id: number) => {
     if (packageItems.length === 1) return;
